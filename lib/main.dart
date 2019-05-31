@@ -4,11 +4,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:money_book/screens/book_screen.dart';
+import 'package:money_book/screens/income_edit_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/shared_state/transactions.dart';
 import 'package:money_book/model/transaction.dart';
+import 'package:money_book/localDB/database_creator.dart';
+import 'package:money_book/api/transaction.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  await DatabaseCreator().initDatabase();
+  runApp(MyApp());
+}
 
 /// This Widget is the main application widget.
 class MyApp extends StatefulWidget {
@@ -25,14 +31,23 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {
-      this.transactions.add(new Transaction(2000, 'Income'));
-      this.transactions.add(new Transaction(3000, 'Income'));
-      this.transactions.add(new Transaction(4000, 'Income'));
+    TransactionAPI.getAll().then((List<Transaction> ts) {
+      setState(() {
+        this.transactions.addAll(ts);
+        this
+            .transactions
+            .add(new Transaction(2000, DateTime.now(), name: 'Income'));
+        this
+            .transactions
+            .add(new Transaction(3000, DateTime.now(), name: 'Income'));
+        this
+            .transactions
+            .add(new Transaction(4000, DateTime.now(), name: 'Income'));
+      });
+      debugPrint(this.transactions.get(0).id.toString());
+      debugPrint(this.transactions.get(1).id.toString());
+      debugPrint(this.transactions.get(2).id.toString());
     });
-    debugPrint(this.transactions.get(0).id.toString());
-    debugPrint(this.transactions.get(1).id.toString());
-    debugPrint(this.transactions.get(2).id.toString());
   }
 
   @override
@@ -41,6 +56,7 @@ class _MyAppState extends State<MyApp> {
       providers: [ChangeNotifierProvider.value(notifier: transactions)],
       child: MaterialApp(title: MyApp._title, routes: {
         '/': (context) => BookScreen(),
+        '/edit/income': (context) => IncomeEditScreen(),
       }),
     );
   }

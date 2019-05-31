@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:unicorndial/unicorndial.dart';
+
+//import 'package:unicorndial/unicorndial.dart';
+import 'package:money_book/temp.dart';
 
 class FloatingAddButton extends StatefulWidget {
   @override
@@ -14,21 +16,29 @@ class _FloatingAddButtonState extends State<FloatingAddButton> {
     childrenButtons.add(UnicornButton(
       hasLabel: true,
       labelText: 'Expense',
-      labelBackgroundColor: Colors.black,
       currentButton: FloatingActionButton(
-          mini: true, onPressed: () => {}, child: Icon(Icons.train)),
+          heroTag: 'expense',
+          mini: true,
+          onPressed: () => {},
+          child: Icon(Icons.train)),
     ));
     childrenButtons.add(UnicornButton(
       hasLabel: true,
       labelText: 'Bill',
       currentButton: FloatingActionButton(
-          mini: true, onPressed: () => {debugPrint('hahhhh')}, child: Icon(Icons.directions_bike)),
+          heroTag: 'bill',
+          mini: true,
+          onPressed: () => {debugPrint('hahhhh')},
+          child: Icon(Icons.directions_bike)),
     ));
     childrenButtons.add(UnicornButton(
       hasLabel: true,
       labelText: 'Income',
       currentButton: FloatingActionButton(
-          mini: true, onPressed: () => {}, child: Icon(Icons.directions_bike)),
+          heroTag: 'income',
+          mini: true,
+          onPressed: () => {Navigator.pushNamed(context, '/edit/income')},
+          child: Icon(Icons.directions_bike)),
     ));
 
     return UnicornDialer(

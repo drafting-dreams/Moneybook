@@ -10,6 +10,10 @@ class Transactions extends ChangeNotifier {
     this.transactions.add(t);
   }
 
+  void addAll(List<Transaction> t) {
+    this.transactions.addAll(t);
+  }
+
   Transaction get(int i) {
     return this.transactions[i];
   }

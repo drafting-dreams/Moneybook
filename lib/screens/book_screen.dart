@@ -18,11 +18,17 @@ class _BookScreen extends State<BookScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Moneybook')),
       floatingActionButton: FloatingAddButton(),
-      body: ListView.builder(itemCount: transactions.length, itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-            title: Text('${transactions.get(index).name}'),
-            subtitle: Text('${transactions.get(index).value}'));
-      }),
+      body: ListView.builder(
+          itemCount: transactions.length,
+          itemBuilder: (BuildContext context, int index) {
+            final transaction = transactions.get(index);
+            return ListTile(
+              title: Text('${transaction.name}'),
+              subtitle: Text('${transaction.value}'),
+              trailing:
+                  Text('${transaction.date.day}/${transaction.date.month}'),
+            );
+          }),
     );
   }
 }
