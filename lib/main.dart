@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_book/screens/book_screen.dart';
 import 'package:money_book/screens/income_edit_screen.dart';
+import 'package:money_book/screens/expense_edit_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/shared_state/transactions.dart';
 import 'package:money_book/model/transaction.dart';
@@ -29,9 +30,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    TransactionAPI.getAll().then((List<Transaction> ts) {
+    final now = DateTime.now();
+    final nextMonth = now.month == 12
+        ? DateTime(now.year + 1, now.month, 1)
+        : DateTime(now.year, now.month + 1, 1);
+    TransactionAPI.loadPrevious(nextMonth).then((List<Transaction> ts) {
       setState(() {
         this.transactions.addAll(ts);
         this
@@ -57,6 +61,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(title: MyApp._title, routes: {
         '/': (context) => BookScreen(),
         '/edit/income': (context) => IncomeEditScreen(),
+        '/edit/expense': (context) => ExpenseEditScreen(),
       }),
     );
   }

@@ -19,7 +19,7 @@ class _FloatingAddButtonState extends State<FloatingAddButton> {
       currentButton: FloatingActionButton(
           heroTag: 'expense',
           mini: true,
-          onPressed: () => {},
+          onPressed: () => {Navigator.pushNamed(context, '/edit/expense')},
           child: Icon(Icons.train)),
     ));
     childrenButtons.add(UnicornButton(

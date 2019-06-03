@@ -2,7 +2,7 @@ import 'package:money_book/utils/random.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/localDB/database_creator.dart';
 
-enum ExpenseType { food, commute, cloth, housing, communication }
+enum ExpenseType { food, commute, cloth, housing, communication, electronic, others }
 
 class Transaction {
   static const ID_PREFIX_LENGTH = 6;
@@ -34,7 +34,7 @@ class Transaction {
     if (json[DatabaseCreator.transactionType] != null) {
       for (ExpenseType t in ExpenseType.values) {
         if (t.toString() == json[DatabaseCreator.transactionType]) {
-          this.type = json[DatabaseCreator.transactionType];
+          this.type = t;
         }
       }
     }

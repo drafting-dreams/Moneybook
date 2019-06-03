@@ -60,6 +60,5 @@ class DatabaseCreator {
 
   Future<void> onCreate(Database db, int version) async {
     await createTransactionTable(db);
-    print('hahahahahahahaha');
   }
 }
