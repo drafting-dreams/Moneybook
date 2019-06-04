@@ -2,7 +2,7 @@ import 'package:money_book/utils/random.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/localDB/database_creator.dart';
 
-enum ExpenseType { food, commute, cloth, housing, communication, electronic, others }
+enum ExpenseType { food, commute, housing, entertainment, communication, cloth, electronic, others }
 
 class Transaction {
   static const ID_PREFIX_LENGTH = 6;

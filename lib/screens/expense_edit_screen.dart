@@ -100,16 +100,16 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                               child: Text(Util.expenseType2String(ExpenseType.housing))
                             ),
                             DropdownMenuItem<ExpenseType>(
-                              value: ExpenseType.commute,
-                              child: Text(Util.expenseType2String(ExpenseType.commute))
+                              value: ExpenseType.entertainment,
+                              child: Text(Util.expenseType2String(ExpenseType.entertainment))
                             ),
                             DropdownMenuItem<ExpenseType>(
                               value: ExpenseType.communication,
                               child: Text(Util.expenseType2String(ExpenseType.communication))
                             ),
                             DropdownMenuItem<ExpenseType>(
-                              value: ExpenseType.commute,
-                              child: Text(Util.expenseType2String(ExpenseType.commute))
+                              value: ExpenseType.cloth,
+                              child: Text(Util.expenseType2String(ExpenseType.cloth))
                             ),
                             DropdownMenuItem<ExpenseType>(
                               value: ExpenseType.electronic,
