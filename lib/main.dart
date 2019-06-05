@@ -48,9 +48,6 @@ class _MyAppState extends State<MyApp> {
 //            .transactions
 //            .add(new Transaction(4000, DateTime.now(), name: 'Income'));
       });
-      debugPrint(this.transactions.get(0).id.toString());
-      debugPrint(this.transactions.get(1).id.toString());
-      debugPrint(this.transactions.get(2).id.toString());
     });
   }
 

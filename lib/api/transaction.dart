@@ -34,6 +34,17 @@ class TransactionAPI {
     return re;
   }
 
+  static Future<List<Map<String, dynamic>>> loadPreviousYear(int year) async {
+    int nearestYear;
+    try {
+      nearestYear = await TransactionService.getNearestYear(year);
+    } on NoNearestDateException {
+      return List<Map<String, dynamic>>();
+    }
+    final re = await getListByMonth(nearestYear);
+    return re;
+  }
+
   static Future<List<Map<String, dynamic>>> getListByYear() async {
     var futures = <Future<List<Transaction>>>[];
 
@@ -47,6 +58,30 @@ class TransactionAPI {
     return transactionsGroupByYear.where((list) => list.length > 0).map((list) {
       return {
         'year': list[0].date.year,
+        'amount': list.fold(
+            0.0, (current, transaction) => current + transaction.value)
+      };
+    }).toList();
+  }
+
+  static Future<List<Map<String, dynamic>>> getListByMonth(year) async {
+    var futures = <Future<List<Transaction>>>[];
+
+    for (int month = 1; month <= 12; month++) {
+      DateTime start = DateTime(year, month, 1);
+      DateTime end =
+          month == 12 ? DateTime(year + 1, 1, 0) : DateTime(year, month + 1, 0);
+      futures.add(TransactionService.getListByDate(start, end));
+    }
+
+    final List<List<Transaction>> transactionsGroupByMonth =
+        await Future.wait(futures);
+    return transactionsGroupByMonth
+        .where((list) => list.length > 0)
+        .map((list) {
+      return {
+        'year': list[0].date.year,
+        'month': list[0].date.month,
         'amount': list.fold(
             0.0, (current, transaction) => current + transaction.value)
       };

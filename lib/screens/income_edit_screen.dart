@@ -66,7 +66,6 @@ class _IncomeEdit extends State<IncomeEditScreen> {
                           keyboardType: TextInputType.number,
                           validator: (v) {
                             String value = amountController.text;
-                            debugPrint(value);
                             if (value.isEmpty) {
                               return 'Please enter your income amount';
                             }
