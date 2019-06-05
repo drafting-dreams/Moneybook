@@ -6,11 +6,18 @@ class Transactions extends ChangeNotifier {
 
   Transactions();
 
+  void clear() {this.transactions = [];notifyListeners();}
+
   void add(Transaction t) {
     // Find the first transaction's date which is after the added one, and insert it here
     final idx = this.transactions.indexWhere((element) => t.date.compareTo(element.date) < 0);
-    this.transactions.insert(idx, t);
-    notifyListeners();
+    if (idx > 0) {
+      this.transactions.insert(idx, t);
+      notifyListeners();
+    } else if (idx < 0) {
+      this.transactions.add(t);
+      notifyListeners();
+    }
   }
 
   void addAll(List<Transaction> t) {
@@ -32,6 +39,9 @@ class Transactions extends ChangeNotifier {
   }
 
   DateTime get previousLoadingReference {
+    if (this.transactions.length < 1) {
+      return null;
+    }
     return this.transactions[0].date;
   }
 
@@ -44,4 +54,12 @@ class Transactions extends ChangeNotifier {
         .toList()
         .fold(0.0, (current, next) => current + next.value);
   }
+}
+
+class NoTransactionAvailableException implements Exception {
+  final msg;
+
+  const NoTransactionAvailableException([this.msg]);
+
+  String toString() => msg ?? 'No transaction available';
 }

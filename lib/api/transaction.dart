@@ -26,12 +26,30 @@ class TransactionAPI {
   static Future<List<Transaction>> loadPrevious(DateTime referenceDate) async {
     DateTime nearestDate;
     try {
-      nearestDate = await TransactionService.getNearestDate(
-        referenceDate);
+      nearestDate = await TransactionService.getNearestDate(referenceDate);
     } on NoNearestDateException {
       return List<Transaction>();
     }
     final re = await _getOneMonthList(nearestDate);
     return re;
+  }
+
+  static Future<List<Map<String, dynamic>>> getListByYear() async {
+    var futures = <Future<List<Transaction>>>[];
+
+    for (int year = 2019; year <= DateTime.now().year; year++) {
+      futures.add(TransactionService.getListByDate(
+          DateTime(year, 1, 1), DateTime(year, 12, 31)));
+    }
+
+    final List<List<Transaction>> transactionsGroupByYear =
+        await Future.wait(futures);
+    return transactionsGroupByYear.where((list) => list.length > 0).map((list) {
+      return {
+        'year': list[0].date.year,
+        'amount': list.fold(
+            0.0, (current, transaction) => current + transaction.value)
+      };
+    }).toList();
   }
 }

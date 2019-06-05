@@ -38,15 +38,15 @@ class _MyAppState extends State<MyApp> {
     TransactionAPI.loadPrevious(nextMonth).then((List<Transaction> ts) {
       setState(() {
         this.transactions.addAll(ts);
-        this
-            .transactions
-            .add(new Transaction(2000, DateTime.now(), name: 'Income'));
-        this
-            .transactions
-            .add(new Transaction(3000, DateTime.now(), name: 'Income'));
-        this
-            .transactions
-            .add(new Transaction(4000, DateTime.now(), name: 'Income'));
+//        this
+//            .transactions
+//            .add(new Transaction(2000, DateTime.now(), name: 'Income'));
+//        this
+//            .transactions
+//            .add(new Transaction(3000, DateTime.now(), name: 'Income'));
+//        this
+//            .transactions
+//            .add(new Transaction(4000, DateTime.now(), name: 'Income'));
       });
       debugPrint(this.transactions.get(0).id.toString());
       debugPrint(this.transactions.get(1).id.toString());
