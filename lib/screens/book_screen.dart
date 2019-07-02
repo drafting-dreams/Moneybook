@@ -7,6 +7,7 @@ import 'package:money_book/model/transaction.dart';
 import 'package:money_book/widget/list/default_list.dart';
 import 'package:money_book/widget/list/month_list.dart';
 import 'package:money_book/widget/list/year_list.dart';
+import 'package:money_book/widget/bottom_navigator.dart';
 
 enum ActionTypes { byDay, byMonth, byYear }
 
@@ -47,7 +48,8 @@ class _BookScreen extends State<BookScreen> {
 
   Function _onRefreshWrapper(DateTime referenceDate, Transactions t) {
     if (referenceDate == null) {
-      return () {};
+      Future<void> doNothing() async {}
+      return doNothing;
     }
     Future<void> _onRefresh() async {
       List<Transaction> previousTransactions =
@@ -123,11 +125,7 @@ class _BookScreen extends State<BookScreen> {
       )),
       floatingActionButton: FloatingAddButton(),
       body: bodyWidgets[_currentActionType](),
-      bottomNavigationBar: BottomNavigationBar(items: [
-        BottomNavigationBarItem(icon: Icon(Icons.list), title: Text('History')),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.equalizer), title: Text('Statistic'))
-      ]),
+      bottomNavigationBar: BottomNavigator(initialIndex: 0)
     );
   }
 }

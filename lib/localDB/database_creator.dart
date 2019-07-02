@@ -6,6 +6,10 @@ Database db;
 
 class DatabaseCreator {
   static const dbName = 'MoneybookDB';
+  static const accountTable = 'accountTable';
+  static const accountId = 'accountId';
+  static const accountName = 'accountName';
+  static const accountUsing = 'accountUsing';
   static const transactionTable = 'TransactionTable';
   static const transactionId = 'id';
   static const transactionName = 'name';
@@ -28,14 +32,26 @@ class DatabaseCreator {
     }
   }
 
+  Future<void> createAccountTable(Database db) async {
+    final todoSql = '''CREATE TABLE $accountTable
+    (
+      $accountId TEXT PRIMARY KEY,
+      $accountName TEXT,
+      $accountUsing INTEGER
+    )''';
+    await db.execute(todoSql);
+  }
+
   Future<void> createTransactionTable(Database db) async {
     final todoSql = '''CREATE TABLE $transactionTable
     (
-      ${DatabaseCreator.transactionId} STRING PRIMARY KEY,
-      ${DatabaseCreator.transactionName} STRING,
+      ${DatabaseCreator.transactionId} TEXT PRIMARY KEY,
+      ${DatabaseCreator.transactionName} TEXT,
       ${DatabaseCreator.transactionValue} REAL,
       ${DatabaseCreator.transactionDate} TEXT,
-      ${DatabaseCreator.transactionType} STRING
+      ${DatabaseCreator.transactionType} TEXT,
+      $accountId Text,
+          FOREIGN KEY($accountId) REFERENCES $accountTable($accountId)
     )''';
     await db.execute(todoSql);
   }
@@ -45,7 +61,7 @@ class DatabaseCreator {
     final path = join(databasePath, dbName);
 
     if (await Directory(dirname(path)).exists()) {
-//      await deleteDatabase(path);
+      await deleteDatabase(path);
     } else {
       Directory(path).create(recursive: true);
     }
@@ -59,6 +75,7 @@ class DatabaseCreator {
   }
 
   Future<void> onCreate(Database db, int version) async {
+    await createAccountTable(db);
     await createTransactionTable(db);
   }
 }

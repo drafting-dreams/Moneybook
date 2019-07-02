@@ -6,14 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:money_book/screens/book_screen.dart';
 import 'package:money_book/screens/income_edit_screen.dart';
 import 'package:money_book/screens/expense_edit_screen.dart';
+import 'package:money_book/screens/account_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/shared_state/transactions.dart';
+import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/model/transaction.dart';
 import 'package:money_book/localDB/database_creator.dart';
 import 'package:money_book/api/transaction.dart';
+import 'package:money_book/api/account.dart';
+import 'package:money_book/localDB/service/account.dart';
+import 'package:money_book/model/account.dart';
 
 void main() async {
   await DatabaseCreator().initDatabase();
+  await AccountService.initializingAccount();
   runApp(MyApp());
 }
 
@@ -26,11 +32,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final AccountState accountState = AccountState();
   final Transactions transactions = Transactions();
 
   @override
   void initState() {
     super.initState();
+    Account currentAccount;
+    AccountAPI.getCurrentAccount().then((Account account) {
+      currentAccount = account;
+      accountState.setCurrentAccount(currentAccount);
+    });
+
     final now = DateTime.now();
     final nextMonth = now.month == 12
         ? DateTime(now.year + 1, now.month, 1)
@@ -59,6 +72,7 @@ class _MyAppState extends State<MyApp> {
         '/': (context) => BookScreen(),
         '/edit/income': (context) => IncomeEditScreen(),
         '/edit/expense': (context) => ExpenseEditScreen(),
+        '/accounts': (context) => AccountScreen()
       }),
     );
   }
