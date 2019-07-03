@@ -5,6 +5,10 @@ import 'package:money_book/api/account.dart';
 
 
 class AccountEditScreen extends StatefulWidget {
+  final String id;
+
+  AccountEditScreen({this.id});
+
   State<StatefulWidget> createState() {
     return _AccountEditScreen();
   }
@@ -17,61 +21,81 @@ class _AccountEditScreen extends State<AccountEditScreen> {
   final balanceController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.id != null) {
+      AccountAPI.getAccountById(widget.id).then((Account account) {
+        setState(() {
+          nameController.text = account.name;
+          balanceController.text = account.balance.toString();
+        });
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Moneybook'),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () async {
-                if (_formKey.currentState.validate()) {
+      appBar: AppBar(
+        title: Text('Moneybook'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () async {
+              if (_formKey.currentState.validate()) {
+                if (widget.id == null) {
                   Account account = Account(nameController.text,
-                      double.parse(balanceController.text));
+                    double.parse(balanceController.text));
                   await AccountAPI.createAccount(account);
-                  Navigator.of(context).pop();
                 } else {
-                  setState(() {
-                    _autoValidate = true;
-                  });
+                  await AccountAPI.modifyAccount(widget.id, nameController.text,
+                    double.parse(balanceController.text));
                 }
-              },
-              child: Text('Save'),
-              textColor: Colors.white,
-            )
-          ],
-        ),
-        body: Form(
-          key: _formKey,
-          autovalidate: _autoValidate,
-          child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Account Name'),
-                    controller: nameController,
-                    validator: (v) {
-                      String value = nameController.text;
-                      if (value.trim().isEmpty) {
-                        return "Please input account's name";
-                      }
-                    },
-                  ),
-                  TextFormField(
-                      decoration: InputDecoration(labelText: 'Account Balance'),
-                      controller: balanceController,
-                      keyboardType: TextInputType.number,
-                      validator: (v) {
-                        String value = balanceController.text;
-                        if (value.isEmpty) {
-                          return "Please enter account's balance";
-                        }
-                        if (!Util.isNumeric(value)) {
-                          return 'Invalid number';
-                        }
-                      })
-                ],
-              )),
-        ));
+                Navigator.of(context).pop();
+              } else {
+                setState(() {
+                  _autoValidate = true;
+                });
+              }
+            },
+            child: Text('Save'),
+            textColor: Colors.white,
+          )
+        ],
+      ),
+      body: Form(
+        key: _formKey,
+        autovalidate: _autoValidate,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15.0),
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Account Name'),
+                controller: nameController,
+                validator: (v) {
+                  String value = nameController.text;
+                  if (value
+                    .trim()
+                    .isEmpty) {
+                    return "Please input account's name";
+                  }
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Account Balance'),
+                controller: balanceController,
+                keyboardType: TextInputType.number,
+                validator: (v) {
+                  String value = balanceController.text;
+                  if (value.isEmpty) {
+                    return "Please enter account's balance";
+                  }
+                  if (!Util.isNumeric(value)) {
+                    return 'Invalid number';
+                  }
+                })
+            ],
+          )),
+      ));
   }
 }

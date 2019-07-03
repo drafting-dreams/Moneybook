@@ -23,6 +23,16 @@ class AccountService {
     return Account.fromJson(data[0]);
   }
 
+  static Future<Account> getAccountById(String id) async {
+    final sql = '''SELECT * FROM ${DatabaseCreator.accountTable}
+    WHERE ${DatabaseCreator.accountId} = ?''';
+
+    List<dynamic> params= [id];
+    final data = await db.rawQuery(sql, params);
+
+    return Account.fromJson(data[0]);
+  }
+
   static Future<Account> createAccount(Account account) async {
     final sql = '''INSERT INTO ${DatabaseCreator.accountTable}
     (
@@ -38,6 +48,17 @@ class AccountService {
         'Created an new account', sql, null, result, params);
 
     return account;
+  }
+
+  static Future<void> updateAccount(String id, String name, double balance) async {
+    final sql = '''UPDATE ${DatabaseCreator.accountTable}
+    SET ${DatabaseCreator.accountName} = ?,
+        ${DatabaseCreator.accountBalance} = ?
+    WHERE ${DatabaseCreator.accountId} = ?''';
+
+    List<dynamic> params = [name, balance, id];
+    final result = await db.rawUpdate(sql, params);
+    DatabaseCreator.databaseLog('Update account', sql, null, result, params);
   }
 
   static Future<void> deleteAccount(String id) async {

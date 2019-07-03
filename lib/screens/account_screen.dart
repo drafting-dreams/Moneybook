@@ -17,6 +17,7 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreen extends State<AccountScreen> {
+  final SlidableController slidableController = SlidableController();
   List<Account> accounts = [];
 
   void initState() {
@@ -92,8 +93,23 @@ class _AccountScreen extends State<AccountScreen> {
               },
               child: Slidable(
                   key: ValueKey(index),
+                  controller: slidableController,
                   actionPane: SlidableDrawerActionPane(),
                   secondaryActions: <Widget>[
+                    IconSlideAction(
+                      caption: 'Edit',
+                      color: Colors.grey[350],
+                      icon: Icons.edit,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                              AccountEditScreen(id: accounts[index].id))).then((value) {
+                          updateAccountsList();
+                        });
+                      },
+                    ),
                     IconSlideAction(
                       caption: 'Delete',
                       color: Colors.red,

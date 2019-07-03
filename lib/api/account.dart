@@ -17,6 +17,15 @@ class AccountAPI {
     return account;
   }
 
+  static Future<Account> getAccountById(String id) async {
+    Account account = await AccountService.getAccountById(id);
+    return account;
+  }
+
+  static Future<void> modifyAccount(String id, String name, double balance) async {
+    await AccountService.updateAccount(id, name, balance);
+  }
+
   static Future<void> setCurrentAccount(String id) async {
     await AccountService.setCurrent(id);
   }
