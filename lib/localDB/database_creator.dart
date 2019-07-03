@@ -9,6 +9,7 @@ class DatabaseCreator {
   static const accountTable = 'accountTable';
   static const accountId = 'accountId';
   static const accountName = 'accountName';
+  static const accountBalance = 'accountBalance';
   static const accountUsing = 'accountUsing';
   static const transactionTable = 'TransactionTable';
   static const transactionId = 'id';
@@ -18,7 +19,7 @@ class DatabaseCreator {
   static const transactionType = 'type';
 
   static void databaseLog(String functionName, String sql,
-      [List<Map<String, dynamic>> selectQueryResult,
+    [List<Map<String, dynamic>> selectQueryResult,
       int insertAndUpdateQueryResult, List<dynamic> params]) {
     print(functionName);
     print(sql);
@@ -37,6 +38,7 @@ class DatabaseCreator {
     (
       $accountId TEXT PRIMARY KEY,
       $accountName TEXT,
+      $accountBalance REAL,
       $accountUsing INTEGER
     )''';
     await db.execute(todoSql);
@@ -61,7 +63,7 @@ class DatabaseCreator {
     final path = join(databasePath, dbName);
 
     if (await Directory(dirname(path)).exists()) {
-      await deleteDatabase(path);
+//      await deleteDatabase(path);
     } else {
       Directory(path).create(recursive: true);
     }

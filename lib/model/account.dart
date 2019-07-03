@@ -18,5 +18,6 @@ class Account {
   Account.fromJson(Map<String, dynamic> json) {
     this.id = json[DatabaseCreator.accountId];
     this.name = json[DatabaseCreator.accountName];
+    this.balance = json[DatabaseCreator.accountBalance];
   }
 }

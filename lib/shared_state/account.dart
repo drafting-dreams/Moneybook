@@ -8,5 +8,6 @@ class AccountState extends ChangeNotifier {
 
   setCurrentAccount(Account account) {
     this.currentAccount = account;
+    notifyListeners();
   }
 }

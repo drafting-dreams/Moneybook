@@ -14,12 +14,11 @@ import 'package:money_book/model/transaction.dart';
 import 'package:money_book/localDB/database_creator.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/api/account.dart';
-import 'package:money_book/localDB/service/account.dart';
 import 'package:money_book/model/account.dart';
 
 void main() async {
   await DatabaseCreator().initDatabase();
-  await AccountService.initializingAccount();
+  await AccountAPI.initializingAccount();
   runApp(MyApp());
 }
 
@@ -67,7 +66,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider.value(notifier: transactions)],
+      providers: [
+        ChangeNotifierProvider.value(notifier: transactions),
+        ChangeNotifierProvider.value(notifier: accountState)
+      ],
       child: MaterialApp(title: MyApp._title, routes: {
         '/': (context) => BookScreen(),
         '/edit/income': (context) => IncomeEditScreen(),

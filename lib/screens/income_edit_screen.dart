@@ -14,6 +14,7 @@ class IncomeEditScreen extends StatefulWidget {
 
 class _IncomeEdit extends State<IncomeEditScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
   DateTime date = DateTime.now();
@@ -45,6 +46,10 @@ class _IncomeEdit extends State<IncomeEditScreen> {
                 await TransactionAPI.add(t);
                 transactions.add(t);
                 Navigator.of(context).pop();
+              } else {
+                setState(() {
+                  _autoValidate = true;
+                });
               }
             },
             child: Text('Save'),
@@ -53,6 +58,7 @@ class _IncomeEdit extends State<IncomeEditScreen> {
         ]),
         body: Form(
             key: _formKey,
+            autovalidate: _autoValidate,
             child: Container(
                 child: Column(
               children: <Widget>[

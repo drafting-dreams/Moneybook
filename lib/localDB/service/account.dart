@@ -2,15 +2,6 @@ import 'package:money_book/model/account.dart';
 import 'package:money_book/localDB/database_creator.dart';
 
 class AccountService {
-  static Future<void> initializingAccount() async {
-    final accounts = await getAll();
-    if (accounts.length == 0) {
-      final account = await createAccount(Account('Normal'));
-      await setCurrent(account.id);
-      print('First account initialized');
-    }
-  }
-
   static Future<List<Account>> getAll() async {
     final sql = '''SELECT * FROM ${DatabaseCreator.accountTable}''';
     final data = await db.rawQuery(sql);
@@ -37,15 +28,24 @@ class AccountService {
     (
       ${DatabaseCreator.accountId},
       ${DatabaseCreator.accountName},
+      ${DatabaseCreator.accountBalance},
       ${DatabaseCreator.accountUsing}
     )
-    VALUES(?,?,?)''';
-    List<dynamic> params = [account.id, account.name, 0];
+    VALUES(?,?,?,?)''';
+    List<dynamic> params = [account.id, account.name, account.balance, 0];
     final result = await db.rawInsert(sql, params);
     DatabaseCreator.databaseLog(
-      'Created an new account', sql, null, result, params);
+        'Created an new account', sql, null, result, params);
 
     return account;
+  }
+
+  static Future<void> deleteAccount(String id) async {
+    final sql = '''DELETE FROM ${DatabaseCreator.accountTable}
+    WHERE ${DatabaseCreator.accountId} = ?''';
+    List<dynamic> params = [id];
+    await db.rawDelete(sql, params);
+    DatabaseCreator.databaseLog('Delete Account', sql, null, null, params);
   }
 
   static Future<void> setCurrent(String id) async {
@@ -59,6 +59,6 @@ class AccountService {
     List<dynamic> params = [id];
     final result = await db.rawUpdate(sql2, params);
     DatabaseCreator.databaseLog(
-      'Set current account', sql2, null, result, params);
+        'Set current account', sql2, null, result, params);
   }
 }

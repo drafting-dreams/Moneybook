@@ -24,6 +24,15 @@ class TransactionService {
     DatabaseCreator.databaseLog('Add Transaction', sql, null, result, params);
   }
 
+  static Future<void> deleteTransactionsByAccount(String id) async {
+    final sql = '''DELETE FROM ${DatabaseCreator.transactionTable}
+    WHERE ${DatabaseCreator.accountId} = ?''';
+    List<dynamic> params = [id];
+    await db.rawDelete(sql, params);
+    DatabaseCreator.databaseLog(
+        'Delete transaction by account', sql, null, null, params);
+  }
+
   static Future<List<Transaction>> getAll() async {
     final sql = '''SELECT * FROM ${DatabaseCreator.transactionTable}
     ''';
@@ -31,7 +40,8 @@ class TransactionService {
     return re;
   }
 
-  static Future<List<Transaction>> getListByDate(DateTime start, [DateTime end]) async {
+  static Future<List<Transaction>> getListByDate(DateTime start,
+      [DateTime end]) async {
     final s = Util.date2DBString(start);
     final e = Util.date2DBString(end);
     final sql = '''SELECT * FROM ${DatabaseCreator.transactionTable}
@@ -45,9 +55,11 @@ class TransactionService {
   }
 
   static Future<DateTime> getNearestDate(DateTime referenceDate) async {
-    final previousMonthLastDay = DateTime(referenceDate.year, referenceDate.month, 0);
+    final previousMonthLastDay =
+        DateTime(referenceDate.year, referenceDate.month, 0);
     final d = Util.date2DBString(previousMonthLastDay);
-    final sql = '''SELECT ${DatabaseCreator.transactionDate} FROM ${DatabaseCreator.transactionTable}
+    final sql =
+        '''SELECT ${DatabaseCreator.transactionDate} FROM ${DatabaseCreator.transactionTable}
     WHERE ${DatabaseCreator.transactionDate} <= ?
     ORDER BY ${DatabaseCreator.transactionDate} DESC LIMIT 1
     ''';
@@ -56,13 +68,15 @@ class TransactionService {
     if (data.length < 1) {
       throw NoNearestDateException();
     }
-    List<int> date = Util.dbString2date(data[0][DatabaseCreator.transactionDate]);
+    List<int> date =
+        Util.dbString2date(data[0][DatabaseCreator.transactionDate]);
     return DateTime(date[0], date[1], date[2]);
   }
 
   static Future<int> getNearestYear(int referenceYear) async {
     final d = Util.date2DBString(DateTime(referenceYear, 1, 1));
-    final sql = ''' SELECT ${DatabaseCreator.transactionDate} FROM ${DatabaseCreator.transactionTable}
+    final sql =
+        ''' SELECT ${DatabaseCreator.transactionDate} FROM ${DatabaseCreator.transactionTable}
     WHERE ${DatabaseCreator.transactionDate} <= ?
     ORDER BY ${DatabaseCreator.transactionDate} DESC LIMIT 1
     ''';
@@ -74,7 +88,8 @@ class TransactionService {
     return Util.dbString2date(data[0][DatabaseCreator.transactionDate])[0];
   }
 
-  static Future<List<Transaction>> _executeSqlList(sql, [List<dynamic> params]) async {
+  static Future<List<Transaction>> _executeSqlList(sql,
+      [List<dynamic> params]) async {
     final data = await db.rawQuery(sql, params);
     List<Transaction> transactions = List();
 
