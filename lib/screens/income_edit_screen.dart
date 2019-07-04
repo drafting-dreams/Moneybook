@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/shared_state/transactions.dart';
+import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/model/transaction.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/api/transaction.dart';
@@ -34,14 +35,15 @@ class _IncomeEdit extends State<IncomeEditScreen> {
   @override
   Widget build(BuildContext context) {
     var transactions = Provider.of<Transactions>(context);
+    var accountState = Provider.of<AccountState>(context);
 
     return Scaffold(
         appBar: AppBar(title: Text('Moneybook'), actions: [
           FlatButton(
             onPressed: () async {
               if (_formKey.currentState.validate()) {
-                Transaction t = Transaction(
-                    double.parse(amountController.text), date,
+                Transaction t = Transaction(double.parse(amountController.text),
+                    date, accountState.currentAccount.id,
                     name: descriptionController.text);
                 await TransactionAPI.add(t);
                 transactions.add(t);

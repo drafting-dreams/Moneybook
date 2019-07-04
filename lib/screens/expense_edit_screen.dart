@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/shared_state/transactions.dart';
+import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/model/transaction.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/api/transaction.dart';
@@ -35,6 +36,7 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
   @override
   Widget build(BuildContext context) {
     var transactions = Provider.of<Transactions>(context);
+    var accountState = Provider.of<AccountState>(context);
 
     return Scaffold(
         appBar: AppBar(title: Text('Moneybook'), actions: [
@@ -42,7 +44,9 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
             onPressed: () async {
               if (_formKey.currentState.validate()) {
                 Transaction t = Transaction(
-                    -double.parse(amountController.text), date,
+                    -double.parse(amountController.text),
+                    date,
+                    accountState.currentAccount.id,
                     type: selectedType,
                     name: descriptionController.text);
                 await TransactionAPI.add(t);
@@ -97,33 +101,33 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                           isExpanded: true,
                           items: [
                             DropdownMenuItem<ExpenseType>(
-                              value: ExpenseType.food,
-                              child: Text(Util.expenseType2String(ExpenseType.food))
-                            ),
+                                value: ExpenseType.food,
+                                child: Text(
+                                    Util.expenseType2String(ExpenseType.food))),
                             DropdownMenuItem<ExpenseType>(
-                              value: ExpenseType.housing,
-                              child: Text(Util.expenseType2String(ExpenseType.housing))
-                            ),
+                                value: ExpenseType.housing,
+                                child: Text(Util.expenseType2String(
+                                    ExpenseType.housing))),
                             DropdownMenuItem<ExpenseType>(
-                              value: ExpenseType.entertainment,
-                              child: Text(Util.expenseType2String(ExpenseType.entertainment))
-                            ),
+                                value: ExpenseType.entertainment,
+                                child: Text(Util.expenseType2String(
+                                    ExpenseType.entertainment))),
                             DropdownMenuItem<ExpenseType>(
-                              value: ExpenseType.communication,
-                              child: Text(Util.expenseType2String(ExpenseType.communication))
-                            ),
+                                value: ExpenseType.communication,
+                                child: Text(Util.expenseType2String(
+                                    ExpenseType.communication))),
                             DropdownMenuItem<ExpenseType>(
-                              value: ExpenseType.cloth,
-                              child: Text(Util.expenseType2String(ExpenseType.cloth))
-                            ),
+                                value: ExpenseType.cloth,
+                                child: Text(Util.expenseType2String(
+                                    ExpenseType.cloth))),
                             DropdownMenuItem<ExpenseType>(
-                              value: ExpenseType.electronic,
-                              child: Text(Util.expenseType2String(ExpenseType.electronic))
-                            ),
+                                value: ExpenseType.electronic,
+                                child: Text(Util.expenseType2String(
+                                    ExpenseType.electronic))),
                             DropdownMenuItem<ExpenseType>(
-                              value: ExpenseType.others,
-                              child: Text(Util.expenseType2String(ExpenseType.others))
-                            ),
+                                value: ExpenseType.others,
+                                child: Text(Util.expenseType2String(
+                                    ExpenseType.others))),
                           ],
                           onChanged: (value) {
                             setState(() {

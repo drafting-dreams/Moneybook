@@ -9,13 +9,15 @@ class Transaction {
   String id; // timestamp
   String name = '';
   double value;
+  String accountId;
   DateTime date;
   ExpenseType type;
 
-  Transaction(double v, DateTime dt, {ExpenseType type, String name}) {
+  Transaction(double v, DateTime dt, String accountId, {ExpenseType type, String name}) {
     this.id = RandomGenerator.str(ID_PREFIX_LENGTH) +
         new DateTime.now().millisecondsSinceEpoch.toString();
     this.date = new DateTime.now();
+    this.accountId = accountId;
     if (name != null) {
       this.name = name;
     }
@@ -29,6 +31,7 @@ class Transaction {
     this.id = json[DatabaseCreator.transactionId];
     this.name = json[DatabaseCreator.transactionName];
     this.value = json[DatabaseCreator.transactionValue];
+    this.accountId = json[DatabaseCreator.accountId];
     List<int> date = Util.dbString2date(json[DatabaseCreator.transactionDate]);
     this.date = new DateTime(date[0], date[1], date[2]);
     if (json[DatabaseCreator.transactionType] != null) {

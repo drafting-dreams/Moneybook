@@ -41,24 +41,16 @@ class _MyAppState extends State<MyApp> {
     AccountAPI.getCurrentAccount().then((Account account) {
       currentAccount = account;
       accountState.setCurrentAccount(currentAccount);
-    });
-
-    final now = DateTime.now();
-    final nextMonth = now.month == 12
-        ? DateTime(now.year + 1, now.month, 1)
-        : DateTime(now.year, now.month + 1, 1);
-    TransactionAPI.loadPrevious(nextMonth).then((List<Transaction> ts) {
-      setState(() {
-        this.transactions.addAll(ts);
-//        this
-//            .transactions
-//            .add(new Transaction(2000, DateTime.now(), name: 'Income'));
-//        this
-//            .transactions
-//            .add(new Transaction(3000, DateTime.now(), name: 'Income'));
-//        this
-//            .transactions
-//            .add(new Transaction(4000, DateTime.now(), name: 'Income'));
+      final now = DateTime.now();
+      final nextMonth = now.month == 12
+          ? DateTime(now.year + 1, now.month, 1)
+          : DateTime(now.year, now.month + 1, 1);
+      TransactionAPI.loadPrevious(accountState.currentAccount.id, nextMonth)
+          .then((List<Transaction> ts) {
+        setState(() {
+          transactions.clear();
+          transactions.addAll(ts);
+        });
       });
     });
   }

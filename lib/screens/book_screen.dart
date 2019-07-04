@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_book/widget/floating_add_button.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/shared_state/transactions.dart';
+import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/model/transaction.dart';
 import 'package:money_book/widget/list/default_list.dart';
@@ -23,37 +24,43 @@ class _BookScreen extends State<BookScreen> {
   List<Map<String, dynamic>> transactionByYear = [];
   List<Map<String, dynamic>> transactionByMonth = [];
 
-  void setActionType(ActionTypes type) {
-    setState(() {
-      _currentActionType = type;
-      switch (type) {
-        case ActionTypes.byDay:
-          break;
-        case ActionTypes.byMonth:
-          TransactionAPI.getListByMonth(DateTime.now().year).then((data) {
-            setState(() {
-              transactionByMonth = data;
+  Function setActionTypeWrapper(String accountId) {
+    void setActionType(ActionTypes type) {
+      setState(() {
+        _currentActionType = type;
+        switch (type) {
+          case ActionTypes.byDay:
+            break;
+          case ActionTypes.byMonth:
+            TransactionAPI.getListByMonth(accountId, DateTime.now().year)
+                .then((data) {
+              setState(() {
+                transactionByMonth = data;
+              });
             });
-          });
-          break;
-        case ActionTypes.byYear:
-          TransactionAPI.getListByYear().then((data) {
-            setState(() {
-              transactionByYear = data;
+            break;
+          case ActionTypes.byYear:
+            TransactionAPI.getListByYear(accountId).then((data) {
+              setState(() {
+                transactionByYear = data;
+              });
             });
-          });
-      }
-    });
+        }
+      });
+    }
+
+    return setActionType;
   }
 
-  Function _onRefreshWrapper(DateTime referenceDate, Transactions t) {
+  Function _onRefreshWrapper(
+      String accountId, DateTime referenceDate, Transactions t) {
     if (referenceDate == null) {
       Future<void> doNothing() async {}
       return doNothing;
     }
     Future<void> _onRefresh() async {
       List<Transaction> previousTransactions =
-          await TransactionAPI.loadPrevious(referenceDate);
+          await TransactionAPI.loadPrevious(accountId, referenceDate);
       t.addBefore(previousTransactions);
     }
 
@@ -79,9 +86,14 @@ class _BookScreen extends State<BookScreen> {
   @override
   Widget build(BuildContext context) {
     var transactions = Provider.of<Transactions>(context);
+    var accountState = Provider.of<AccountState>(context);
+
+    final String currentAccountId = accountState.currentAccount == null
+        ? ''
+        : accountState.currentAccount.id;
 
     Map<ActionTypes, Function> bodyWidgets = {
-      ActionTypes.byDay: () => DefaultList(_onRefreshWrapper(
+      ActionTypes.byDay: () => DefaultList(_onRefreshWrapper(currentAccountId,
           transactions.previousLoadingReference, transactions)),
       ActionTypes.byYear: () => YearList(transactionByYear),
       ActionTypes.byMonth: () =>
@@ -89,43 +101,42 @@ class _BookScreen extends State<BookScreen> {
     };
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('MoneyBook'),
-        actions: <Widget>[
-          Builder(
-            builder: (innerContext) => IconButton(
-                  icon: Icon(Icons.tune),
-                  onPressed: () => Scaffold.of(innerContext).openEndDrawer(),
-                ),
-          )
-        ],
-      ),
-      endDrawer: Drawer(
-          child: ListView(
-        children: <Widget>[
-          RadioListTile<ActionTypes>(
-            value: ActionTypes.byDay,
-            title: Text('Default'),
-            groupValue: _currentActionType,
-            onChanged: setActionType,
-          ),
-          RadioListTile<ActionTypes>(
-            value: ActionTypes.byMonth,
-            title: Text('By Month'),
-            groupValue: _currentActionType,
-            onChanged: setActionType,
-          ),
-          RadioListTile<ActionTypes>(
-            value: ActionTypes.byYear,
-            title: Text('By Year'),
-            groupValue: _currentActionType,
-            onChanged: setActionType,
-          ),
-        ],
-      )),
-      floatingActionButton: FloatingAddButton(),
-      body: bodyWidgets[_currentActionType](),
-      bottomNavigationBar: BottomNavigator(initialIndex: 0)
-    );
+        appBar: AppBar(
+          title: Text('MoneyBook'),
+          actions: <Widget>[
+            Builder(
+              builder: (innerContext) => IconButton(
+                    icon: Icon(Icons.tune),
+                    onPressed: () => Scaffold.of(innerContext).openEndDrawer(),
+                  ),
+            )
+          ],
+        ),
+        endDrawer: Drawer(
+            child: ListView(
+          children: <Widget>[
+            RadioListTile<ActionTypes>(
+              value: ActionTypes.byDay,
+              title: Text('Default'),
+              groupValue: _currentActionType,
+              onChanged: setActionTypeWrapper(currentAccountId),
+            ),
+            RadioListTile<ActionTypes>(
+              value: ActionTypes.byMonth,
+              title: Text('By Month'),
+              groupValue: _currentActionType,
+              onChanged: setActionTypeWrapper(currentAccountId),
+            ),
+            RadioListTile<ActionTypes>(
+              value: ActionTypes.byYear,
+              title: Text('By Year'),
+              groupValue: _currentActionType,
+              onChanged: setActionTypeWrapper(currentAccountId),
+            ),
+          ],
+        )),
+        floatingActionButton: FloatingAddButton(),
+        body: bodyWidgets[_currentActionType](),
+        bottomNavigationBar: BottomNavigator(initialIndex: 0));
   }
 }

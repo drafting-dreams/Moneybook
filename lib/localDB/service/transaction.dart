@@ -3,22 +3,25 @@ import 'package:money_book/localDB/database_creator.dart';
 import 'package:money_book/utils/util.dart';
 
 class TransactionService {
-  static Future<void> addTransaction(Transaction transaction) async {
+  static Future<void> addTransaction(
+      Transaction transaction) async {
     final sql = '''INSERT INTO ${DatabaseCreator.transactionTable}
     (
       ${DatabaseCreator.transactionId},
       ${DatabaseCreator.transactionName},
       ${DatabaseCreator.transactionValue},
       ${DatabaseCreator.transactionDate},
-      ${DatabaseCreator.transactionType}
+      ${DatabaseCreator.transactionType},
+      ${DatabaseCreator.accountId}
     )
-    VALUES(?,?,?,?,?)''';
+    VALUES(?,?,?,?,?,?)''';
     List<dynamic> params = [
       transaction.id,
       transaction.name,
       transaction.value,
       Util.date2DBString(transaction.date),
-      transaction.type.toString()
+      transaction.type.toString(),
+      transaction.accountId
     ];
     final result = await db.rawInsert(sql, params);
     DatabaseCreator.databaseLog('Add Transaction', sql, null, result, params);
@@ -33,37 +36,42 @@ class TransactionService {
         'Delete transaction by account', sql, null, null, params);
   }
 
-  static Future<List<Transaction>> getAll() async {
+  static Future<List<Transaction>> getAll(String accountId) async {
     final sql = '''SELECT * FROM ${DatabaseCreator.transactionTable}
+    WHERE ${DatabaseCreator.accountId} = ?
     ''';
-    final re = await _executeSqlList(sql);
-    return re;
-  }
-
-  static Future<List<Transaction>> getListByDate(DateTime start,
-      [DateTime end]) async {
-    final s = Util.date2DBString(start);
-    final e = Util.date2DBString(end);
-    final sql = '''SELECT * FROM ${DatabaseCreator.transactionTable}
-    WHERE ${DatabaseCreator.transactionDate} >= ?
-    AND ${DatabaseCreator.transactionDate} <= ?
-    ORDER BY ${DatabaseCreator.transactionDate} ASC
-    ''';
-    List<dynamic> params = [s, e];
+    List<dynamic> params = [accountId];
     final re = await _executeSqlList(sql, params);
     return re;
   }
 
-  static Future<DateTime> getNearestDate(DateTime referenceDate) async {
+  static Future<List<Transaction>> getListByDate(
+      String accountId, DateTime start,
+      [DateTime end]) async {
+    final s = Util.date2DBString(start);
+    final e = Util.date2DBString(end);
+    final sql = '''SELECT * FROM ${DatabaseCreator.transactionTable}
+    WHERE ${DatabaseCreator.accountId} = ?
+    AND ${DatabaseCreator.transactionDate} >= ?
+    AND ${DatabaseCreator.transactionDate} <= ?
+    ORDER BY ${DatabaseCreator.transactionDate} ASC
+    ''';
+    List<dynamic> params = [accountId, s, e];
+    final re = await _executeSqlList(sql, params);
+    return re;
+  }
+
+  static Future<DateTime> getNearestDate(String accountId, DateTime referenceDate) async {
     final previousMonthLastDay =
         DateTime(referenceDate.year, referenceDate.month, 0);
     final d = Util.date2DBString(previousMonthLastDay);
     final sql =
         '''SELECT ${DatabaseCreator.transactionDate} FROM ${DatabaseCreator.transactionTable}
-    WHERE ${DatabaseCreator.transactionDate} <= ?
+    WHERE ${DatabaseCreator.accountId} = ?
+    AND ${DatabaseCreator.transactionDate} <= ?
     ORDER BY ${DatabaseCreator.transactionDate} DESC LIMIT 1
     ''';
-    List<dynamic> params = [d];
+    List<dynamic> params = [accountId, d];
     final data = await db.rawQuery(sql, params);
     if (data.length < 1) {
       throw NoNearestDateException();
@@ -73,14 +81,15 @@ class TransactionService {
     return DateTime(date[0], date[1], date[2]);
   }
 
-  static Future<int> getNearestYear(int referenceYear) async {
+  static Future<int> getNearestYear(String accountId, int referenceYear) async {
     final d = Util.date2DBString(DateTime(referenceYear, 1, 1));
     final sql =
         ''' SELECT ${DatabaseCreator.transactionDate} FROM ${DatabaseCreator.transactionTable}
-    WHERE ${DatabaseCreator.transactionDate} <= ?
+    WHERE ${DatabaseCreator.accountId} = ?
+    AND ${DatabaseCreator.transactionDate} <= ?
     ORDER BY ${DatabaseCreator.transactionDate} DESC LIMIT 1
     ''';
-    List<dynamic> params = [d];
+    List<dynamic> params = [accountId, d];
     final data = await db.rawQuery(sql, params);
     if (data.length < 1) {
       throw NoNearestDateException();

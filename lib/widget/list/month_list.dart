@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/utils/util.dart';
+import 'package:money_book/shared_state/account.dart';
+import 'package:provider/provider.dart';
 
 class MonthList extends StatelessWidget {
   final Function refresh;
   final List<Map<String, dynamic>> monthTransactionTotalList;
 
-  Future<void> _onRefresh() async {
-    if (monthTransactionTotalList.length > 0) {
-      List<Map<String, dynamic>> previous =
-          await TransactionAPI.loadPreviousYear(
-              monthTransactionTotalList[0]['year']);
-      refresh(previous);
+  Function onRefreshWrapper(String accountId) {
+    Future<void> _onRefresh() async {
+      if (monthTransactionTotalList.length > 0) {
+        List<Map<String, dynamic>> previous =
+            await TransactionAPI.loadPreviousYear(
+                accountId, monthTransactionTotalList[0]['year']);
+        refresh(previous);
+      }
     }
+
+    return _onRefresh;
   }
 
   MonthList(this.refresh, this.monthTransactionTotalList);
 
   build(BuildContext context) {
+    var accountState = Provider.of<AccountState>(context);
     return RefreshIndicator(
-        onRefresh: _onRefresh,
+        onRefresh: onRefreshWrapper(accountState.currentAccount.id),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: monthTransactionTotalList.length,
