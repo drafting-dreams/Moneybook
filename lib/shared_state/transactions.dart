@@ -8,6 +8,10 @@ class Transactions extends ChangeNotifier {
 
   void clear() {this.transactions = [];notifyListeners();}
 
+  void sort() {
+    transactions.sort((a, b) => a.date.compareTo(b.date));
+  }
+
   void add(Transaction t) {
     // Find the first transaction's date which is after the added one, and insert it here
     final idx = this.transactions.indexWhere((element) => t.date.compareTo(element.date) < 0);
@@ -18,6 +22,14 @@ class Transactions extends ChangeNotifier {
       this.transactions.add(t);
       notifyListeners();
     }
+  }
+
+  void update(String id, Transaction info) {
+    final idx = transactions.indexWhere((element) => id == element.id);
+    transactions[idx].value = info.value;
+    transactions[idx].name = info.name;
+    transactions[idx].date = info.date;
+    transactions[idx].type = info.type;
   }
 
   void addAll(List<Transaction> t) {

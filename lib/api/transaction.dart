@@ -4,11 +4,20 @@ import 'package:money_book/localDB/service/account.dart';
 import 'package:money_book/model/account.dart';
 
 class TransactionAPI {
+  static Future<Transaction> getTransactionById(String id) async {
+    final transaction = await TransactionService.getTransactionById(id);
+    return transaction;
+  }
+
   static Future<void> add(Transaction t) async {
     await TransactionService.addTransaction(t);
     Account account = await AccountService.getAccountById(t.accountId);
     await AccountService.updateAccount(
         account.id, account.name, account.balance + t.value);
+  }
+
+  static Future<void> modify(String id, Transaction newTransactionInfo) async {
+    await TransactionService.updateTransaction(id, newTransactionInfo);
   }
 
   static Future<List<Transaction>> getAll(String accountId) async {

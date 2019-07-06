@@ -7,6 +7,10 @@ import 'package:money_book/utils/util.dart';
 import 'package:money_book/api/transaction.dart';
 
 class IncomeEditScreen extends StatefulWidget {
+  String id;
+
+  IncomeEditScreen({this.id});
+
   @override
   State<StatefulWidget> createState() {
     return _IncomeEdit();
@@ -19,6 +23,20 @@ class _IncomeEdit extends State<IncomeEditScreen> {
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
   DateTime date = DateTime.now();
+
+  void initState() {
+    super.initState();
+    if (widget.id != null) {
+      TransactionAPI.getTransactionById(widget.id)
+          .then((Transaction transaction) {
+        setState(() {
+          amountController.text = transaction.value.toString();
+          descriptionController.text = transaction.name;
+          date = transaction.date;
+        });
+      });
+    }
+  }
 
   Future _selectDate() async {
     DateTime picked = await showDatePicker(
@@ -45,8 +63,20 @@ class _IncomeEdit extends State<IncomeEditScreen> {
                 Transaction t = Transaction(double.parse(amountController.text),
                     date, accountState.currentAccount.id,
                     name: descriptionController.text);
-                await TransactionAPI.add(t);
-                transactions.add(t);
+                if (widget.id == null) {
+                  await TransactionAPI.add(t);
+                  Transaction firstTransaction = transactions.get(0);
+                  if (t.date.compareTo(firstTransaction.date) < 0 &&
+                      (t.date.month != firstTransaction.date.month ||
+                          t.date.year != firstTransaction.date.year)) {
+                  } else {
+                    transactions.add(t);
+                  }
+                } else {
+                  await TransactionAPI.modify(widget.id, t);
+                  transactions.update(widget.id, t);
+                }
+
                 Navigator.of(context).pop();
               } else {
                 setState(() {

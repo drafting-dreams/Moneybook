@@ -7,6 +7,10 @@ import 'package:money_book/utils/util.dart';
 import 'package:money_book/api/transaction.dart';
 
 class ExpenseEditScreen extends StatefulWidget {
+  String id;
+
+  ExpenseEditScreen({this.id});
+
   @override
   State<StatefulWidget> createState() {
     return _ExpenseEdit();
@@ -20,6 +24,21 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
   final descriptionController = TextEditingController();
   DateTime date = DateTime.now();
   ExpenseType selectedType = ExpenseType.food;
+
+  void initState() {
+    super.initState();
+    if (widget.id != null) {
+      TransactionAPI.getTransactionById(widget.id)
+          .then((Transaction transaction) {
+        setState(() {
+          amountController.text = (-transaction.value).toString();
+          descriptionController.text = transaction.name;
+          date = transaction.date;
+          selectedType = transaction.type;
+        });
+      });
+    }
+  }
 
   Future _selectDate() async {
     DateTime picked = await showDatePicker(
@@ -49,8 +68,13 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                     accountState.currentAccount.id,
                     type: selectedType,
                     name: descriptionController.text);
-                await TransactionAPI.add(t);
-                transactions.add(t);
+                if (widget.id == null) {
+                  await TransactionAPI.add(t);
+                  transactions.add(t);
+                } else {
+                  await TransactionAPI.modify(widget.id, t);
+                  transactions.update(widget.id, t);
+                }
                 Navigator.of(context).pop();
               } else {
                 setState(() {

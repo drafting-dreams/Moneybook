@@ -3,8 +3,16 @@ import 'package:money_book/localDB/database_creator.dart';
 import 'package:money_book/utils/util.dart';
 
 class TransactionService {
-  static Future<void> addTransaction(
-      Transaction transaction) async {
+  static Future<Transaction> getTransactionById(String id) async {
+    final sql = '''SELECT * FROM ${DatabaseCreator.transactionTable}
+    WHERE ${DatabaseCreator.transactionId} = ?''';
+
+    List<dynamic> params = [id];
+    final transactions = await _executeSqlList(sql, params);
+    return transactions[0];
+  }
+
+  static Future<void> addTransaction(Transaction transaction) async {
     final sql = '''INSERT INTO ${DatabaseCreator.transactionTable}
     (
       ${DatabaseCreator.transactionId},
@@ -25,6 +33,27 @@ class TransactionService {
     ];
     final result = await db.rawInsert(sql, params);
     DatabaseCreator.databaseLog('Add Transaction', sql, null, result, params);
+  }
+
+  static Future<void> updateTransaction(
+      String id, Transaction transaction) async {
+    final sql = '''UPDATE ${DatabaseCreator.transactionTable}
+    SET ${DatabaseCreator.transactionName} = ?,
+    ${DatabaseCreator.transactionValue} = ?,
+    ${DatabaseCreator.transactionDate} = ?,
+    ${DatabaseCreator.transactionType} = ?
+    WHERE ${DatabaseCreator.transactionId} = ?''';
+
+    List<dynamic> params = [
+      transaction.name,
+      transaction.value,
+      Util.date2DBString(transaction.date),
+      transaction.type.toString(),
+      id
+    ];
+    final result = await db.rawUpdate(sql, params);
+    DatabaseCreator.databaseLog(
+        'Update transaction', sql, null, result, params);
   }
 
   static Future<void> deleteTransactionsByAccount(String id) async {
@@ -61,7 +90,8 @@ class TransactionService {
     return re;
   }
 
-  static Future<DateTime> getNearestDate(String accountId, DateTime referenceDate) async {
+  static Future<DateTime> getNearestDate(
+      String accountId, DateTime referenceDate) async {
     final previousMonthLastDay =
         DateTime(referenceDate.year, referenceDate.month, 0);
     final d = Util.date2DBString(previousMonthLastDay);
