@@ -1,12 +1,32 @@
 import 'package:flutter/foundation.dart';
 import 'package:money_book/model/transaction.dart';
 
+enum TransactionClass { all, income, expense }
+
 class Transactions extends ChangeNotifier {
   List<Transaction> transactions = [];
+  TransactionClass tc = TransactionClass.all;
 
-  Transactions();
+  List<Transaction> get filtered {
+    switch (tc) {
+      case TransactionClass.expense:
+        return transactions.where((Transaction t) => t.value < 0).toList();
+      case TransactionClass.income:
+        return transactions.where((Transaction t) => t.value > 0).toList();
+      default:
+        return transactions;
+    }
+  }
 
-  void clear() {this.transactions = [];notifyListeners();}
+  void clear() {
+    this.transactions = [];
+    notifyListeners();
+  }
+
+  void setClass(TransactionClass c) {
+    tc = c;
+    notifyListeners();
+  }
 
   void sort() {
     transactions.sort((a, b) => a.date.compareTo(b.date));
@@ -14,7 +34,9 @@ class Transactions extends ChangeNotifier {
 
   void add(Transaction t) {
     // Find the first transaction's date which is after the added one, and insert it here
-    final idx = this.transactions.indexWhere((element) => t.date.compareTo(element.date) < 0);
+    final idx = this
+        .transactions
+        .indexWhere((element) => t.date.compareTo(element.date) < 0);
     if (idx > 0) {
       this.transactions.insert(idx, t);
       notifyListeners();
@@ -26,10 +48,20 @@ class Transactions extends ChangeNotifier {
 
   void update(String id, Transaction info) {
     final idx = transactions.indexWhere((element) => id == element.id);
-    transactions[idx].value = info.value;
-    transactions[idx].name = info.name;
-    transactions[idx].date = info.date;
-    transactions[idx].type = info.type;
+    if (info.date.compareTo(transactions[0].date) < 0 &&
+        (info.date.month != transactions[0].date.month ||
+            info.date.year != transactions[0].date.year)) {
+      transactions.removeAt(idx);
+    } else {
+      Transaction old = transactions[idx];
+      old.value = info.value;
+      old.name = info.name;
+      old.date = info.date;
+      old.type = info.type;
+      transactions.removeAt(idx);
+      this.add(old);
+    }
+
   }
 
   void addAll(List<Transaction> t) {
@@ -43,23 +75,23 @@ class Transactions extends ChangeNotifier {
   }
 
   Transaction get(int i) {
-    return this.transactions[i];
+    return this.filtered[i];
   }
 
   int get length {
-    return this.transactions.length;
+    return this.filtered.length;
   }
 
   DateTime get previousLoadingReference {
     if (this.transactions.length < 1) {
-      return null;
+      return DateTime.now();
     }
     return this.transactions[0].date;
   }
 
   double getTotalOfMonth(DateTime dt) {
     return this
-        .transactions
+        .filtered
         .where((transaction) =>
             dt.year == transaction.date.year &&
             dt.month == transaction.date.month)

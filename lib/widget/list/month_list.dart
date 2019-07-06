@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/shared_state/account.dart';
+import 'package:money_book/shared_state/transactions.dart';
 import 'package:provider/provider.dart';
 
 class MonthList extends StatelessWidget {
   final Function refresh;
   final List<Map<String, dynamic>> monthTransactionTotalList;
 
-  Function onRefreshWrapper(String accountId) {
+  Function onRefreshWrapper(String accountId, TransactionClass tc) {
     Future<void> _onRefresh() async {
       if (monthTransactionTotalList.length > 0) {
         List<Map<String, dynamic>> previous =
             await TransactionAPI.loadPreviousYear(
-                accountId, monthTransactionTotalList[0]['year']);
+                accountId, monthTransactionTotalList[0]['year'], tc);
         refresh(previous);
       }
     }
@@ -23,10 +24,19 @@ class MonthList extends StatelessWidget {
 
   MonthList(this.refresh, this.monthTransactionTotalList);
 
+  TextStyle style(double total) {
+    print(total);
+    return total > 0
+        ? TextStyle(color: Colors.green[600])
+        : total < 0 ? TextStyle(color: Colors.red[600]) : null;
+  }
+
   build(BuildContext context) {
+    var transactions = Provider.of<Transactions>(context);
     var accountState = Provider.of<AccountState>(context);
     return RefreshIndicator(
-        onRefresh: onRefreshWrapper(accountState.currentAccount.id),
+        onRefresh:
+            onRefreshWrapper(accountState.currentAccount.id, transactions.tc),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: monthTransactionTotalList.length,
@@ -53,9 +63,7 @@ class MonthList extends StatelessWidget {
                               fontSize: 16, fontWeight: FontWeight.bold)),
                       Text(total,
                           textAlign: TextAlign.right,
-                          style: totalAmount > 0
-                              ? TextStyle(color: Colors.green[600])
-                              : TextStyle(color: Colors.red[600]))
+                          style: style(totalAmount))
                     ]),
               );
             }
@@ -68,10 +76,7 @@ class MonthList extends StatelessWidget {
                   title: Text(Util.getMonthName(e['month'])),
                   trailing: Text(
                       (e['amount'] > 0 ? '+' : '') + e['amount'].toString(),
-                      style: TextStyle(
-                          color: e['amount'] > 0
-                              ? Colors.green[600]
-                              : Colors.red[600])),
+                      style: style(e['amount'])),
                 )
               ],
             );

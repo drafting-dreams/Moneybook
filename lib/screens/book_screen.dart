@@ -24,7 +24,7 @@ class _BookScreen extends State<BookScreen> {
   List<Map<String, dynamic>> transactionByYear = [];
   List<Map<String, dynamic>> transactionByMonth = [];
 
-  Function setActionTypeWrapper(String accountId) {
+  Function setActionTypeWrapper(String accountId, TransactionClass tc) {
     void setActionType(ActionTypes type) {
       setState(() {
         _currentActionType = type;
@@ -32,7 +32,7 @@ class _BookScreen extends State<BookScreen> {
           case ActionTypes.byDay:
             break;
           case ActionTypes.byMonth:
-            TransactionAPI.getListByMonth(accountId, DateTime.now().year)
+            TransactionAPI.getListByMonth(accountId, DateTime.now().year, tc)
                 .then((data) {
               setState(() {
                 transactionByMonth = data;
@@ -40,7 +40,7 @@ class _BookScreen extends State<BookScreen> {
             });
             break;
           case ActionTypes.byYear:
-            TransactionAPI.getListByYear(accountId).then((data) {
+            TransactionAPI.getListByYear(accountId, tc).then((data) {
               setState(() {
                 transactionByYear = data;
               });
@@ -50,6 +50,32 @@ class _BookScreen extends State<BookScreen> {
     }
 
     return setActionType;
+  }
+
+  Function setClassWrapper(String accountId, Transactions ts) {
+    void setClass(TransactionClass transactionClass) {
+      ts.setClass(transactionClass);
+      switch (_currentActionType) {
+        case ActionTypes.byDay:
+          break;
+        case ActionTypes.byMonth:
+          TransactionAPI.getListByMonth(accountId, DateTime.now().year, ts.tc)
+            .then((data) {
+            setState(() {
+              transactionByMonth = data;
+            });
+          });
+          break;
+        case ActionTypes.byYear:
+          TransactionAPI.getListByYear(accountId, ts.tc).then((data) {
+            setState(() {
+              transactionByYear = data;
+            });
+          });
+      }
+    }
+
+    return setClass;
   }
 
   Function _onRefreshWrapper(
@@ -115,23 +141,54 @@ class _BookScreen extends State<BookScreen> {
         endDrawer: Drawer(
             child: ListView(
           children: <Widget>[
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 26.0, vertical: 10.0),
+              child: Text('Class',
+                  style: TextStyle(fontSize: 18, color: Colors.grey[700])),
+            ),
+            RadioListTile<TransactionClass>(
+              value: TransactionClass.all,
+              title: Text('All'),
+              groupValue: transactions.tc,
+              onChanged: setClassWrapper(currentAccountId, transactions),
+            ),
+            RadioListTile<TransactionClass>(
+              value: TransactionClass.income,
+              title: Text('Income'),
+              groupValue: transactions.tc,
+              onChanged: setClassWrapper(currentAccountId, transactions),
+            ),
+            RadioListTile<TransactionClass>(
+              value: TransactionClass.expense,
+              title: Text('Expense'),
+              groupValue: transactions.tc,
+              onChanged: setClassWrapper(currentAccountId, transactions),
+            ),
+            Divider(height: 2.0),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 26.0, vertical: 10.0),
+              child: Text('Time',
+                  style: TextStyle(fontSize: 18, color: Colors.grey[700])),
+            ),
             RadioListTile<ActionTypes>(
               value: ActionTypes.byDay,
               title: Text('Default'),
               groupValue: _currentActionType,
-              onChanged: setActionTypeWrapper(currentAccountId),
+              onChanged: setActionTypeWrapper(currentAccountId, transactions.tc),
             ),
             RadioListTile<ActionTypes>(
               value: ActionTypes.byMonth,
               title: Text('By Month'),
               groupValue: _currentActionType,
-              onChanged: setActionTypeWrapper(currentAccountId),
+              onChanged: setActionTypeWrapper(currentAccountId, transactions.tc),
             ),
             RadioListTile<ActionTypes>(
               value: ActionTypes.byYear,
               title: Text('By Year'),
               groupValue: _currentActionType,
-              onChanged: setActionTypeWrapper(currentAccountId),
+              onChanged: setActionTypeWrapper(currentAccountId, transactions.tc),
             ),
           ],
         )),

@@ -2,6 +2,7 @@ import 'package:money_book/model/transaction.dart';
 import 'package:money_book/localDB/service/transaction.dart';
 import 'package:money_book/localDB/service/account.dart';
 import 'package:money_book/model/account.dart';
+import 'package:money_book/shared_state/transactions.dart';
 
 class TransactionAPI {
   static Future<Transaction> getTransactionById(String id) async {
@@ -51,19 +52,19 @@ class TransactionAPI {
   }
 
   static Future<List<Map<String, dynamic>>> loadPreviousYear(
-      String accountId, int year) async {
+      String accountId, int year, TransactionClass tc) async {
     int nearestYear;
     try {
       nearestYear = await TransactionService.getNearestYear(accountId, year);
     } on NoNearestDateException {
       return List<Map<String, dynamic>>();
     }
-    final re = await getListByMonth(accountId, nearestYear);
+    final re = await getListByMonth(accountId, nearestYear, tc);
     return re;
   }
 
   static Future<List<Map<String, dynamic>>> getListByYear(
-      String accountId) async {
+      String accountId, TransactionClass tc) async {
     var futures = <Future<List<Transaction>>>[];
 
     for (int year = 2019; year <= DateTime.now().year; year++) {
@@ -76,14 +77,28 @@ class TransactionAPI {
     return transactionsGroupByYear.where((list) => list.length > 0).map((list) {
       return {
         'year': list[0].date.year,
-        'amount': list.fold(
-            0.0, (current, transaction) => current + transaction.value)
+        'amount': list.fold(0.0, (current, transaction) {
+          if (tc == TransactionClass.all) {
+            return current + transaction.value;
+          } else {
+            if (tc == TransactionClass.income) {
+              if (transaction.value > 0) {
+                return current + transaction.value;
+              }
+              return current;
+            }
+            if (transaction.value < 0) {
+              return current + transaction.value;
+            }
+            return current;
+          }
+        })
       };
     }).toList();
   }
 
   static Future<List<Map<String, dynamic>>> getListByMonth(
-      String accountId, int year) async {
+      String accountId, int year, TransactionClass tc) async {
     var futures = <Future<List<Transaction>>>[];
 
     for (int month = 1; month <= 12; month++) {
@@ -101,8 +116,22 @@ class TransactionAPI {
       return {
         'year': list[0].date.year,
         'month': list[0].date.month,
-        'amount': list.fold(
-            0.0, (current, transaction) => current + transaction.value)
+        'amount': list.fold(0.0, (current, transaction) {
+          if (tc == TransactionClass.all) {
+            return current + transaction.value;
+          } else {
+            if (tc == TransactionClass.income) {
+              if (transaction.value > 0) {
+                return current + transaction.value;
+              }
+              return current;
+            }
+            if (transaction.value < 0) {
+              return current + transaction.value;
+            }
+            return current;
+          }
+        })
       };
     }).toList();
   }

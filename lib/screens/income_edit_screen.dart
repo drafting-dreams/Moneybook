@@ -41,7 +41,7 @@ class _IncomeEdit extends State<IncomeEditScreen> {
   Future _selectDate() async {
     DateTime picked = await showDatePicker(
         context: context,
-        initialDate: DateTime.now(),
+        initialDate: date != null ? date : DateTime.now(),
         firstDate: DateTime(2019),
         lastDate: DateTime.now());
     if (picked != null)
