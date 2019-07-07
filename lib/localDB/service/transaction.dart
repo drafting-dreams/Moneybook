@@ -56,6 +56,15 @@ class TransactionService {
         'Update transaction', sql, null, result, params);
   }
 
+  static Future<void> deleteTransactionById(String id) async {
+    final sql = '''DELETE FROM ${DatabaseCreator.transactionTable}
+    WHERE ${DatabaseCreator.transactionId} = ?''';
+
+    List<dynamic> params = [id];
+    await db.rawDelete(sql, params);
+    DatabaseCreator.databaseLog('Delete transaction by id', sql, null, null, params);
+  }
+
   static Future<void> deleteTransactionsByAccount(String id) async {
     final sql = '''DELETE FROM ${DatabaseCreator.transactionTable}
     WHERE ${DatabaseCreator.accountId} = ?''';

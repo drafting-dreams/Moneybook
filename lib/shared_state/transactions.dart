@@ -28,6 +28,12 @@ class Transactions extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeById(String id) {
+    transactions
+        .removeAt(transactions.indexWhere((Transaction t) => t.id == id));
+    notifyListeners();
+  }
+
   void sort() {
     transactions.sort((a, b) => a.date.compareTo(b.date));
   }
@@ -35,12 +41,13 @@ class Transactions extends ChangeNotifier {
   void add(Transaction t) {
     Transaction firstTransaction = transactions[0];
     if (t.date.compareTo(firstTransaction.date) < 0 &&
-      (t.date.month != firstTransaction.date.month ||
-        t.date.year != firstTransaction.date.year)) {} else {
+        (t.date.month != firstTransaction.date.month ||
+            t.date.year != firstTransaction.date.year)) {
+    } else {
       // Find the first transaction's date which is after the added one, and insert it here
       final idx = this
-        .transactions
-        .indexWhere((element) => t.date.compareTo(element.date) < 0);
+          .transactions
+          .indexWhere((element) => t.date.compareTo(element.date) < 0);
       if (idx > 0) {
         this.transactions.insert(idx, t);
         notifyListeners();
@@ -66,7 +73,6 @@ class Transactions extends ChangeNotifier {
       transactions.removeAt(idx);
       this.add(old);
     }
-
   }
 
   void addAll(List<Transaction> t) {

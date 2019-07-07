@@ -17,6 +17,16 @@ class TransactionAPI {
         account.id, account.name, account.balance + t.value);
   }
 
+  static Future<void> delete(String id,
+      [String accountId, double transactionValue]) async {
+    await TransactionService.deleteTransactionById(id);
+    if (accountId != null) {
+      Account account = await AccountService.getAccountById(accountId);
+      await AccountService.updateAccount(
+          account.id, account.name, account.balance - transactionValue);
+    }
+  }
+
   static Future<void> modify(String id, Transaction newTransactionInfo) async {
     await TransactionService.updateTransaction(id, newTransactionInfo);
   }

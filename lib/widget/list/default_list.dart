@@ -4,13 +4,41 @@ import 'package:money_book/shared_state/transactions.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/screens/expense_edit_screen.dart';
 import 'package:money_book/screens/income_edit_screen.dart';
+import 'package:money_book/api/transaction.dart';
 import 'package:money_book/model/transaction.dart';
+
+enum DeleteType { NORMAL, CASCADE }
 
 class DefaultList extends StatelessWidget {
   final Function onRefresh;
   final SlidableController slidableController = SlidableController();
 
   DefaultList(this.onRefresh);
+
+  Future<DeleteType> _deletionDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text('Delete Transaction'),
+              content: Text(
+                  "Do you want this operation affect your account's balance?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Yes'),
+                  onPressed: () {
+                    Navigator.of(context).pop(DeleteType.CASCADE);
+                  },
+                ),
+                FlatButton(
+                  child: Text('No'),
+                  onPressed: () {
+                    Navigator.of(context).pop(DeleteType.NORMAL);
+                  },
+                )
+              ],
+            ));
+  }
 
   build(BuildContext context) {
     var transactions = Provider.of<Transactions>(context);
@@ -63,17 +91,35 @@ class DefaultList extends StatelessWidget {
                   actionPane: SlidableDrawerActionPane(),
                   secondaryActions: <Widget>[
                     IconSlideAction(
-                        caption: 'Edit',
-                        color: Colors.grey[350],
-                        icon: Icons.edit,
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                            if (transaction.value >= 0) {
-                              return IncomeEditScreen(id: transaction.id);
-                            }
-                            return ExpenseEditScreen(id: transaction.id);
-                          }));
-                        },
+                      caption: 'Edit',
+                      color: Colors.grey[350],
+                      icon: Icons.edit,
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          if (transaction.value >= 0) {
+                            return IncomeEditScreen(id: transaction.id);
+                          }
+                          return ExpenseEditScreen(id: transaction.id);
+                        }));
+                      },
+                    ),
+                    IconSlideAction(
+                      caption: 'Delete',
+                      color: Colors.red,
+                      icon: Icons.delete,
+                      onTap: () {
+                        _deletionDialog(context).then((DeleteType type) {
+                          if (type == DeleteType.NORMAL) {
+                            TransactionAPI.delete(transaction.id);
+                            transactions.removeById(transaction.id);
+                          } else if (type == DeleteType.CASCADE) {
+                            TransactionAPI.delete(transaction.id,
+                                transaction.accountId, transaction.value);
+                            transactions.removeById(transaction.id);
+                          }
+                        });
+                      },
                     )
                   ],
                   child: ListTile(
