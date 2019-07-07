@@ -5,15 +5,27 @@ import 'package:provider/provider.dart';
 import 'package:money_book/screens/expense_edit_screen.dart';
 import 'package:money_book/screens/income_edit_screen.dart';
 import 'package:money_book/api/transaction.dart';
-import 'package:money_book/model/transaction.dart';
 
 enum DeleteType { NORMAL, CASCADE }
 
-class DefaultList extends StatelessWidget {
+class DefaultList extends StatefulWidget {
   final Function onRefresh;
-  final SlidableController slidableController = SlidableController();
 
   DefaultList(this.onRefresh);
+
+  @override
+  _DefaultListState createState() => _DefaultListState();
+}
+
+class _DefaultListState extends State<DefaultList> {
+  final SlidableController slidableController = SlidableController();
+
+  final List<Map<String, int>> hiddenMonth = [];
+
+  bool hiddenContained(int year, int month) =>
+      hiddenMonth.indexWhere((Map element) =>
+          element['year'] == year && element['month'] == month) !=
+      -1;
 
   Future<DeleteType> _deletionDialog(BuildContext context) async {
     return showDialog(
@@ -45,7 +57,7 @@ class DefaultList extends StatelessWidget {
     return RefreshIndicator(
 //      onRefresh: _onRefreshWrapper(
 //        transactions.previousLoadingReference, transactions),
-      onRefresh: onRefresh,
+      onRefresh: widget.onRefresh,
       child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: transactions.length,
@@ -61,80 +73,112 @@ class DefaultList extends StatelessWidget {
               final totalAmount =
                   transactions.getTotalOfMonth(transaction.date);
               total = (totalAmount > 0 ? '+' : '') + totalAmount.toString();
-              leading = Container(
-                decoration: BoxDecoration(color: Colors.blue[100]),
-                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('${transaction.date.year}/${transaction.date.month}',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
-                      Text(total,
-                          textAlign: TextAlign.right,
-                          style: totalAmount > 0
-                              ? TextStyle(color: Colors.green[600])
-                              : TextStyle(color: Colors.red[600]))
-                    ]),
-              );
+              leading = GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (hiddenContained(
+                          transaction.date.year, transaction.date.month)) {
+                        hiddenMonth.removeWhere((Map element) =>
+                            element['year'] == transaction.date.year &&
+                            element['month'] == transaction.date.month);
+                      } else {
+                        hiddenMonth.add({
+                          'year': transaction.date.year,
+                          'month': transaction.date.month
+                        });
+                      }
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.blue[100]),
+                    padding: EdgeInsets.fromLTRB(10, 15, 5, 15),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                              '${transaction.date.year}/${transaction.date.month}',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          Expanded(
+                            child: Container(),
+                          ),
+                          Text(total,
+                              textAlign: TextAlign.right,
+                              style: totalAmount > 0
+                                  ? TextStyle(color: Colors.green[600])
+                                  : TextStyle(color: Colors.red[600])),
+                          hiddenContained(
+                                  transaction.date.year, transaction.date.month)
+                              ? Icon(Icons.arrow_left)
+                              : Icon(Icons.arrow_drop_down)
+                        ]),
+                  ));
             }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 leading,
-                Divider(
-                  height: 2.0,
-                ),
-                Slidable(
-                  key: ValueKey(index),
-                  controller: slidableController,
-                  actionPane: SlidableDrawerActionPane(),
-                  secondaryActions: <Widget>[
-                    IconSlideAction(
-                      caption: 'Edit',
-                      color: Colors.grey[350],
-                      icon: Icons.edit,
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (BuildContext context) {
-                          if (transaction.value >= 0) {
-                            return IncomeEditScreen(id: transaction.id);
-                          }
-                          return ExpenseEditScreen(id: transaction.id);
-                        }));
-                      },
-                    ),
-                    IconSlideAction(
-                      caption: 'Delete',
-                      color: Colors.red,
-                      icon: Icons.delete,
-                      onTap: () {
-                        _deletionDialog(context).then((DeleteType type) {
-                          if (type == DeleteType.NORMAL) {
-                            TransactionAPI.delete(transaction.id);
-                            transactions.removeById(transaction.id);
-                          } else if (type == DeleteType.CASCADE) {
-                            TransactionAPI.delete(transaction.id,
-                                transaction.accountId, transaction.value);
-                            transactions.removeById(transaction.id);
-                          }
-                        });
-                      },
-                    )
-                  ],
-                  child: ListTile(
-                    title: Text('${transaction.name}'),
-                    subtitle: Text(
-                      (transaction.value > 0 ? '+' : '') +
-                          '${transaction.value}',
-                      style: transaction.value >= 0
-                          ? TextStyle(color: Colors.green[600])
-                          : TextStyle(color: Colors.red[600]),
-                    ),
-                    trailing: Text(
-                        '${transaction.date.day}/${transaction.date.month}'),
-                  ),
-                ),
+                hiddenContained(transaction.date.year, transaction.date.month)
+                    ? Container(
+                        height: 0,
+                      )
+                    : Divider(
+                        height: 2.0,
+                      ),
+                hiddenContained(transaction.date.year, transaction.date.month)
+                    ? Container(
+                        height: 0,
+                      )
+                    : Slidable(
+                        key: ValueKey(index),
+                        controller: slidableController,
+                        actionPane: SlidableDrawerActionPane(),
+                        secondaryActions: <Widget>[
+                          IconSlideAction(
+                            caption: 'Edit',
+                            color: Colors.grey[350],
+                            icon: Icons.edit,
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                if (transaction.value >= 0) {
+                                  return IncomeEditScreen(id: transaction.id);
+                                }
+                                return ExpenseEditScreen(id: transaction.id);
+                              }));
+                            },
+                          ),
+                          IconSlideAction(
+                            caption: 'Delete',
+                            color: Colors.red,
+                            icon: Icons.delete,
+                            onTap: () {
+                              _deletionDialog(context).then((DeleteType type) {
+                                if (type == DeleteType.NORMAL) {
+                                  TransactionAPI.delete(transaction.id);
+                                  transactions.removeById(transaction.id);
+                                } else if (type == DeleteType.CASCADE) {
+                                  TransactionAPI.delete(transaction.id,
+                                      transaction.accountId, transaction.value);
+                                  transactions.removeById(transaction.id);
+                                }
+                              });
+                            },
+                          )
+                        ],
+                        child: ListTile(
+                          title: Text('${transaction.name}'),
+                          subtitle: Text(
+                            (transaction.value > 0 ? '+' : '') +
+                                '${transaction.value}',
+                            style: transaction.value >= 0
+                                ? TextStyle(color: Colors.green[600])
+                                : TextStyle(color: Colors.red[600]),
+                          ),
+                          trailing: Text(
+                              '${transaction.date.day}/${transaction.date.month}'),
+                        ),
+                      ),
               ],
             );
           }),
