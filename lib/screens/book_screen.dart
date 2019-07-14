@@ -8,6 +8,7 @@ import 'package:money_book/model/transaction.dart';
 import 'package:money_book/widget/list/default_list.dart';
 import 'package:money_book/widget/list/month_list.dart';
 import 'package:money_book/widget/list/year_list.dart';
+import 'package:money_book/widget/list/customize_list.dart';
 import 'package:money_book/widget/bottom_navigator.dart';
 import 'package:money_book/widget/expanded_section.dart';
 import 'package:money_book/utils/util.dart';
@@ -31,7 +32,7 @@ class _BookScreen extends State<BookScreen> {
   int endMonth = 12;
   bool expand = false;
 
-  Function setActionTypeWrapper(String accountId, TransactionClass tc) {
+  Function setActionTypeWrapper(String accountId, Transactions ts) {
     void setActionType(ActionTypes type) {
       setState(() {
         _currentActionType = type;
@@ -40,9 +41,20 @@ class _BookScreen extends State<BookScreen> {
             setState(() {
               expand = false;
             });
+            final now = DateTime.now();
+            final nextMonth = now.month == 12
+              ? DateTime(now.year + 1, now.month, 1)
+              : DateTime(now.year, now.month + 1, 1);
+            TransactionAPI.loadPrevious(accountId, nextMonth)
+              .then((List<Transaction> data) {
+              setState(() {
+                ts.clear();
+                ts.addAll(data);
+              });
+            });
             break;
           case ActionTypes.byMonth:
-            TransactionAPI.getListByMonth(accountId, DateTime.now().year, tc)
+            TransactionAPI.getListByMonth(accountId, DateTime.now().year, ts.tc)
                 .then((data) {
               setState(() {
                 transactionByMonth = data;
@@ -51,7 +63,7 @@ class _BookScreen extends State<BookScreen> {
             });
             break;
           case ActionTypes.byYear:
-            TransactionAPI.getListByYear(accountId, tc).then((data) {
+            TransactionAPI.getListByYear(accountId, ts.tc).then((data) {
               setState(() {
                 transactionByYear = data;
                 expand = false;
@@ -62,6 +74,7 @@ class _BookScreen extends State<BookScreen> {
             setState(() {
               expand = true;
             });
+            getFilteredList(accountId, ts);
         }
       });
     }
@@ -118,6 +131,17 @@ class _BookScreen extends State<BookScreen> {
     });
   }
 
+  void getFilteredList(String accountId, Transactions ts) {
+    TransactionAPI.getListByDate(
+      accountId,
+      DateTime(startYear, startMonth),
+      endMonth == 12 ? DateTime(endYear + 1, 1, 0) : DateTime(endYear, endMonth + 1, 0))
+      .then((data) {
+      ts.clear();
+      ts.addAll(data);
+    });
+  }
+
 //  Function _monthFreshWrapper(
 //      int year, List<Map<String, dynamic>> monthTransactionTotalList) {
 //    Future<void> _onRefresh() async {
@@ -143,10 +167,9 @@ class _BookScreen extends State<BookScreen> {
       ActionTypes.byYear: () => YearList(transactionByYear),
       ActionTypes.byMonth: () =>
           MonthList(refreshTransactionByMonth, transactionByMonth),
-      ActionTypes.customize: () => DefaultList(_onRefreshWrapper(
-          currentAccountId,
-          transactions.previousLoadingReference,
-          transactions))
+      ActionTypes.customize: () => CustomizeList(
+          start: DateTime(startYear, startMonth),
+          end: DateTime(endYear, endMonth))
     };
 
     return Scaffold(
@@ -209,96 +232,147 @@ class _BookScreen extends State<BookScreen> {
               title: Text('Default'),
               groupValue: _currentActionType,
               onChanged:
-                  setActionTypeWrapper(currentAccountId, transactions.tc),
+                  setActionTypeWrapper(currentAccountId, transactions),
             ),
             RadioListTile<ActionTypes>(
               value: ActionTypes.byMonth,
               title: Text('By Month'),
               groupValue: _currentActionType,
               onChanged:
-                  setActionTypeWrapper(currentAccountId, transactions.tc),
+                  setActionTypeWrapper(currentAccountId, transactions),
             ),
             RadioListTile<ActionTypes>(
               value: ActionTypes.byYear,
               title: Text('By Year'),
               groupValue: _currentActionType,
               onChanged:
-                  setActionTypeWrapper(currentAccountId, transactions.tc),
+                  setActionTypeWrapper(currentAccountId, transactions),
             ),
             RadioListTile<ActionTypes>(
                 value: ActionTypes.customize,
                 title: Text('Customize'),
                 groupValue: _currentActionType,
                 onChanged:
-                    setActionTypeWrapper(currentAccountId, transactions.tc)),
+                    setActionTypeWrapper(currentAccountId, transactions)),
             ExpandedSection(
                 expand: expand,
-                child: Column(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Row(
+                    Column(
                       children: <Widget>[
-                        Container(width: 50, margin: EdgeInsets.only(left: 26), child: Text('From ')),
-                        DropdownButton<int>(
-                            value: startYear,
-                            onChanged: (int i) {
-                              setState(() {
-                                startYear = i;
-                              });
-                            },
-                            items: <int>[
-                              for (var i = 2019;
-                                  i <= DateTime.now().year;
-                                  i += 1)
-                                i
-                            ]
-                                .map<DropdownMenuItem<int>>((int value) =>
-                                    DropdownMenuItem<int>(
-                                        value: value,
-                                        child: Text(value.toString())))
-                                .toList()),
-                        Container(padding: EdgeInsets.symmetric(horizontal: 10), child: Text('-')),
-                        DropdownButton<int>(
-                            value: startMonth,
-                            onChanged: (int i) {},
-                            items: <int>[for (var i = 1; i <= 12; i += 1) i]
-                                .map<DropdownMenuItem<int>>((int value) =>
-                                    DropdownMenuItem<int>(
-                                        value: value,
-                                        child: Text(Util.getMonthName(value))))
-                                .toList()),
+                        Row(
+                          children: <Widget>[
+                            Container(
+                                width: 50,
+                                margin: EdgeInsets.only(left: 26),
+                                child: Text('From ')),
+                            DropdownButton<int>(
+                                value: startYear,
+                                onChanged: (int i) {
+                                  setState(() {
+                                    startYear = i;
+                                  });
+                                },
+                                items: <int>[
+                                  for (var i = 2019;
+                                      i <= DateTime.now().year;
+                                      i += 1)
+                                    i
+                                ]
+                                    .map<DropdownMenuItem<int>>((int value) =>
+                                        DropdownMenuItem<int>(
+                                            value: value,
+                                            child: Text(value.toString())))
+                                    .toList()),
+                            Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('-')),
+                            DropdownButton<int>(
+                                value: startMonth,
+                                onChanged: (int i) {
+                                  setState(() {
+                                    startMonth = i;
+                                  });
+                                },
+                                items: <int>[for (var i = 1; i <= 12; i += 1) i]
+                                    .map<DropdownMenuItem<int>>((int value) =>
+                                        DropdownMenuItem<int>(
+                                            value: value,
+                                            child:
+                                                Text(Util.getMonthName(value))))
+                                    .toList()),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Container(
+                                width: 50,
+                                margin: EdgeInsets.only(left: 26),
+                                child: Text(' to ')),
+                            DropdownButton<int>(
+                                value: endYear,
+                                onChanged: (int i) {
+                                  setState(() {
+                                    endYear = i;
+                                  });
+                                },
+                                items: <int>[
+                                  for (var i = 2019;
+                                      i <= DateTime.now().year;
+                                      i += 1)
+                                    i
+                                ]
+                                    .map<DropdownMenuItem<int>>((int value) =>
+                                        DropdownMenuItem<int>(
+                                            value: value,
+                                            child: Text(value.toString())))
+                                    .toList()),
+                            Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('-')),
+                            DropdownButton<int>(
+                                value: endMonth,
+                                onChanged: (int i) {
+                                  setState(() {
+                                    endMonth = i;
+                                  });
+                                },
+                                items: <int>[for (var i = 1; i <= 12; i += 1) i]
+                                    .map<DropdownMenuItem<int>>((int value) =>
+                                        DropdownMenuItem<int>(
+                                            value: value,
+                                            child:
+                                                Text(Util.getMonthName(value))))
+                                    .toList()),
+                          ],
+                        )
                       ],
                     ),
-                    Row(
-                      children: <Widget>[
-                        Container(width: 50, margin: EdgeInsets.only(left: 26), child: Text(' to ')),
-                        DropdownButton<int>(
-                            value: endYear,
-                            onChanged: (int i) {},
-                            items: <int>[
-                              for (var i = 2019;
-                                  i <= DateTime.now().year;
-                                  i += 1)
-                                i
-                            ]
-                                .map<DropdownMenuItem<int>>((int value) =>
-                                    DropdownMenuItem<int>(
-                                        value: value,
-                                        child: Text(value.toString())))
-                                .toList()),
-                        Container(padding: EdgeInsets.symmetric(horizontal: 10), child: Text('-')),
-                        DropdownButton<int>(
-                            value: endMonth,
-                            onChanged: (int i) {},
-                            items: <int>[for (var i = 1; i <= 12; i += 1) i]
-                                .map<DropdownMenuItem<int>>((int value) =>
-                                    DropdownMenuItem<int>(
-                                        value: value,
-                                        child: Text(Util.getMonthName(value))))
-                                .toList()),
-                      ],
+                    Transform.translate(
+                      offset: Offset(0, 4),
+                      child: Container(
+                          padding: EdgeInsets.only(
+                            left: 1,
+                          ),
+                          child: SizedBox(
+                            width: 72,
+                            child: RaisedButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                color: Colors.lightBlueAccent,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 19,
+                                ),
+                                onPressed: () {
+                                  getFilteredList(currentAccountId, transactions);
+                                },
+                                child: Text('Filter\nRange')),
+                          )),
                     )
                   ],
-                ))
+                )),
           ],
         )),
         floatingActionButton: FloatingAddButton(),

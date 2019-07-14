@@ -36,6 +36,13 @@ class TransactionAPI {
     return transactions;
   }
 
+  static Future<List<Transaction>> getListByDate(
+      String accountId, DateTime start, DateTime end) async {
+    List<Transaction> transactions =
+        await TransactionService.getListByDate(accountId, start, end);
+    return transactions;
+  }
+
   static Future<List<Transaction>> _getOneMonthList(
       String accountId, DateTime referenceDate) async {
     final start = new DateTime(referenceDate.year, referenceDate.month, 1);

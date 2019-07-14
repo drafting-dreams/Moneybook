@@ -18,6 +18,12 @@ class _ExpandedSectionState extends State<ExpandedSection> with SingleTickerProv
   void initState() {
     super.initState();
     prepareAnimations();
+    if(widget.expand && expandController.isDismissed) {
+      expandController.duration = Duration(milliseconds: 0);
+      expandController.forward().then((void v) {
+        expandController.duration = Duration(milliseconds: 500);
+      });
+    }
   }
 
   ///Setting up the animation
