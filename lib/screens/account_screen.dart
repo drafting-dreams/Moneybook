@@ -122,9 +122,6 @@ class _AccountScreen extends State<AccountScreen> {
             },
           )
         ]),
-        bottomNavigationBar: BottomNavigator(
-          initialIndex: 2,
-        ),
         body: ListView.builder(
           itemCount: accounts.length,
           itemBuilder: (context, index) {
