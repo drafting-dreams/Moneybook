@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_book/widget/no_animation_route.dart';
 import 'package:money_book/screens/account_screen.dart';
+import 'package:money_book/screens/expense_type_setting_screen.dart';
 import 'package:money_book/widget/bottom_navigator.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -11,6 +12,27 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  Widget renderTile(String text, IconData icon, Widget screen) =>
+    InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (BuildContext context) => screen));
+      },
+      child: ListTile(
+        title: Row(
+          children: <Widget>[
+            Container(
+              width: 28,
+              margin: EdgeInsets.only(right: 20),
+              child: Icon(icon, color: Theme
+                .of(context)
+                .accentColor,)),
+            Text(text,)
+          ],
+        ),));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,23 +42,8 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       body: ListView(
         children: <Widget>[
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    NoAnimationMaterialPageRoute(
-                        builder: (BuildContext context) => AccountScreen()));
-              },
-              child: ListTile(
-                  title: Row(
-                children: <Widget>[
-                  Container(
-                      width: 28,
-                      margin: EdgeInsets.only(right: 20),
-                      child: Icon(Icons.account_box, color: Theme.of(context).accentColor,)),
-                  Text('Account',)
-                ],
-              ), trailing: Icon(Icons.chevron_right),))
+          renderTile('Accounts', Icons.account_box, AccountScreen()),
+          renderTile('Expense Type', Icons.category, ExpenseTypeSettingScreen())
         ],
       ),
     );

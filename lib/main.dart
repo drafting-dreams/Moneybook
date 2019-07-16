@@ -14,11 +14,13 @@ import 'package:money_book/model/transaction.dart';
 import 'package:money_book/localDB/database_creator.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/api/account.dart';
+import 'package:money_book/api/expense_type.dart';
 import 'package:money_book/model/account.dart';
 
 void main() async {
   await DatabaseCreator().initDatabase();
   await AccountAPI.initializingAccount();
+  await ExpenseTypeAPI.initializingTypes();
   runApp(MyApp());
 }
 

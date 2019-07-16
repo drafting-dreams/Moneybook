@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:money_book/widget/bottom_navigator.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:money_book/api/account.dart';
 import 'package:money_book/model/account.dart';

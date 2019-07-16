@@ -17,6 +17,8 @@ class DatabaseCreator {
   static const transactionDate = 'date';
   static const transactionValue = 'value';
   static const transactionType = 'type';
+  static const expenseTypeTable = 'expenseTypeTable';
+  static const expenseTypeName = 'expenseTypeName';
 
   static void databaseLog(String functionName, String sql,
     [List<Map<String, dynamic>> selectQueryResult,
@@ -31,6 +33,14 @@ class DatabaseCreator {
     } else if (insertAndUpdateQueryResult != null) {
       print(insertAndUpdateQueryResult);
     }
+  }
+
+  Future<void> createExpenseTypeTable(Database db) async {
+    final todoSql = '''CREATE TABLE $expenseTypeTable
+    (
+      $expenseTypeName TEXT PRIMARY KEY
+    )''';
+    await db.execute(todoSql);
   }
 
   Future<void> createAccountTable(Database db) async {
@@ -63,7 +73,7 @@ class DatabaseCreator {
     final path = join(databasePath, dbName);
 
     if (await Directory(dirname(path)).exists()) {
-//      await deleteDatabase(path);
+      await deleteDatabase(path);
     } else {
       Directory(path).create(recursive: true);
     }
@@ -79,5 +89,6 @@ class DatabaseCreator {
   Future<void> onCreate(Database db, int version) async {
     await createAccountTable(db);
     await createTransactionTable(db);
+    await createExpenseTypeTable(db);
   }
 }

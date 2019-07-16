@@ -1,0 +1,35 @@
+import 'package:money_book/localDB/database_creator.dart';
+
+class ExpenseTypeService {
+  static Future<List<String>> list() async {
+    final sql = '''SELECT * FROM ${DatabaseCreator.expenseTypeTable}''';
+    final data = await db.rawQuery(sql);
+    List<String> types = [];
+
+    for (final node in data) {
+      final type = node[DatabaseCreator.expenseTypeName];
+      types.add(type);
+    }
+    return types;
+  }
+
+  static Future<void> createType(String name) async {
+    final sql = '''INSERT INTO ${DatabaseCreator.expenseTypeTable}
+    (
+      ${DatabaseCreator.expenseTypeName}
+    )
+    VALUES(?)''';
+    List<dynamic> params = [name];
+    final result = await db.rawInsert(sql, params);
+    DatabaseCreator.databaseLog(
+        'Created an expense type', sql, null, result, params);
+  }
+
+  static Future<void> deleteType(String name) async {
+    final sql = '''DELETE FROM ${DatabaseCreator.expenseTypeTable}
+    WHERE ${DatabaseCreator.expenseTypeName} = ?''';
+    List<dynamic> params = [name];
+    await db.rawDelete(sql, params);
+    DatabaseCreator.databaseLog('Delete expense type', sql, null, null, params);
+  }
+}
