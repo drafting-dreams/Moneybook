@@ -15,8 +15,9 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
   final SlidableController slidableController = SlidableController();
   List<String> types = [];
 
-  Future<String> _inputDialog(BuildContext context) async {
-    String typeName = '';
+  Future<String> _inputDialog(BuildContext context, String old) async {
+    TextEditingController controller = TextEditingController();
+    controller.text = old;
     return showDialog<String>(
         context: context,
         barrierDismissible: true,
@@ -27,13 +28,11 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: controller,
                     autofocus: true,
                     decoration: InputDecoration(
                       labelText: 'Type Name',
                     ),
-                    onChanged: (val) {
-                      typeName = val;
-                    },
                   ),
                 )
               ],
@@ -45,7 +44,7 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
                   'Confirm',
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop(typeName);
+                  Navigator.of(context).pop(controller.text);
                 },
               )
             ],
@@ -95,8 +94,8 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
     });
   }
 
-  void createOrModifyType(BuildContext context) {
-    _inputDialog(context).then((String name) {
+  void createOrModifyType(BuildContext context, [String oldName = '']) {
+    _inputDialog(context, oldName).then((String name) {
       print(name);
       if (name.length < 1) {
         showDialog<Confirmation>(
@@ -145,9 +144,15 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
           }
         });
       } else {
-        ExpenseTypeAPI.createType(name).then((void v) {
-          loadData();
-        });
+        if (oldName.length == 0) {
+          ExpenseTypeAPI.createType(name).then((void v) {
+            loadData();
+          });
+        } else {
+          ExpenseTypeAPI.modifyType(oldName, name).then((void v) {
+            loadData();
+          });
+        }
       }
     });
   }
@@ -178,6 +183,13 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
                       controller: slidableController,
                       actionPane: SlidableDrawerActionPane(),
                       secondaryActions: <Widget>[
+                        IconSlideAction(
+                            caption: 'Edit',
+                            color: Colors.grey[350],
+                            icon: Icons.edit,
+                            onTap: () {
+                              createOrModifyType(context, types[index]);
+                            }),
                         IconSlideAction(
                           caption: 'Delete',
                           color: Colors.red,

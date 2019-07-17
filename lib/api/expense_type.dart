@@ -25,7 +25,11 @@ class ExpenseTypeAPI {
   }
 
   static Future<void> createType(String name) async {
-    ExpenseTypeService.createType(name);
+    await ExpenseTypeService.createType(name);
+  }
+
+  static Future<void> modifyType(String oldName, String newName) async {
+    await ExpenseTypeService.updateType(oldName, newName);
   }
 
   static Future<void> deleteType(String name) async {

@@ -25,6 +25,16 @@ class ExpenseTypeService {
         'Created an expense type', sql, null, result, params);
   }
 
+  static Future<void> updateType(String oldName, String newName) async {
+    final sql = '''UPDATE ${DatabaseCreator.expenseTypeTable}
+    SET ${DatabaseCreator.expenseTypeName} = ?
+    WHERE ${DatabaseCreator.expenseTypeName} = ?''';
+
+    List<dynamic> params = [newName, oldName];
+    final result = await db.rawUpdate(sql, params);
+    DatabaseCreator.databaseLog('Update Expense type', sql, null, result, params);
+  }
+
   static Future<void> deleteType(String name) async {
     final sql = '''DELETE FROM ${DatabaseCreator.expenseTypeTable}
     WHERE ${DatabaseCreator.expenseTypeName} = ?''';
