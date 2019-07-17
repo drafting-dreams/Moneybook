@@ -39,6 +39,10 @@ class Transactions extends ChangeNotifier {
   }
 
   void add(Transaction t) {
+    if (transactions.length == 0) {
+      transactions.add(t);
+      return;
+    }
     Transaction firstTransaction = transactions[0];
     if (t.date.compareTo(firstTransaction.date) < 0 &&
         (t.date.month != firstTransaction.date.month ||

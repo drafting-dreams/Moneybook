@@ -5,6 +5,7 @@ import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/model/transaction.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/api/transaction.dart';
+import 'package:money_book/api/expense_type.dart';
 
 class ExpenseEditScreen extends StatefulWidget {
   String id;
@@ -23,10 +24,17 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
   DateTime date = DateTime.now();
-  ExpenseType selectedType = ExpenseType.food;
+  List<String> types = [];
+  String selectedType;
 
   void initState() {
     super.initState();
+    ExpenseTypeAPI.list().then((data) {
+      setState(() {
+        types = data;
+        selectedType = data[0];
+      });
+    });
     if (widget.id != null) {
       TransactionAPI.getTransactionById(widget.id)
           .then((Transaction transaction) {
@@ -121,38 +129,12 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                                 return 'Please input some description about the income';
                               }
                             }),
-                        DropdownButton<ExpenseType>(
+                        DropdownButton<String>(
                           isExpanded: true,
-                          items: [
-                            DropdownMenuItem<ExpenseType>(
-                                value: ExpenseType.food,
-                                child: Text(
-                                    Util.expenseType2String(ExpenseType.food))),
-                            DropdownMenuItem<ExpenseType>(
-                                value: ExpenseType.housing,
-                                child: Text(Util.expenseType2String(
-                                    ExpenseType.housing))),
-                            DropdownMenuItem<ExpenseType>(
-                                value: ExpenseType.entertainment,
-                                child: Text(Util.expenseType2String(
-                                    ExpenseType.entertainment))),
-                            DropdownMenuItem<ExpenseType>(
-                                value: ExpenseType.communication,
-                                child: Text(Util.expenseType2String(
-                                    ExpenseType.communication))),
-                            DropdownMenuItem<ExpenseType>(
-                                value: ExpenseType.cloth,
-                                child: Text(Util.expenseType2String(
-                                    ExpenseType.cloth))),
-                            DropdownMenuItem<ExpenseType>(
-                                value: ExpenseType.electronic,
-                                child: Text(Util.expenseType2String(
-                                    ExpenseType.electronic))),
-                            DropdownMenuItem<ExpenseType>(
-                                value: ExpenseType.others,
-                                child: Text(Util.expenseType2String(
-                                    ExpenseType.others))),
-                          ],
+                          items: types.map((String type) => DropdownMenuItem<String>(
+                            value: type,
+                            child: Text(type)
+                          )).toList(),
                           onChanged: (value) {
                             setState(() {
                               selectedType = value;

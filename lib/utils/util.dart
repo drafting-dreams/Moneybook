@@ -1,5 +1,3 @@
-import 'package:money_book/model/transaction.dart';
-
 class Util {
   static bool isNumeric(String str) {
     try {
@@ -16,10 +14,6 @@ class Util {
 
   static List<int> dbString2date(String str) {
     return str.split('-').map((num) => int.parse(num)).toList();
-  }
-
-  static String expenseType2String(ExpenseType type) {
-    return type.toString().substring(12);
   }
 
   static String getMonthName(int month) {
