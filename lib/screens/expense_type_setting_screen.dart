@@ -15,6 +15,44 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
   final SlidableController slidableController = SlidableController();
   List<String> types = [];
 
+  Future<String> _inputDialog(BuildContext context) async {
+    String typeName = '';
+    return showDialog<String>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Enter the type name'),
+            content: Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: 'Type Name',
+                    ),
+                    onChanged: (val) {
+                      typeName = val;
+                    },
+                  ),
+                )
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                textColor: Theme.of(context).primaryColor,
+                child: Text(
+                  'Confirm',
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(typeName);
+                },
+              )
+            ],
+          );
+        });
+  }
+
   Future<Confirmation> _deletionConfirmDialog(
       BuildContext context, String type) async {
     return showDialog(
@@ -57,10 +95,77 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
     });
   }
 
+  void createOrModifyType(BuildContext context) {
+    _inputDialog(context).then((String name) {
+      print(name);
+      if (name.length < 1) {
+        showDialog<Confirmation>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Wrong name'),
+              content: Text('Please enter a name'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop(Confirmation.ACCEPT);
+                  },
+                )
+              ],
+            );
+          },
+        ).then((Confirmation cf) {
+          if (cf == Confirmation.ACCEPT) {
+            createOrModifyType(context);
+          }
+        });
+      } else if (this.types.contains(name)) {
+        showDialog<Confirmation>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Duplicated name'),
+              content: Text('Please enter another name'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop(Confirmation.ACCEPT);
+                  },
+                )
+              ],
+            );
+          },
+        ).then((Confirmation cf) {
+          if (cf == Confirmation.ACCEPT) {
+            createOrModifyType(context);
+          }
+        });
+      } else {
+        ExpenseTypeAPI.createType(name).then((void v) {
+          loadData();
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Expense Type')),
+        appBar: AppBar(
+          title: Text('Expense Type'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.add_circle_outline),
+              onPressed: () {
+                createOrModifyType(context);
+              },
+            )
+          ],
+        ),
         body: ListView.builder(
             itemCount: types.length,
             itemBuilder: (context, index) {
