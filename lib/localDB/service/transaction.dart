@@ -142,6 +142,30 @@ class TransactionService {
     return result[0]['SUM(${DatabaseCreator.transactionValue})'];
   }
 
+  static Future<Map<String, double>> getSumByDateGroupByType(
+      String accountId, DateTime start, DateTime end) async {
+    final s = Util.date2DBString(start);
+    final e = Util.date2DBString(end);
+    List<dynamic> params = [accountId, s, e];
+    final sql =
+        '''SELECT ${DatabaseCreator.transactionType}, SUM(${DatabaseCreator.transactionValue})
+    FROM ${DatabaseCreator.transactionTable}
+    WHERE ${DatabaseCreator.accountId} = ?
+    AND ${DatabaseCreator.transactionDate} >= ?
+    AND ${DatabaseCreator.transactionDate} <= ?
+    AND ${DatabaseCreator.transactionValue} < 0
+    GROUP BY ${DatabaseCreator.transactionType}
+    ''';
+    final result = await db.rawQuery(sql, params);
+    DatabaseCreator.databaseLog('GetSumByGroup', sql, result, null, params);
+    Map<String, double> re = {};
+    for (var item in result) {
+      re[item[DatabaseCreator.transactionType]] =
+          item['SUM(${DatabaseCreator.transactionValue})'];
+    }
+    return re;
+  }
+
   static Future<DateTime> getNearestDate(
       String accountId, DateTime referenceDate) async {
     final previousMonthLastDay =

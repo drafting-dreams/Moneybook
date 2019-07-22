@@ -14,16 +14,16 @@ class TransactionAPI {
     await TransactionService.addTransaction(t);
     Account account = await AccountService.getAccountById(t.accountId);
     await AccountService.updateAccount(
-        account.id, account.name, account.balance + t.value);
+      account.id, account.name, account.balance + t.value);
   }
 
   static Future<void> delete(String id,
-      [String accountId, double transactionValue]) async {
+    [String accountId, double transactionValue]) async {
     await TransactionService.deleteTransactionById(id);
     if (accountId != null) {
       Account account = await AccountService.getAccountById(accountId);
       await AccountService.updateAccount(
-          account.id, account.name, account.balance - transactionValue);
+        account.id, account.name, account.balance - transactionValue);
     }
   }
 
@@ -36,31 +36,31 @@ class TransactionAPI {
     return transactions;
   }
 
-  static Future<List<Transaction>> getListByDate(
-      String accountId, DateTime start, DateTime end) async {
+  static Future<List<Transaction>> getListByDate(String accountId,
+    DateTime start, DateTime end) async {
     List<Transaction> transactions =
-        await TransactionService.getListByDate(accountId, start, end);
+    await TransactionService.getListByDate(accountId, start, end);
     return transactions;
   }
 
-  static Future<List<Transaction>> _getOneMonthList(
-      String accountId, DateTime referenceDate) async {
+  static Future<List<Transaction>> _getOneMonthList(String accountId,
+    DateTime referenceDate) async {
     final start = new DateTime(referenceDate.year, referenceDate.month, 1);
     // This gives you the previous month's last day
     final end = referenceDate.month == 12
-        ? DateTime(referenceDate.year + 1, 1, 0)
-        : DateTime(referenceDate.year, referenceDate.month + 1, 0);
+      ? DateTime(referenceDate.year + 1, 1, 0)
+      : DateTime(referenceDate.year, referenceDate.month + 1, 0);
     List<Transaction> transactions =
-        await TransactionService.getListByDate(accountId, start, end);
+    await TransactionService.getListByDate(accountId, start, end);
     return transactions;
   }
 
-  static Future<List<Transaction>> loadPrevious(
-      String accountId, DateTime referenceDate) async {
+  static Future<List<Transaction>> loadPrevious(String accountId,
+    DateTime referenceDate) async {
     DateTime nearestDate;
     try {
       nearestDate =
-          await TransactionService.getNearestDate(accountId, referenceDate);
+      await TransactionService.getNearestDate(accountId, referenceDate);
     } on NoNearestDateException {
       return List<Transaction>();
     }
@@ -68,8 +68,8 @@ class TransactionAPI {
     return re;
   }
 
-  static Future<List<Map<String, dynamic>>> loadPreviousYear(
-      String accountId, int year, TransactionClass tc) async {
+  static Future<List<Map<String, dynamic>>> loadPreviousYear(String accountId,
+    int year, TransactionClass tc) async {
     int nearestYear;
     try {
       nearestYear = await TransactionService.getNearestYear(accountId, year);
@@ -80,12 +80,14 @@ class TransactionAPI {
     return re;
   }
 
-  static Future<List<Map<String, dynamic>>> getListByYear(
-      String accountId, TransactionClass tc) async {
+  static Future<List<Map<String, dynamic>>> getListByYear(String accountId,
+    TransactionClass tc) async {
     var futures = <Future<double>>[];
-    for (int year = 2019; year <= DateTime.now().year; year++) {
+    for (int year = 2019; year <= DateTime
+      .now()
+      .year; year++) {
       futures.add(TransactionService.getSumByDate(
-          accountId, DateTime(year, 1, 1), DateTime(year, 12, 31), tc));
+        accountId, DateTime(year, 1, 1), DateTime(year, 12, 31), tc));
     }
     List<double> sums = await Future.wait(futures);
     List<Map<String, dynamic>> re = [];
@@ -95,14 +97,14 @@ class TransactionAPI {
     return re.where((item) => item['amount'] != null).toList();
   }
 
-  static Future<List<Map<String, dynamic>>> getListByMonth(
-      String accountId, int year, TransactionClass tc) async {
+  static Future<List<Map<String, dynamic>>> getListByMonth(String accountId,
+    int year, TransactionClass tc) async {
     var futures = <Future<double>>[];
 
     for (int month = 1; month <= 12; month++) {
       DateTime start = DateTime(year, month, 1);
       DateTime end =
-          month == 12 ? DateTime(year + 1, 1, 0) : DateTime(year, month + 1, 0);
+      month == 12 ? DateTime(year + 1, 1, 0) : DateTime(year, month + 1, 0);
       futures.add(TransactionService.getSumByDate(accountId, start, end, tc));
     }
 
@@ -112,5 +114,17 @@ class TransactionAPI {
       re.add({'year': year, 'month': i + 1, 'amount': sums[i]});
     }
     return re.where((item) => item['amount'] != null).toList();
+  }
+
+  static Future<Map<String, double>> getSumByTypeGroup(String accountId,
+    int year, [int month]) {
+    if (month == null) {
+      return TransactionService.getSumByDateGroupByType(
+        accountId, DateTime(year, 1, 1), DateTime(year, 12, 31));
+    }
+    DateTime end = month == 12 ? DateTime(year + 1, 1, 0) : DateTime(
+      year, month + 1, 0);
+    return TransactionService.getSumByDateGroupByType(
+      accountId, DateTime(year, month, 1), end);
   }
 }

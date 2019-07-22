@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_book/widget/no_animation_route.dart';
 import 'package:money_book/screens/setting_screen.dart';
 import 'package:money_book/screens/book_screen.dart';
+import 'package:money_book/screens/statistic_screen.dart';
 
 class BottomNavigator extends StatelessWidget {
   final int initialIndex;
@@ -17,6 +18,12 @@ class BottomNavigator extends StatelessWidget {
                 context,
                 NoAnimationMaterialPageRoute(
                     builder: (BuildContext context) => BookScreen()));
+            break;
+          case 1:
+            Navigator.pushReplacement(
+              context,
+              NoAnimationMaterialPageRoute(
+                builder: (BuildContext context) => StatisticScreen()));
             break;
           case 2:
             Navigator.pushReplacement(
