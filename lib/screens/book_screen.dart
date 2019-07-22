@@ -43,10 +43,10 @@ class _BookScreen extends State<BookScreen> {
             });
             final now = DateTime.now();
             final nextMonth = now.month == 12
-              ? DateTime(now.year + 1, now.month, 1)
-              : DateTime(now.year, now.month + 1, 1);
+                ? DateTime(now.year + 1, now.month, 1)
+                : DateTime(now.year, now.month + 1, 1);
             TransactionAPI.loadPrevious(accountId, nextMonth)
-              .then((List<Transaction> data) {
+                .then((List<Transaction> data) {
               setState(() {
                 ts.clear();
                 ts.addAll(data);
@@ -133,10 +133,12 @@ class _BookScreen extends State<BookScreen> {
 
   void getFilteredList(String accountId, Transactions ts) {
     TransactionAPI.getListByDate(
-      accountId,
-      DateTime(startYear, startMonth),
-      endMonth == 12 ? DateTime(endYear + 1, 1, 0) : DateTime(endYear, endMonth + 1, 0))
-      .then((data) {
+            accountId,
+            DateTime(startYear, startMonth),
+            endMonth == 12
+                ? DateTime(endYear + 1, 1, 0)
+                : DateTime(endYear, endMonth + 1, 0))
+        .then((data) {
       ts.clear();
       ts.addAll(data);
     });
@@ -231,22 +233,19 @@ class _BookScreen extends State<BookScreen> {
               value: ActionTypes.byDay,
               title: Text('Default'),
               groupValue: _currentActionType,
-              onChanged:
-                  setActionTypeWrapper(currentAccountId, transactions),
+              onChanged: setActionTypeWrapper(currentAccountId, transactions),
             ),
             RadioListTile<ActionTypes>(
               value: ActionTypes.byMonth,
               title: Text('By Month'),
               groupValue: _currentActionType,
-              onChanged:
-                  setActionTypeWrapper(currentAccountId, transactions),
+              onChanged: setActionTypeWrapper(currentAccountId, transactions),
             ),
             RadioListTile<ActionTypes>(
               value: ActionTypes.byYear,
               title: Text('By Year'),
               groupValue: _currentActionType,
-              onChanged:
-                  setActionTypeWrapper(currentAccountId, transactions),
+              onChanged: setActionTypeWrapper(currentAccountId, transactions),
             ),
             RadioListTile<ActionTypes>(
                 value: ActionTypes.customize,
@@ -366,7 +365,8 @@ class _BookScreen extends State<BookScreen> {
                                   vertical: 19,
                                 ),
                                 onPressed: () {
-                                  getFilteredList(currentAccountId, transactions);
+                                  getFilteredList(
+                                      currentAccountId, transactions);
                                 },
                                 child: Text('Filter\nRange')),
                           )),

@@ -22,8 +22,8 @@ class _MonthListState extends State<MonthList> {
     Future<void> _onRefresh() async {
       if (widget.monthTransactionTotalList.length > 0) {
         List<Map<String, dynamic>> previous =
-            await TransactionAPI.loadPreviousYear(
-                accountId, widget.monthTransactionTotalList[0]['year'], tc);
+            await TransactionAPI.getListByMonth(
+                accountId, widget.monthTransactionTotalList[0]['year'] - 1, tc);
         widget.refresh(previous);
       }
     }
