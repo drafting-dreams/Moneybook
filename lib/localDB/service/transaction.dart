@@ -1,4 +1,5 @@
 import 'package:money_book/model/transaction.dart';
+import 'package:money_book/shared_state/transactions.dart';
 import 'package:money_book/localDB/database_creator.dart';
 import 'package:money_book/utils/util.dart';
 
@@ -62,7 +63,8 @@ class TransactionService {
 
     List<dynamic> params = [id];
     await db.rawDelete(sql, params);
-    DatabaseCreator.databaseLog('Delete transaction by id', sql, null, null, params);
+    DatabaseCreator.databaseLog(
+        'Delete transaction by id', sql, null, null, params);
   }
 
   static Future<void> deleteTransactionsByAccount(String id) async {
@@ -97,6 +99,47 @@ class TransactionService {
     List<dynamic> params = [accountId, s, e];
     final re = await _executeSqlList(sql, params);
     return re;
+  }
+
+  static Future<double> getSumByDate(String accountId, DateTime start,
+      DateTime end, TransactionClass tc) async {
+    final s = Util.date2DBString(start);
+    final e = Util.date2DBString(end);
+    List<dynamic> params = [accountId, s, e];
+    String sql;
+    switch (tc) {
+      case TransactionClass.expense:
+        sql =
+            '''SELECT SUM(${DatabaseCreator.transactionValue}) FROM ${DatabaseCreator.transactionTable}
+        WHERE ${DatabaseCreator.accountId} = ?
+        AND ${DatabaseCreator.transactionDate} >= ?
+        AND ${DatabaseCreator.transactionDate} <= ?
+        AND ${DatabaseCreator.transactionValue} < 0''';
+        break;
+      case TransactionClass.income:
+        sql =
+            '''SELECT SUM(${DatabaseCreator.transactionValue}) FROM ${DatabaseCreator.transactionTable}
+        WHERE ${DatabaseCreator.accountId} = ?
+        AND ${DatabaseCreator.transactionDate} >= ?
+        AND ${DatabaseCreator.transactionDate} <= ?
+        AND ${DatabaseCreator.transactionValue} > 0''';
+        break;
+      default:
+        sql =
+            '''SELECT SUM(${DatabaseCreator.transactionValue}) FROM ${DatabaseCreator.transactionTable}
+        WHERE ${DatabaseCreator.accountId} = ?
+        AND ${DatabaseCreator.transactionDate} >= ?
+        AND ${DatabaseCreator.transactionDate} <= ?''';
+    }
+    final result = await db.rawQuery(sql, params);
+    for (var i in result) {
+      i.forEach((String key, dynamic value) {
+        print(key);
+      });
+    }
+    DatabaseCreator.databaseLog(
+        'Get transaction sum', sql, result, null, params);
+    return result[0]['SUM(${DatabaseCreator.transactionValue})'];
   }
 
   static Future<DateTime> getNearestDate(

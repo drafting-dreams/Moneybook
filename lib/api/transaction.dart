@@ -82,36 +82,17 @@ class TransactionAPI {
 
   static Future<List<Map<String, dynamic>>> getListByYear(
       String accountId, TransactionClass tc) async {
-    var futures = <Future<List<Transaction>>>[];
-
+    var futures = <Future<double>>[];
     for (int year = 2019; year <= DateTime.now().year; year++) {
-      futures.add(TransactionService.getListByDate(
-          accountId, DateTime(year, 1, 1), DateTime(year, 12, 31)));
+      futures.add(TransactionService.getSumByDate(
+          accountId, DateTime(year, 1, 1), DateTime(year, 12, 31), tc));
     }
-
-    final List<List<Transaction>> transactionsGroupByYear =
-        await Future.wait(futures);
-    return transactionsGroupByYear.where((list) => list.length > 0).map((list) {
-      return {
-        'year': list[0].date.year,
-        'amount': list.fold(0.0, (current, transaction) {
-          if (tc == TransactionClass.all) {
-            return current + transaction.value;
-          } else {
-            if (tc == TransactionClass.income) {
-              if (transaction.value > 0) {
-                return current + transaction.value;
-              }
-              return current;
-            }
-            if (transaction.value < 0) {
-              return current + transaction.value;
-            }
-            return current;
-          }
-        })
-      };
-    }).toList();
+    List<double> sums = await Future.wait(futures);
+    List<Map<String, dynamic>> re = [];
+    for (var i = 0; i < sums.length; i++) {
+      re.add({'year': 2019 + i, 'amount': sums[i]});
+    }
+    return re;
   }
 
   static Future<List<Map<String, dynamic>>> getListByMonth(

@@ -14,7 +14,7 @@ class ExpenseTypeAPI {
         'housing',
         'entertainment',
         'communication',
-        'cloth',
+        'clothes',
         'electronic',
         'others'
       ];
