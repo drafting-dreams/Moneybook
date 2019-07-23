@@ -9,8 +9,9 @@ import 'package:money_book/api/expense_type.dart';
 
 class ExpenseEditScreen extends StatefulWidget {
   String id;
+  Function update;
 
-  ExpenseEditScreen({this.id});
+  ExpenseEditScreen({this.id, this.update});
 
   @override
   State<StatefulWidget> createState() {
@@ -78,7 +79,14 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                     name: descriptionController.text);
                 if (widget.id == null) {
                   await TransactionAPI.add(t);
-                  transactions.add(t);
+                  Transaction firstTransaction = transactions.get(0);
+                  if (t.date.compareTo(firstTransaction.date) < 0 &&
+                      (t.date.month != firstTransaction.date.month ||
+                          t.date.year != firstTransaction.date.year)) {
+                  } else {
+                    transactions.add(t);
+                  }
+                  this.widget.update();
                 } else {
                   await TransactionAPI.modify(widget.id, t);
                   transactions.update(widget.id, t);
@@ -131,10 +139,10 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                             }),
                         DropdownButton<String>(
                           isExpanded: true,
-                          items: types.map((String type) => DropdownMenuItem<String>(
-                            value: type,
-                            child: Text(type)
-                          )).toList(),
+                          items: types
+                              .map((String type) => DropdownMenuItem<String>(
+                                  value: type, child: Text(type)))
+                              .toList(),
                           onChanged: (value) {
                             setState(() {
                               selectedType = value;

@@ -36,7 +36,7 @@ class _StatisticScreen extends State<StatisticScreen> {
     TransactionAPI.getSumByTypeGroup(
             accountId, year, currentMode == Mode.month ? month : null)
         .then((json) {
-      print(json);
+//      print(json);
     });
   }
 

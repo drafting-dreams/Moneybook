@@ -43,6 +43,7 @@ class Transactions extends ChangeNotifier {
       transactions.add(t);
       return;
     }
+    print('in add');
     Transaction firstTransaction = transactions[0];
     if (t.date.compareTo(firstTransaction.date) < 0 &&
         (t.date.month != firstTransaction.date.month ||
@@ -52,7 +53,7 @@ class Transactions extends ChangeNotifier {
       final idx = this
           .transactions
           .indexWhere((element) => t.date.compareTo(element.date) < 0);
-      if (idx > 0) {
+      if (idx >= 0) {
         this.transactions.insert(idx, t);
         notifyListeners();
       } else if (idx < 0) {

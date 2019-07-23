@@ -8,8 +8,9 @@ import 'package:money_book/api/transaction.dart';
 
 class IncomeEditScreen extends StatefulWidget {
   String id;
+  Function update;
 
-  IncomeEditScreen({this.id});
+  IncomeEditScreen({this.id, this.update});
 
   @override
   State<StatefulWidget> createState() {
@@ -72,11 +73,11 @@ class _IncomeEdit extends State<IncomeEditScreen> {
                   } else {
                     transactions.add(t);
                   }
+                  this.widget.update();
                 } else {
                   await TransactionAPI.modify(widget.id, t);
                   transactions.update(widget.id, t);
                 }
-
                 Navigator.of(context).pop();
               } else {
                 setState(() {

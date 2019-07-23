@@ -54,21 +54,10 @@ class _BookScreen extends State<BookScreen> {
             });
             break;
           case ActionTypes.byMonth:
-            TransactionAPI.getListByMonth(accountId, DateTime.now().year, ts.tc)
-                .then((data) {
-              setState(() {
-                transactionByMonth = data;
-                expand = false;
-              });
-            });
+            updateMonthList(accountId, ts.tc);
             break;
           case ActionTypes.byYear:
-            TransactionAPI.getListByYear(accountId, ts.tc).then((data) {
-              setState(() {
-                transactionByYear = data;
-                expand = false;
-              });
-            });
+            updateYearList(accountId, ts.tc);
             break;
           case ActionTypes.customize:
             setState(() {
@@ -89,25 +78,38 @@ class _BookScreen extends State<BookScreen> {
         case ActionTypes.byDay:
           break;
         case ActionTypes.byMonth:
-          TransactionAPI.getListByMonth(accountId, DateTime.now().year, ts.tc)
-              .then((data) {
-            setState(() {
-              transactionByMonth = data;
-            });
-          });
+          updateMonthList(accountId, ts.tc);
           break;
         case ActionTypes.byYear:
-          TransactionAPI.getListByYear(accountId, ts.tc).then((data) {
-            setState(() {
-              transactionByYear = data;
-            });
-          });
+          updateYearList(accountId, ts.tc);
           break;
         case ActionTypes.customize:
       }
     }
 
     return setClass;
+  }
+
+  void updateBoth(String accountId, TransactionClass tc) {
+    updateMonthList(accountId, tc);
+    updateYearList(accountId, tc);
+  }
+
+  void updateMonthList(String accountId, TransactionClass tc) {
+    TransactionAPI.getListByMonth(accountId, DateTime.now().year, tc)
+      .then((data) {
+      setState(() {
+        transactionByMonth = data;
+      });
+    });
+  }
+
+  void updateYearList(String accountId, TransactionClass tc) {
+    TransactionAPI.getListByYear(accountId, tc).then((data) {
+      setState(() {
+        transactionByYear = data;
+      });
+    });
   }
 
   Function _onRefreshWrapper(
@@ -375,7 +377,7 @@ class _BookScreen extends State<BookScreen> {
                 )),
           ],
         )),
-        floatingActionButton: FloatingAddButton(),
+        floatingActionButton: FloatingAddButton(update: () {this.updateBoth(accountState.currentAccount.id, transactions.tc);},),
         body: bodyWidgets[_currentActionType](),
         bottomNavigationBar: BottomNavigator(initialIndex: 0));
   }
