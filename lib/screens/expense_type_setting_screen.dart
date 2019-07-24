@@ -80,6 +80,28 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
         });
   }
 
+  Future<Confirmation> _fallbackDialog(BuildContext context) {
+    final content = types.length == 1
+        ? 'There must be at least one expense type.'
+        : "The  maximum number of expense type is 12.";
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Types number limit'),
+            content: Text(content),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(Confirmation.ACCEPT);
+                  },
+                  child: Text('OK'))
+            ],
+          );
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -166,6 +188,10 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
             IconButton(
               icon: Icon(Icons.add_circle_outline),
               onPressed: () {
+                if (types.length == 12) {
+                  _fallbackDialog(context);
+                  return;
+                }
                 createOrModifyType(context);
               },
             )
@@ -195,6 +221,10 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
                           color: Colors.red,
                           icon: Icons.delete,
                           onTap: () {
+                            if (types.length == 1) {
+                              _fallbackDialog(context);
+                              return;
+                            }
                             _deletionConfirmDialog(context, types[index])
                                 .then((Confirmation confirmation) {
                               if (confirmation == Confirmation.ACCEPT) {
