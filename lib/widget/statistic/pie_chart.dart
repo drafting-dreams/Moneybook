@@ -28,26 +28,38 @@ class PieOutsideLabelChart extends StatelessWidget {
     ];
   }
 
-  /// Creates a [PieChart] with sample data and no transition.
-//  factory PieOutsideLabelChart.withSampleData() {
-//    return new PieOutsideLabelChart(
-//      _createSampleData(),
-//      // Disable animations for image tests.
-//      animate: false,
-//    );
-//  }
-
   @override
   Widget build(BuildContext context) {
+    if (data.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Icon(Icons.error_outline, size: 120, color: Theme.of(context).accentColor, ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'No data for this period of time.',
+                style: TextStyle(),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
     return new charts.PieChart(data2Series(data),
         behaviors: [
           charts.ChartTitle('Expense type ratio chart',
               behaviorPosition: charts.BehaviorPosition.top,
               titleOutsideJustification: charts.OutsideJustification.middle,
-              innerPadding: 40,
-              outerPadding: 20),
+              innerPadding: 25,
+              outerPadding: 25),
           charts.DatumLegend(
               position: charts.BehaviorPosition.end,
+              cellPadding: EdgeInsets.only(bottom: 4.0, right: 38),
               showMeasures: true,
               horizontalFirst: false,
               legendDefaultMeasure: charts.LegendDefaultMeasure.average,
