@@ -14,4 +14,8 @@ class RandomGenerator {
     }
     return re;
   }
+
+  static int randomInt(max) {
+    return _random.nextInt(max);
+  }
 }
