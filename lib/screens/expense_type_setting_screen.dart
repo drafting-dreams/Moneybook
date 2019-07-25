@@ -83,7 +83,7 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
   Future<Confirmation> _fallbackDialog(BuildContext context) {
     final content = types.length == 1
         ? 'There must be at least one expense type.'
-        : "The  maximum number of expense type is 12.";
+        : "The  maximum number of expense type is 11.";
     return showDialog(
         context: context,
         barrierDismissible: true,
@@ -188,7 +188,7 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
             IconButton(
               icon: Icon(Icons.add_circle_outline),
               onPressed: () {
-                if (types.length == 12) {
+                if (types.length == 11) {
                   _fallbackDialog(context);
                   return;
                 }

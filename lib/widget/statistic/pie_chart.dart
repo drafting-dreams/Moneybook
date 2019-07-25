@@ -18,8 +18,10 @@ class PieOutsideLabelChart extends StatelessWidget {
     return [
       charts.Series<TransactionStatistic, String>(
         id: 'pie_chart',
-        colorFn: (_, idx) =>
-            charts.MaterialPalette.getOrderedPalettes(12)[idx].shadeDefault,
+        colorFn: (_, idx) {
+          return charts.MaterialPalette.getOrderedPalettes(12)[idx % 11]
+              .shadeDefault;
+        },
         domainFn: (TransactionStatistic t, _) => t.type,
         measureFn: (TransactionStatistic t, _) => t.value,
         data: statistic,
@@ -36,7 +38,11 @@ class PieOutsideLabelChart extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Icon(Icons.error_outline, size: 120, color: Theme.of(context).accentColor, ),
+            child: Icon(
+              Icons.error_outline,
+              size: 120,
+              color: Theme.of(context).accentColor,
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -55,11 +61,11 @@ class PieOutsideLabelChart extends StatelessWidget {
           charts.ChartTitle('Expense type ratio chart',
               behaviorPosition: charts.BehaviorPosition.top,
               titleOutsideJustification: charts.OutsideJustification.middle,
-              innerPadding: 25,
+              innerPadding: 10,
               outerPadding: 25),
           charts.DatumLegend(
               position: charts.BehaviorPosition.end,
-              cellPadding: EdgeInsets.only(bottom: 4.0, right: 38),
+              cellPadding: EdgeInsets.only(top:6.0, right: 30),
               showMeasures: true,
               horizontalFirst: false,
               legendDefaultMeasure: charts.LegendDefaultMeasure.average,
