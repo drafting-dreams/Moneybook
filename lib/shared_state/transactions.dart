@@ -91,6 +91,8 @@ class Transactions extends ChangeNotifier {
   }
 
   Transaction get(int i) {
+    if (this.filtered.length < 1)
+      return null;
     return this.filtered[i];
   }
 

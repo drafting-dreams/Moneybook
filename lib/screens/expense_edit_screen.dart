@@ -80,9 +80,9 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                 if (widget.id == null) {
                   await TransactionAPI.add(t);
                   Transaction firstTransaction = transactions.get(0);
-                  if (t.date.compareTo(firstTransaction.date) < 0 &&
+                  if (firstTransaction == null || (t.date.compareTo(firstTransaction.date) < 0 &&
                       (t.date.month != firstTransaction.date.month ||
-                          t.date.year != firstTransaction.date.year)) {
+                          t.date.year != firstTransaction.date.year))) {
                   } else {
                     transactions.add(t);
                   }
