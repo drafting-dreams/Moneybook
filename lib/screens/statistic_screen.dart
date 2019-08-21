@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_book/widget/statistic/pie_chart.dart';
+import 'package:money_book/widget/statistic/line_chart.dart';
 import 'package:money_book/widget/bottom_navigator.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/api/account.dart';
@@ -122,8 +123,8 @@ class _StatisticScreen extends State<StatisticScreen> {
           j++;
         }
       }
-      var futures = <Future<Map<String,double>>> [];
-      for (int k = i; k<=j; k++) {
+      var futures = <Future<Map<String, double>>>[];
+      for (int k = i; k <= j; k++) {
         futures.add(TransactionAPI.getSumByTypeGroup(accountId, k));
       }
       Future.wait(futures).then((List<Map<String, double>> data) {
@@ -173,8 +174,8 @@ class _StatisticScreen extends State<StatisticScreen> {
         bottomNavigationBar: BottomNavigator(
           initialIndex: 1,
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        body: ListView(
+//          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             pieChartData != null
                 ? SizedBox(
@@ -249,7 +250,23 @@ class _StatisticScreen extends State<StatisticScreen> {
                       ),
                     ]),
                   )
-                : Container()
+                : Container(),
+            lineChartData != null &&
+                    (currentMode == Mode.month || currentMode == Mode.year)
+                ? SizedBox(
+                    height: 600,
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                            margin: EdgeInsets.only(top: 40),
+                            child: LineChart(
+                              currentMode,
+                              lineChartData,
+                              animate: true,
+                            ))
+                      ],
+                    ))
+                : Container(),
           ],
         ));
   }
