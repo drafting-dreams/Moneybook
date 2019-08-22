@@ -104,8 +104,9 @@ class _StatisticScreen extends State<StatisticScreen> {
         futures.add(TransactionAPI.getSumByTypeGroup(accountId, year, i));
       }
       Future.wait(futures).then((List<Map<String, double>> data) {
-        this.lineChartData = data;
-        print(this.lineChartData);
+        setState(() {
+          this.lineChartData = data;
+        });
       });
     } else if (currentMode == Mode.year) {
       DateTime today = DateTime.now();
@@ -254,7 +255,7 @@ class _StatisticScreen extends State<StatisticScreen> {
             lineChartData != null &&
                     (currentMode == Mode.month || currentMode == Mode.year)
                 ? SizedBox(
-                    height: 600,
+                    height: 400,
                     child: Stack(
                       children: <Widget>[
                         Container(

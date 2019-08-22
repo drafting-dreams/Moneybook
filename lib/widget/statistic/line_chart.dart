@@ -10,9 +10,9 @@ class LineChart extends StatelessWidget {
 
   LineChart(this.type, this.data, {this.timeReference, this.animate});
 
-  List<charts.Series<TransactionStatistic, String>> data2Series(
-    List<Map<String, double>> data) {
-    final List<List<TransactionStatistic>>re = [];
+  List<charts.Series<TransactionStatistic, num>> data2Series(
+      List<Map<String, double>> data) {
+    final List<List<TransactionStatistic>> re = [];
     // Iterate through the twelve months or years, if this.type is month
     // then the data.length should be 12
     for (var i = 0; i < data.length; i++) {
@@ -20,9 +20,9 @@ class LineChart extends StatelessWidget {
       // Iterate each month's type
       data[i].forEach((transactionType, value) {
         final index = re.indexWhere((ss) {
-          for (var j=0; j<ss.length; j++) {
+          for (var j = 0; j < ss.length; j++) {
             if (ss[j] != null) {
-              if (ss[j].type ==type) {
+              if (ss[j].type == transactionType) {
                 return true;
               }
             }
@@ -44,34 +44,39 @@ class LineChart extends StatelessWidget {
 
     // Fill the null value in lists in re
     re.forEach((ss) {
-      TransactionStatistic notNull = ss[ss.indexWhere((s) => s!= null)];
-      for (var i=0; i<ss.length; i++) {
-        if (ss[i]==null) {
+      TransactionStatistic notNull = ss[ss.indexWhere((s) => s != null)];
+      for (var i = 0; i < ss.length; i++) {
+        if (ss[i] == null) {
           ss[i] = TransactionStatistic(notNull.type, 0, month: i);
         }
       }
     });
-    print(re);
-    return re.map((statistic) =>
-      charts.Series<TransactionStatistic, String>(
+    return re.map((statistic) {
+      return charts.Series<TransactionStatistic, num>(
         id: statistic[0].type,
         data: statistic,
-        domainFn: (TransactionStatistic t, _) => t.type,
-        measureFn: (TransactionStatistic t, _) => t.value,
+        domainFn: (TransactionStatistic t, idx) => idx + 1,
+        measureFn: (TransactionStatistic t, idx) => -t.value,
         labelAccessorFn: (TransactionStatistic t, _) => t.type,
-      )
-    ).toList();
+      );
+    }).toList();
   }
 
   Widget build(BuildContext context) {
-    return charts.BarChart(
-    data2Series(data),
-    animate: animate,
-    barGroupingType: charts.BarGroupingType.grouped,
-    behaviors: [
-    charts.SeriesLegend(
-    position: charts.BehaviorPosition.start,
-    )],
+    return charts.LineChart(
+      data2Series(data),
+      animate: animate,
+      defaultRenderer: new charts.LineRendererConfig(includePoints: true),
+      behaviors: [
+        charts.ChartTitle('Expense trend chart',
+        behaviorPosition: charts.BehaviorPosition.top,
+        titleOutsideJustification: charts.OutsideJustification.middle,
+        innerPadding: 30,
+        outerPadding: 25,),
+        charts.SeriesLegend(
+          position: charts.BehaviorPosition.start,
+        )
+      ],
     );
   }
 }
