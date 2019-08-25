@@ -5,10 +5,8 @@ import 'package:money_book/screens/statistic_screen.dart';
 class LineChart extends StatelessWidget {
   List<Map<String, double>> data;
   final bool animate;
-  Mode type;
-  int timeReference;
 
-  LineChart(this.type, this.data, this.timeReference, {this.animate});
+  LineChart(this.data, {this.animate});
 
   List<charts.Series<TransactionStatistic, num>> data2Series(
       List<Map<String, double>> data) {
@@ -35,8 +33,7 @@ class LineChart extends StatelessWidget {
         } else {
           statistics = re[index];
         }
-        statistics[i] = TransactionStatistic(transactionType, value,
-            this.type == Mode.month ? i + 1 : this.timeReference);
+        statistics[i] = TransactionStatistic(transactionType, value, i + 1);
         if (index < 0) {
           re.add(statistics);
         }
@@ -48,8 +45,7 @@ class LineChart extends StatelessWidget {
       TransactionStatistic notNull = ss[ss.indexWhere((s) => s != null)];
       for (var i = 0; i < ss.length; i++) {
         if (ss[i] == null) {
-          ss[i] = TransactionStatistic(notNull.type, 0,
-              this.type == Mode.month ? i + 1 : this.timeReference);
+          ss[i] = TransactionStatistic(notNull.type, 0, i + 1);
         }
       }
     });

@@ -16,7 +16,7 @@ class StatisticScreen extends StatefulWidget {
 }
 
 class _StatisticScreen extends State<StatisticScreen> {
-  Mode currentMode = Mode.seven;
+  Mode currentMode = Mode.month;
   int year;
   int month;
   DateTime start;
@@ -106,32 +106,6 @@ class _StatisticScreen extends State<StatisticScreen> {
       Future.wait(futures).then((List<Map<String, double>> data) {
         setState(() {
           this.lineChartData = data;
-        });
-      });
-    } else if (currentMode == Mode.year) {
-      DateTime today = DateTime.now();
-      // 10 years trend would be shown at most
-      int i = year;
-      int j = year;
-      while (i > 2019 || j < today.year) {
-        if (j - i >= 9) {
-          return;
-        }
-        if (i > 2019) {
-          i--;
-        }
-        if (j < today.year) {
-          j++;
-        }
-      }
-      var futures = <Future<Map<String, double>>>[];
-      for (int k = i; k <= j; k++) {
-        futures.add(TransactionAPI.getSumByTypeGroup(accountId, k));
-      }
-      Future.wait(futures).then((List<Map<String, double>> data) {
-        setState(() {
-          this.lineChartData = data;
-          print(this.lineChartData);
         });
       });
     }
@@ -252,8 +226,7 @@ class _StatisticScreen extends State<StatisticScreen> {
                     ]),
                   )
                 : Container(),
-            lineChartData != null &&
-                    (currentMode == Mode.month || currentMode == Mode.year)
+            lineChartData != null && currentMode == Mode.month
                 ? SizedBox(
                     height: 400,
                     child: Stack(
@@ -261,7 +234,6 @@ class _StatisticScreen extends State<StatisticScreen> {
                         Container(
                             margin: EdgeInsets.only(top: 40),
                             child: LineChart(
-                              currentMode,
                               lineChartData,
                               animate: true,
                             ))
