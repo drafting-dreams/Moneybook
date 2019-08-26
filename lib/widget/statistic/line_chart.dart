@@ -1,6 +1,5 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:money_book/screens/statistic_screen.dart';
 
 class LineChart extends StatelessWidget {
   List<Map<String, double>> data;

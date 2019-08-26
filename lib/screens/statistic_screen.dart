@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_book/widget/statistic/pie_chart.dart';
 import 'package:money_book/widget/statistic/line_chart.dart';
 import 'package:money_book/widget/bottom_navigator.dart';
+import 'package:money_book/widget/multi_select_chip.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/api/account.dart';
 import 'package:money_book/utils/util.dart';
@@ -23,7 +24,10 @@ class _StatisticScreen extends State<StatisticScreen> {
   DateTime end;
   String accountId;
   Map<String, double> pieChartData;
-  List<Map<String, double>> lineChartData;
+  List<Map<String, double>> lineChartData = [];
+  List<String> typeList;
+  List<String> selectedTypes;
+  final key = GlobalKey<MultiSelectChipState>();
 
   @override
   void initState() {
@@ -104,11 +108,43 @@ class _StatisticScreen extends State<StatisticScreen> {
         futures.add(TransactionAPI.getSumByTypeGroup(accountId, year, i));
       }
       Future.wait(futures).then((List<Map<String, double>> data) {
+        final List<String> typeList = [];
+        data.forEach((map) {
+          map.forEach((key, value) {
+            if (!typeList.contains(key)) {
+              typeList.add(key);
+            }
+          });
+        });
         setState(() {
+          this.typeList = typeList;
+          this.selectedTypes = typeList;
           this.lineChartData = data;
         });
       });
     }
+  }
+
+  _showSelectDialog(context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text('Select Transaction Types'),
+              content: MultiSelectChip(this.typeList,
+                  initialList: this.selectedTypes, key: this.key),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Select'),
+                  onPressed: () {
+                    setState(() {
+                      this.selectedTypes = this.key.currentState.selectedChoice;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                )
+              ]);
+        });
   }
 
   @override
@@ -117,6 +153,28 @@ class _StatisticScreen extends State<StatisticScreen> {
     if (pieChartData != null) {
       pieChartData.forEach((_, v) {
         pieTotal += v;
+      });
+    }
+    final List<Map<String, double>> lineChartData = [];
+    this.lineChartData.forEach((ele) {
+      Map<String, double> temp = Map<String, double>.from(ele);
+      List<String> keys = [];
+      temp.forEach((k, v) {
+        keys.add(k);
+      });
+      keys.forEach((k) {
+        if (!this.selectedTypes.contains(k)) {
+          temp.remove(k);
+        }
+      });
+      lineChartData.add(temp);
+    });
+    bool showLineChart = false;
+    if (lineChartData.length > 0 && currentMode == Mode.month) {
+      lineChartData.forEach((ele) {
+        ele.forEach((k, v) {
+          showLineChart = true;
+        });
       });
     }
     return Scaffold(
@@ -226,11 +284,17 @@ class _StatisticScreen extends State<StatisticScreen> {
                     ]),
                   )
                 : Container(),
-            lineChartData != null && currentMode == Mode.month
+            showLineChart
                 ? SizedBox(
                     height: 400,
                     child: Stack(
                       children: <Widget>[
+                        Positioned(
+                            top: 5,
+                            left: 10,
+                            child: RaisedButton(
+                                child: Text('Select'),
+                                onPressed: () => _showSelectDialog(context))),
                         Container(
                             margin: EdgeInsets.only(top: 40),
                             child: LineChart(
