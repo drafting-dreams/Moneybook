@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 class LineChart extends StatelessWidget {
   List<Map<String, double>> data;
   final bool animate;
+  final Function onSelected;
+  final int year;
 
-  LineChart(this.data, {this.animate});
+  LineChart(this.data, this.year, this.onSelected, {this.animate});
 
   List<charts.Series<TransactionStatistic, num>> data2Series(
       List<Map<String, double>> data) {
@@ -63,21 +65,26 @@ class LineChart extends StatelessWidget {
     return charts.LineChart(
       data2Series(data),
       animate: animate,
+      primaryMeasureAxis: new charts.NumericAxisSpec(
+          tickProviderSpec:
+              new charts.BasicNumericTickProviderSpec(desiredTickCount: 5)),
       domainAxis: new charts.NumericAxisSpec(
           tickProviderSpec:
               new charts.BasicNumericTickProviderSpec(zeroBound: false)),
       defaultRenderer: new charts.LineRendererConfig(includePoints: true),
       behaviors: [
         charts.ChartTitle(
-          'Expense trend chart',
+          '$year Expense trend chart',
           behaviorPosition: charts.BehaviorPosition.top,
           titleOutsideJustification: charts.OutsideJustification.middle,
           innerPadding: 30,
           outerPadding: 25,
         ),
         charts.SeriesLegend(
-          position: charts.BehaviorPosition.start,
-        )
+            position: charts.BehaviorPosition.bottom, desiredMaxColumns: 3),
+      ],
+      selectionModels: [
+        charts.SelectionModelConfig(changedListener: onSelected)
       ],
     );
   }

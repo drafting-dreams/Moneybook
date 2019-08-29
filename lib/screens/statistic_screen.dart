@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:money_book/widget/statistic/pie_chart.dart';
-import 'package:money_book/widget/statistic/line_chart.dart';
 import 'package:money_book/widget/bottom_navigator.dart';
-import 'package:money_book/widget/multi_select_chip.dart';
+import 'package:money_book/widget/statistic/line_chart.dart' as lineChart;
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/api/account.dart';
 import 'package:money_book/utils/util.dart';
@@ -25,9 +25,9 @@ class _StatisticScreen extends State<StatisticScreen> {
   String accountId;
   Map<String, double> pieChartData;
   List<Map<String, double>> lineChartData = [];
+  List<lineChart.TransactionStatistic> selectionBoard = [];
   List<String> typeList;
   List<String> selectedTypes;
-  final key = GlobalKey<MultiSelectChipState>();
 
   @override
   void initState() {
@@ -125,26 +125,16 @@ class _StatisticScreen extends State<StatisticScreen> {
     }
   }
 
-  _showSelectDialog(context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              title: Text('Select Transaction Types'),
-              content: MultiSelectChip(this.typeList,
-                  initialList: this.selectedTypes, key: this.key),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Select'),
-                  onPressed: () {
-                    setState(() {
-                      this.selectedTypes = this.key.currentState.selectedChoice;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                )
-              ]);
+  _onSelectionChanged(charts.SelectionModel model) {
+    setState(() {
+      selectionBoard = [];
+      final selectedDatum = model.selectedDatum;
+      if (selectedDatum.isNotEmpty) {
+        selectedDatum.forEach((datumPair) {
+          selectionBoard.add(datumPair.datum);
         });
+      }
+    });
   }
 
   @override
@@ -187,6 +177,7 @@ class _StatisticScreen extends State<StatisticScreen> {
                 onSelected: (Mode mode) {
                   setState(() {
                     currentMode = mode;
+                    selectionBoard = [];
                     loadData();
                   });
                 },
@@ -286,21 +277,39 @@ class _StatisticScreen extends State<StatisticScreen> {
                 : Container(),
             showLineChart
                 ? SizedBox(
-                    height: 400,
+                    height: 600,
                     child: Stack(
                       children: <Widget>[
-                        Positioned(
-                            top: 5,
-                            left: 10,
-                            child: RaisedButton(
-                                child: Text('Select'),
-                                onPressed: () => _showSelectDialog(context))),
                         Container(
                             margin: EdgeInsets.only(top: 40),
-                            child: LineChart(
+                            child: lineChart.LineChart(
                               lineChartData,
-                              animate: true,
-                            ))
+                              year,
+                              this._onSelectionChanged,
+                              animate: false,
+                            )),
+                        selectionBoard.length > 0
+                            ? Positioned(
+                                top: 110,
+                                right: 10,
+                                child: Container(
+                                  width: 220,
+                                  padding: EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                      color: Color.fromRGBO(0, 0, 0, .6)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: selectionBoard
+                                        .map((datum) => Text(
+                                            '${datum.type}: ${datum.value < 0 ? -datum.value : datum.value}',
+                                              style: TextStyle(color: Colors.white),
+                                    ))
+                                        .toList(),
+                                  ),
+                                ))
+                            : Container(),
                       ],
                     ))
                 : Container(),
