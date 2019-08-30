@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_book/api/expense_type.dart';
+import 'package:money_book/screens/expense_type_add_screen.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 enum Confirmation { CANCEL, ACCEPT }
@@ -117,66 +118,69 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
   }
 
   void createOrModifyType(BuildContext context, [String oldName = '']) {
-    _inputDialog(context, oldName).then((String name) {
-      print(name);
-      if (name.length < 1) {
-        showDialog<Confirmation>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Wrong name'),
-              content: Text('Please enter a name'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop(Confirmation.ACCEPT);
-                  },
-                )
-              ],
-            );
-          },
-        ).then((Confirmation cf) {
-          if (cf == Confirmation.ACCEPT) {
-            createOrModifyType(context);
-          }
-        });
-      } else if (this.types.contains(name)) {
-        showDialog<Confirmation>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Duplicated name'),
-              content: Text('Please enter another name'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop(Confirmation.ACCEPT);
-                  },
-                )
-              ],
-            );
-          },
-        ).then((Confirmation cf) {
-          if (cf == Confirmation.ACCEPT) {
-            createOrModifyType(context);
-          }
-        });
-      } else {
-        if (oldName.length == 0) {
-          ExpenseTypeAPI.createType(name).then((void v) {
-            loadData();
-          });
-        } else {
-          ExpenseTypeAPI.modifyType(oldName, name).then((void v) {
-            loadData();
-          });
-        }
-      }
-    });
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => ExpenseTypeAddScreen()));
+//    _inputDialog(context, oldName).then((String name) {
+//      if (name.length < 1) {
+//        showDialog<Confirmation>(
+//          context: context,
+//          barrierDismissible: false,
+//          builder: (BuildContext context) {
+//            return AlertDialog(
+//              title: Text('Wrong name'),
+//              content: Text('Please enter a name'),
+//              actions: <Widget>[
+//                FlatButton(
+//                  child: Text('OK'),
+//                  onPressed: () {
+//                    Navigator.of(context).pop(Confirmation.ACCEPT);
+//                  },
+//                )
+//              ],
+//            );
+//          },
+//        ).then((Confirmation cf) {
+//          if (cf == Confirmation.ACCEPT) {
+//            createOrModifyType(context);
+//          }
+//        });
+//      } else if (this.types.contains(name)) {
+//        showDialog<Confirmation>(
+//          context: context,
+//          barrierDismissible: false,
+//          builder: (BuildContext context) {
+//            return AlertDialog(
+//              title: Text('Duplicated name'),
+//              content: Text('Please enter another name'),
+//              actions: <Widget>[
+//                FlatButton(
+//                  child: Text('OK'),
+//                  onPressed: () {
+//                    Navigator.of(context).pop(Confirmation.ACCEPT);
+//                  },
+//                )
+//              ],
+//            );
+//          },
+//        ).then((Confirmation cf) {
+//          if (cf == Confirmation.ACCEPT) {
+//            createOrModifyType(context);
+//          }
+//        });
+//      } else {
+//        if (oldName.length == 0) {
+//          ExpenseTypeAPI.createType(name).then((void v) {
+//            loadData();
+//          });
+//        } else {
+//          ExpenseTypeAPI.modifyType(oldName, name).then((void v) {
+//            loadData();
+//          });
+//        }
+//      }
+//    });
   }
 
   @override
