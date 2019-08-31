@@ -68,7 +68,7 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
 
     return Scaffold(
         appBar: AppBar(title: Text('Moneybook'), actions: [
-          FlatButton(
+          IconButton(
             onPressed: () async {
               if (_formKey.currentState.validate()) {
                 Transaction t = Transaction(
@@ -98,8 +98,7 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                 });
               }
             },
-            child: Text('Save'),
-            textColor: Colors.white,
+            icon: Icon(Icons.check, color: Colors.white),
           )
         ]),
         body: Form(

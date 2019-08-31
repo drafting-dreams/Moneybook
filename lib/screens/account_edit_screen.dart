@@ -39,7 +39,7 @@ class _AccountEditScreen extends State<AccountEditScreen> {
       appBar: AppBar(
         title: Text('Moneybook'),
         actions: <Widget>[
-          FlatButton(
+          IconButton(
             onPressed: () async {
               if (_formKey.currentState.validate()) {
                 if (widget.id == null) {
@@ -57,8 +57,7 @@ class _AccountEditScreen extends State<AccountEditScreen> {
                 });
               }
             },
-            child: Text('Save'),
-            textColor: Colors.white,
+            icon: Icon(Icons.check, color: Colors.white),
           )
         ],
       ),

@@ -58,7 +58,7 @@ class _IncomeEdit extends State<IncomeEditScreen> {
 
     return Scaffold(
         appBar: AppBar(title: Text('Moneybook'), actions: [
-          FlatButton(
+          IconButton(
             onPressed: () async {
               if (_formKey.currentState.validate()) {
                 Transaction t = Transaction(double.parse(amountController.text),
@@ -85,8 +85,7 @@ class _IncomeEdit extends State<IncomeEditScreen> {
                 });
               }
             },
-            child: Text('Save'),
-            textColor: Colors.white,
+            icon: Icon(Icons.check, color: Colors.white)
           )
         ]),
         body: Form(
