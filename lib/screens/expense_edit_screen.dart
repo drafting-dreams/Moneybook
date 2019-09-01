@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/shared_state/transactions.dart';
 import 'package:money_book/shared_state/account.dart';
+import 'package:money_book/shared_state/expense_type_info.dart';
 import 'package:money_book/model/transaction.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/api/transaction.dart';
-import 'package:money_book/api/expense_type.dart';
+import 'package:money_book/model/expense_type.dart';
 
 class ExpenseEditScreen extends StatefulWidget {
   String id;
@@ -30,12 +31,6 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
 
   void initState() {
     super.initState();
-    ExpenseTypeAPI.list().then((data) {
-      setState(() {
-        types = data;
-        selectedType = data[0];
-      });
-    });
     if (widget.id != null) {
       TransactionAPI.getTransactionById(widget.id)
           .then((Transaction transaction) {
@@ -65,6 +60,7 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
   Widget build(BuildContext context) {
     var transactions = Provider.of<Transactions>(context);
     var accountState = Provider.of<AccountState>(context);
+    var typeInfo = Provider.of<ExpenseTypeInfo>(context);
 
     return Scaffold(
         appBar: AppBar(title: Text('Moneybook'), actions: [
@@ -80,9 +76,10 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                 if (widget.id == null) {
                   await TransactionAPI.add(t);
                   Transaction firstTransaction = transactions.get(0);
-                  if (firstTransaction != null && (t.date.compareTo(firstTransaction.date) < 0 &&
-                      (t.date.month != firstTransaction.date.month ||
-                          t.date.year != firstTransaction.date.year))) {
+                  if (firstTransaction != null &&
+                      (t.date.compareTo(firstTransaction.date) < 0 &&
+                          (t.date.month != firstTransaction.date.month ||
+                              t.date.year != firstTransaction.date.year))) {
                   } else {
                     transactions.add(t);
                   }
@@ -138,9 +135,23 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                             }),
                         DropdownButton<String>(
                           isExpanded: true,
-                          items: types
-                              .map((String type) => DropdownMenuItem<String>(
-                                  value: type, child: Text(type)))
+                          items: typeInfo.types
+                              .map((ExpenseType type) =>
+                                  DropdownMenuItem<String>(
+                                      value: type.name,
+                                      child: Row(
+                                        children: <Widget>[
+                                          RawMaterialButton(
+                                            constraints: BoxConstraints(minWidth: 30, minHeight: 30, maxHeight: 45, maxWidth: 45),
+                                            onPressed: () {},
+                                            shape: CircleBorder(),
+                                            child: Icon(type.icon,
+                                                color: Colors.white),
+                                            fillColor: type.color,
+                                          ),
+                                          Expanded(child: Text(type.name))
+                                        ],
+                                      )))
                               .toList(),
                           onChanged: (value) {
                             setState(() {

@@ -42,6 +42,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     Account currentAccount;
+    ExpenseTypeAPI.list().then((types) {
+      expenseTypes.addAll(types);
+    });
     AccountAPI.getCurrentAccount().then((Account account) {
       currentAccount = account;
       accountState.setCurrentAccount(currentAccount);

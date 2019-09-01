@@ -80,7 +80,7 @@ class DatabaseCreator {
     final path = join(databasePath, dbName);
 
     if (await Directory(dirname(path)).exists()) {
-      await deleteDatabase(path);
+//      await deleteDatabase(path);
     } else {
       Directory(path).create(recursive: true);
     }

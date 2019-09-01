@@ -1,14 +1,14 @@
 import 'package:money_book/localDB/database_creator.dart';
+import 'package:money_book/model/expense_type.dart';
 
 class ExpenseTypeService {
-  static Future<List<String>> list() async {
+  static Future<List<ExpenseType>> list() async {
     final sql = '''SELECT * FROM ${DatabaseCreator.expenseTypeTable}''';
     final data = await db.rawQuery(sql);
-    List<String> types = [];
+    List<ExpenseType> types = [];
 
     for (final node in data) {
-      final type = node[DatabaseCreator.expenseTypeName];
-      types.add(type);
+      types.add(ExpenseType.fromJson(node));
     }
     return types;
   }
@@ -27,14 +27,18 @@ class ExpenseTypeService {
         'Created an expense type', sql, null, result, params);
   }
 
-  static Future<void> updateType(String oldName, String newName) async {
+  static Future<void> updateType(
+      String oldName, String newName, String newIcon, String newColor) async {
     final sql = '''UPDATE ${DatabaseCreator.expenseTypeTable}
-    SET ${DatabaseCreator.expenseTypeName} = ?
+    SET ${DatabaseCreator.expenseTypeName} = ?,
+    ${DatabaseCreator.expenseTypeIcon} = ?,
+    ${DatabaseCreator.expenseTypeColor} = ?
     WHERE ${DatabaseCreator.expenseTypeName} = ?''';
 
-    List<dynamic> params = [newName, oldName];
+    List<dynamic> params = [newName, newIcon, newColor, oldName];
     final result = await db.rawUpdate(sql, params);
-    DatabaseCreator.databaseLog('Update Expense type', sql, null, result, params);
+    DatabaseCreator.databaseLog(
+        'Update Expense type', sql, null, result, params);
   }
 
   static Future<void> deleteType(String name) async {

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:money_book/api/expense_type.dart';
 import 'package:money_book/screens/expense_type_add_screen.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:money_book/shared_state/expense_type_info.dart';
+import 'package:money_book/model/expense_type.dart';
+import 'package:provider/provider.dart';
 
 enum Confirmation { CANCEL, ACCEPT }
 
@@ -14,44 +17,6 @@ class ExpenseTypeSettingScreen extends StatefulWidget {
 
 class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
   final SlidableController slidableController = SlidableController();
-  List<String> types = [];
-
-  Future<String> _inputDialog(BuildContext context, String old) async {
-    TextEditingController controller = TextEditingController();
-    controller.text = old;
-    return showDialog<String>(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Enter the type name'),
-            content: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: controller,
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      labelText: 'Type Name',
-                    ),
-                  ),
-                )
-              ],
-            ),
-            actions: <Widget>[
-              FlatButton(
-                textColor: Theme.of(context).primaryColor,
-                child: Text(
-                  'Confirm',
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop(controller.text);
-                },
-              )
-            ],
-          );
-        });
-  }
 
   Future<Confirmation> _deletionConfirmDialog(
       BuildContext context, String type) async {
@@ -81,8 +46,8 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
         });
   }
 
-  Future<Confirmation> _fallbackDialog(BuildContext context) {
-    final content = types.length == 1
+  Future<Confirmation> _fallbackDialog(BuildContext context, int len) {
+    final content = len == 1
         ? 'There must be at least one expense type.'
         : "The  maximum number of expense type is 11.";
     return showDialog(
@@ -103,88 +68,17 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
         });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    loadData();
-  }
-
-  void loadData() {
-    ExpenseTypeAPI.list().then((data) {
-      setState(() {
-        types = data;
-      });
-    });
-  }
-
-  void createOrModifyType(BuildContext context, [String oldName = '']) {
+  void createOrModifyType(BuildContext context, [ExpenseType oldType]) {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) => ExpenseTypeAddScreen()));
-//    _inputDialog(context, oldName).then((String name) {
-//      if (name.length < 1) {
-//        showDialog<Confirmation>(
-//          context: context,
-//          barrierDismissible: false,
-//          builder: (BuildContext context) {
-//            return AlertDialog(
-//              title: Text('Wrong name'),
-//              content: Text('Please enter a name'),
-//              actions: <Widget>[
-//                FlatButton(
-//                  child: Text('OK'),
-//                  onPressed: () {
-//                    Navigator.of(context).pop(Confirmation.ACCEPT);
-//                  },
-//                )
-//              ],
-//            );
-//          },
-//        ).then((Confirmation cf) {
-//          if (cf == Confirmation.ACCEPT) {
-//            createOrModifyType(context);
-//          }
-//        });
-//      } else if (this.types.contains(name)) {
-//        showDialog<Confirmation>(
-//          context: context,
-//          barrierDismissible: false,
-//          builder: (BuildContext context) {
-//            return AlertDialog(
-//              title: Text('Duplicated name'),
-//              content: Text('Please enter another name'),
-//              actions: <Widget>[
-//                FlatButton(
-//                  child: Text('OK'),
-//                  onPressed: () {
-//                    Navigator.of(context).pop(Confirmation.ACCEPT);
-//                  },
-//                )
-//              ],
-//            );
-//          },
-//        ).then((Confirmation cf) {
-//          if (cf == Confirmation.ACCEPT) {
-//            createOrModifyType(context);
-//          }
-//        });
-//      } else {
-//        if (oldName.length == 0) {
-//          ExpenseTypeAPI.createType(name).then((void v) {
-//            loadData();
-//          });
-//        } else {
-//          ExpenseTypeAPI.modifyType(oldName, name).then((void v) {
-//            loadData();
-//          });
-//        }
-//      }
-//    });
+            builder: (BuildContext context) => ExpenseTypeAddScreen(oldType)));
   }
 
   @override
   Widget build(BuildContext context) {
+    var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
+
     return Scaffold(
         appBar: AppBar(
           title: Text('Expense Type'),
@@ -192,8 +86,8 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
             IconButton(
               icon: Icon(Icons.add_circle_outline),
               onPressed: () {
-                if (types.length == 11) {
-                  _fallbackDialog(context);
+                if (expenseTypeInfo.types.length == 11) {
+                  _fallbackDialog(context, 11);
                   return;
                 }
                 createOrModifyType(context);
@@ -202,7 +96,7 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
           ],
         ),
         body: ListView.builder(
-            itemCount: types.length,
+            itemCount: expenseTypeInfo.types.length,
             itemBuilder: (context, index) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -218,23 +112,23 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
                             color: Colors.grey[350],
                             icon: Icons.edit,
                             onTap: () {
-                              createOrModifyType(context, types[index]);
+                              createOrModifyType(context, expenseTypeInfo.types[index]);
                             }),
                         IconSlideAction(
                           caption: 'Delete',
                           color: Colors.red,
                           icon: Icons.delete,
                           onTap: () {
-                            if (types.length == 1) {
-                              _fallbackDialog(context);
+                            if (expenseTypeInfo.types.length == 1) {
+                              _fallbackDialog(context, 1);
                               return;
                             }
-                            _deletionConfirmDialog(context, types[index])
+                            _deletionConfirmDialog(context, expenseTypeInfo.types[index].name)
                                 .then((Confirmation confirmation) {
                               if (confirmation == Confirmation.ACCEPT) {
-                                ExpenseTypeAPI.deleteType(types[index])
+                                ExpenseTypeAPI.deleteType(expenseTypeInfo.types[index].name)
                                     .then((void v) {
-                                  loadData();
+                                expenseTypeInfo.delete(expenseTypeInfo.types[index].name);
                                 });
                               }
                             });
@@ -242,7 +136,15 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
                         )
                       ],
                       child: ListTile(
-                        title: Text(types[index]),
+                        leading: RawMaterialButton(
+                          onPressed: () {},
+                          constraints: BoxConstraints(minWidth: 35, minHeight: 35),
+                          shape: CircleBorder(),
+                          child: Icon(expenseTypeInfo.types[index].icon,
+                            color: Colors.white),
+                          fillColor: expenseTypeInfo.types[index].color,
+                        ),
+                        title: Text(expenseTypeInfo.types[index].name),
                       ))
                 ],
               );

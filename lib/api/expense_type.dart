@@ -1,13 +1,14 @@
 import 'package:money_book/localDB/service/expense_type.dart';
+import 'package:money_book/model/expense_type.dart';
 
 class ExpenseTypeAPI {
-  static Future<List<String>> list() async {
-    final List<String> types = await ExpenseTypeService.list();
+  static Future<List<ExpenseType>> list() async {
+    final List<ExpenseType> types = await ExpenseTypeService.list();
     return types;
   }
 
   static Future<void> initializingTypes() async {
-    final List<String> list = await ExpenseTypeService.list();
+    final List<ExpenseType> list = await ExpenseTypeService.list();
     if (list.length == 0) {
       const List<String> types = [
         'food',
@@ -30,7 +31,7 @@ class ExpenseTypeAPI {
         'MaterialAccentColor(primary value: Color(0xff7c4dff))',
         'MaterialColor(primary value: Color(0xffffc107))'
       ];
-      for (int i=0; i<types.length; i++) {
+      for (int i = 0; i < types.length; i++) {
         ExpenseTypeService.createType(types[i], icons[i], colors[i]);
       }
     }
@@ -40,8 +41,9 @@ class ExpenseTypeAPI {
     await ExpenseTypeService.createType(name, icon, color);
   }
 
-  static Future<void> modifyType(String oldName, String newName) async {
-    await ExpenseTypeService.updateType(oldName, newName);
+  static Future<void> modifyType(
+      String oldName, String newName, String newIcon, String newColor) async {
+    await ExpenseTypeService.updateType(oldName, newName, newIcon, newColor);
   }
 
   static Future<void> deleteType(String name) async {

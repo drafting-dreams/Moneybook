@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:money_book/api/expense_type.dart';
 import 'package:money_book/const/icons.dart';
+import 'package:money_book/shared_state/expense_type_info.dart';
+import 'package:provider/provider.dart';
+import 'package:money_book/model/expense_type.dart';
 
 class ExpenseTypeAddScreen extends StatefulWidget {
+  ExpenseType oldType;
+
+  ExpenseTypeAddScreen([this.oldType]);
+
   @override
   State<StatefulWidget> createState() {
     return _ExpenseTypeAddScreen();
@@ -10,22 +17,84 @@ class ExpenseTypeAddScreen extends StatefulWidget {
 }
 
 class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
-  List<String> types = [];
   IconData selectedIcon = Icons.business;
   Color selectedColor = Colors.indigoAccent;
   final _textController = TextEditingController();
 
+  @override
   void initState() {
     super.initState();
-    loadData();
+    if (widget.oldType!=null) {
+      _textController.text = widget.oldType.name;
+      selectedIcon = widget.oldType.icon;
+      selectedColor = widget.oldType.color;
+    }
   }
 
-  void loadData() {
-    ExpenseTypeAPI.list().then((data) {
-      setState(() {
-        types = data;
-      });
-    });
+  void createOrModifyType(BuildContext context, ExpenseTypeInfo info,
+      [String oldName = '']) {
+    if (_textController.text.length < 1) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Wrong name'),
+            content: Text('Please enter a name'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        },
+      );
+    } else if (oldName == '' &&
+        info.types.indexWhere((type) => type.name == _textController.text) >
+            -1) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Duplicated name'),
+            content:
+                Text('There is already a type named ${_textController.text}.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        },
+      );
+    } else {
+      if (oldName.length == 0) {
+        ExpenseTypeAPI.createType(_textController.text, selectedIcon.toString(),
+                selectedColor.toString())
+            .then((void v) {
+          info.add(ExpenseType(_textController.text, selectedIcon.toString(),
+              selectedColor.toString()));
+          Navigator.of(context).pop();
+        });
+      } else {
+        ExpenseTypeAPI.modifyType(oldName, _textController.text,
+                selectedIcon.toString(), selectedColor.toString())
+            .then((void v) {
+          info.update(
+              oldName,
+              ExpenseType(_textController.text, selectedIcon.toString(),
+                  selectedColor.toString()));
+          Navigator.of(context).pop();
+        });
+      }
+    }
   }
 
   List<Widget> _build() {
@@ -109,20 +178,21 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
+
     return Scaffold(
         appBar: AppBar(
           title: Text('Add Expense Type'),
           actions: <Widget>[
             IconButton(
-              onPressed: () {
-                print(selectedColor);
-                print(selectedIcon);
-                print(_textController.text);
-              },
+                onPressed: () {
+                  createOrModifyType(context, expenseTypeInfo,
+                      widget.oldType != null ? widget.oldType.name : '');
+                },
                 icon: Icon(
-              Icons.check,
-              color: Colors.white,
-            ))
+                  Icons.check,
+                  color: Colors.white,
+                ))
           ],
         ),
         body: Stack(
@@ -150,8 +220,8 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   decoration: BoxDecoration(
                       color: Colors.white10,
-                      border:
-                          Border(bottom: BorderSide(width: 0.3, color: Colors.grey))),
+                      border: Border(
+                          bottom: BorderSide(width: 0.3, color: Colors.grey))),
                   child: Row(
                     children: <Widget>[
                       RawMaterialButton(
@@ -166,7 +236,8 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
                           fillColor: selectedColor),
                       Expanded(
                           child: Padding(
-                        padding: const EdgeInsets.only(left: 15, top: 5, bottom: 5),
+                        padding:
+                            const EdgeInsets.only(left: 15, top: 5, bottom: 5),
                         child: TextField(
                           controller: _textController,
                           decoration: InputDecoration(hintText: 'Type name'),
