@@ -43,7 +43,6 @@ class Transactions extends ChangeNotifier {
       transactions.add(t);
       return;
     }
-    print('in add');
     Transaction firstTransaction = transactions[0];
     if (t.date.compareTo(firstTransaction.date) < 0 &&
         (t.date.month != firstTransaction.date.month ||

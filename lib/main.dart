@@ -10,6 +10,7 @@ import 'package:money_book/screens/account_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/shared_state/transactions.dart';
 import 'package:money_book/shared_state/account.dart';
+import 'package:money_book/shared_state/expense_type_info.dart';
 import 'package:money_book/model/transaction.dart';
 import 'package:money_book/localDB/database_creator.dart';
 import 'package:money_book/api/transaction.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final AccountState accountState = AccountState();
   final Transactions transactions = Transactions();
+  final ExpenseTypeInfo expenseTypes = ExpenseTypeInfo();
 
   @override
   void initState() {
@@ -62,7 +64,8 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(notifier: transactions),
-        ChangeNotifierProvider.value(notifier: accountState)
+        ChangeNotifierProvider.value(notifier: accountState),
+        ChangeNotifierProvider.value(notifier: expenseTypes)
       ],
       child: MaterialApp(title: MyApp._title, routes: {
         '/': (context) => BookScreen(),

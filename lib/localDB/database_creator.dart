@@ -19,6 +19,8 @@ class DatabaseCreator {
   static const transactionType = 'type';
   static const expenseTypeTable = 'expenseTypeTable';
   static const expenseTypeName = 'expenseTypeName';
+  static const expenseTypeIcon = 'expenseTypeIcon';
+  static const expenseTypeColor = 'expenseTypeColor';
 
   static void databaseLog(String functionName, String sql,
       [List<Map<String, dynamic>> selectQueryResult,
@@ -39,7 +41,9 @@ class DatabaseCreator {
   Future<void> createExpenseTypeTable(Database db) async {
     final todoSql = '''CREATE TABLE $expenseTypeTable
     (
-      $expenseTypeName TEXT PRIMARY KEY
+      $expenseTypeName TEXT PRIMARY KEY,
+      $expenseTypeIcon TEXT,
+      $expenseTypeColor TEXT
     )''';
     await db.execute(todoSql);
   }
@@ -76,7 +80,7 @@ class DatabaseCreator {
     final path = join(databasePath, dbName);
 
     if (await Directory(dirname(path)).exists()) {
-//      await deleteDatabase(path);
+      await deleteDatabase(path);
     } else {
       Directory(path).create(recursive: true);
     }

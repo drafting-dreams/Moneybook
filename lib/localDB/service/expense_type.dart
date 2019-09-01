@@ -13,13 +13,15 @@ class ExpenseTypeService {
     return types;
   }
 
-  static Future<void> createType(String name) async {
+  static Future<void> createType(String name, String icon, String color) async {
     final sql = '''INSERT INTO ${DatabaseCreator.expenseTypeTable}
     (
-      ${DatabaseCreator.expenseTypeName}
+      ${DatabaseCreator.expenseTypeName},
+      ${DatabaseCreator.expenseTypeIcon},
+      ${DatabaseCreator.expenseTypeColor}
     )
-    VALUES(?)''';
-    List<dynamic> params = [name];
+    VALUES(?,?,?)''';
+    List<dynamic> params = [name, icon, color];
     final result = await db.rawInsert(sql, params);
     DatabaseCreator.databaseLog(
         'Created an expense type', sql, null, result, params);
