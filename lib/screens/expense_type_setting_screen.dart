@@ -3,6 +3,7 @@ import 'package:money_book/api/expense_type.dart';
 import 'package:money_book/screens/expense_type_add_screen.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:money_book/shared_state/expense_type_info.dart';
+import 'package:money_book/shared_state/transactions.dart';
 import 'package:money_book/model/expense_type.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,8 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Delete type'),
-            content: Text('You will delete the ' + type + ' type!'),
+            content: Text(
+                'This will delete the $type  type and all related transactions on all accounts!\n\nAre you sure?'),
             actions: <Widget>[
               FlatButton(
                 textColor: Colors.red,
@@ -78,6 +80,7 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
   @override
   Widget build(BuildContext context) {
     var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
+    var transacitons = Provider.of<Transactions>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -112,7 +115,8 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
                             color: Colors.grey[350],
                             icon: Icons.edit,
                             onTap: () {
-                              createOrModifyType(context, expenseTypeInfo.types[index]);
+                              createOrModifyType(
+                                  context, expenseTypeInfo.types[index]);
                             }),
                         IconSlideAction(
                           caption: 'Delete',
@@ -123,12 +127,17 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
                               _fallbackDialog(context, 1);
                               return;
                             }
-                            _deletionConfirmDialog(context, expenseTypeInfo.types[index].name)
+                            _deletionConfirmDialog(
+                                    context, expenseTypeInfo.types[index].name)
                                 .then((Confirmation confirmation) {
                               if (confirmation == Confirmation.ACCEPT) {
-                                ExpenseTypeAPI.deleteType(expenseTypeInfo.types[index].name)
+                                ExpenseTypeAPI.deleteType(
+                                        expenseTypeInfo.types[index].name)
                                     .then((void v) {
-                                expenseTypeInfo.delete(expenseTypeInfo.types[index].name);
+                                  transacitons.removeByType(
+                                      expenseTypeInfo.types[index].name);
+                                  expenseTypeInfo.delete(
+                                      expenseTypeInfo.types[index].name);
                                 });
                               }
                             });
@@ -138,10 +147,11 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
                       child: ListTile(
                         leading: RawMaterialButton(
                           onPressed: () {},
-                          constraints: BoxConstraints(minWidth: 35, minHeight: 35),
+                          constraints:
+                              BoxConstraints(minWidth: 35, minHeight: 35),
                           shape: CircleBorder(),
                           child: Icon(expenseTypeInfo.types[index].icon,
-                            color: Colors.white),
+                              color: Colors.white),
                           fillColor: expenseTypeInfo.types[index].color,
                         ),
                         title: Text(expenseTypeInfo.types[index].name),

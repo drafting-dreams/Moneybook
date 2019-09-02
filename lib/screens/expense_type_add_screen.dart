@@ -24,7 +24,7 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.oldType!=null) {
+    if (widget.oldType != null) {
       _textController.text = widget.oldType.name;
       selectedIcon = widget.oldType.icon;
       selectedColor = widget.oldType.color;
@@ -32,7 +32,7 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
   }
 
   void createOrModifyType(BuildContext context, ExpenseTypeInfo info,
-      [String oldName = '']) {
+    [String oldName = '']) {
     if (_textController.text.length < 1) {
       showDialog(
         context: context,
@@ -53,8 +53,8 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
         },
       );
     } else if (oldName == '' &&
-        info.types.indexWhere((type) => type.name == _textController.text) >
-            -1) {
+      info.types.indexWhere((type) => type.name == _textController.text) >
+        -1) {
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -62,7 +62,7 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
           return AlertDialog(
             title: Text('Duplicated name'),
             content:
-                Text('There is already a type named ${_textController.text}.'),
+            Text('There is already a type named ${_textController.text}.'),
             actions: <Widget>[
               FlatButton(
                 child: Text('OK'),
@@ -77,20 +77,20 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
     } else {
       if (oldName.length == 0) {
         ExpenseTypeAPI.createType(_textController.text, selectedIcon.toString(),
-                selectedColor.toString())
-            .then((void v) {
+          selectedColor.toString())
+          .then((void v) {
           info.add(ExpenseType(_textController.text, selectedIcon.toString(),
-              selectedColor.toString()));
+            selectedColor.toString()));
           Navigator.of(context).pop();
         });
       } else {
         ExpenseTypeAPI.modifyType(oldName, _textController.text,
-                selectedIcon.toString(), selectedColor.toString())
-            .then((void v) {
+          selectedIcon.toString(), selectedColor.toString())
+          .then((void v) {
           info.update(
-              oldName,
-              ExpenseType(_textController.text, selectedIcon.toString(),
-                  selectedColor.toString()));
+            oldName,
+            ExpenseType(_textController.text, selectedIcon.toString(),
+              selectedColor.toString()));
           Navigator.of(context).pop();
         });
       }
@@ -112,59 +112,60 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
 
     for (int i = 0; i < icons.length; i += 4) {
       groupByFour
-          .add(icons.sublist(i, i + 4 > icons.length ? icons.length : i + 4));
+        .add(icons.sublist(i, i + 4 > icons.length ? icons.length : i + 4));
     }
 
     return Container(
-        child: Column(children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              title,
-              style: TextStyle(fontSize: 18),
-            )
-          ],
+      child: Column(children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(fontSize: 18),
+              )
+            ],
+          ),
         ),
-      ),
-      ...groupByFour.map((datas) => _buildIconRow(datas, color)).toList()
-    ]));
+        ...groupByFour.map((datas) => _buildIconRow(datas, color)).toList()
+      ]));
   }
 
   Widget _buildIconRow(List<IconData> datas, Color color) {
     List<Widget> icons = datas
-        .map((data) => Opacity(
-            opacity: 1,
-            child: RawMaterialButton(
-              onPressed: () {
-                setState(() {
-                  selectedIcon = data;
-                  selectedColor = color;
-                });
-              },
-              constraints: BoxConstraints(minWidth: 45, minHeight: 45),
-              shape: CircleBorder(),
-              child: Icon(
-                data,
-                color: selectedIcon == data ? Colors.white : Colors.black54,
-              ),
-              fillColor: selectedIcon == data ? color : Colors.grey,
-            )))
-        .toList();
+      .map((data) =>
+      Opacity(
+        opacity: 1,
+        child: RawMaterialButton(
+          onPressed: () {
+            setState(() {
+              selectedIcon = data;
+              selectedColor = color;
+            });
+          },
+          constraints: BoxConstraints(minWidth: 45, minHeight: 45),
+          shape: CircleBorder(),
+          child: Icon(
+            data,
+            color: selectedIcon == data ? Colors.white : Colors.black54,
+          ),
+          fillColor: selectedIcon == data ? color : Colors.grey,
+        )))
+      .toList();
     int len = icons.length;
     if (icons.length < 4) {
       for (int i = 0; i < 4 - len; i++) {
         icons.add(Opacity(
-            opacity: 0,
-            child: RawMaterialButton(
-              onPressed: () {},
-              constraints: BoxConstraints(minWidth: 45, minHeight: 45),
-              shape: CircleBorder(),
-              child: Container(),
-              fillColor: color,
-            )));
+          opacity: 0,
+          child: RawMaterialButton(
+            onPressed: () {},
+            constraints: BoxConstraints(minWidth: 45, minHeight: 45),
+            shape: CircleBorder(),
+            child: Container(),
+            fillColor: color,
+          )));
       }
     }
     return Padding(
@@ -181,72 +182,75 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
     var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Add Expense Type'),
-          actions: <Widget>[
-            IconButton(
-                onPressed: () {
-                  createOrModifyType(context, expenseTypeInfo,
-                      widget.oldType != null ? widget.oldType.name : '');
-                },
-                icon: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                ))
-          ],
-        ),
-        body: Stack(
-          children: [
-            Positioned(
-              top: 60,
-              bottom: 0,
-              right: 0,
-              left: 0,
-              child: ListView(
+      appBar: AppBar(
+        title: Text('Add Expense Type'),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              createOrModifyType(context, expenseTypeInfo,
+                widget.oldType != null ? widget.oldType.name : '');
+            },
+            icon: Icon(
+              Icons.check,
+              color: Colors.white,
+            ))
+        ],
+      ),
+      body: Stack(
+        children: [
+          Positioned(
+            top: 60,
+            bottom: 0,
+            right: 0,
+            left: 0,
+            child: ListView(
+              children: <Widget>[
+                Column(
+                  children: _build(),
+                )
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 60,
+              padding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.white10,
+                border: Border(
+                  bottom: BorderSide(width: 0.3, color: Colors.grey))),
+              child: Row(
                 children: <Widget>[
-                  Column(
-                    children: _build(),
-                  )
+                  RawMaterialButton(
+                    onPressed: () {},
+                    constraints:
+                    BoxConstraints(minWidth: 45, minHeight: 45),
+                    shape: CircleBorder(),
+                    child: Icon(
+                      selectedIcon,
+                      color: Colors.white,
+                    ),
+                    fillColor: selectedColor),
+                  Expanded(
+                    child: Padding(
+                      padding:
+                      const EdgeInsets.only(left: 15, top: 5, bottom: 5),
+                      child: TextField(
+                        enabled: widget.oldType == null,
+                        controller: _textController,
+                        decoration: InputDecoration(hintText: 'Type name'),
+                        style: widget.oldType == null ? null : TextStyle(
+                          color: Colors.grey)
+                      ),
+                    ))
                 ],
               ),
-            ),
-            Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 60,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  decoration: BoxDecoration(
-                      color: Colors.white10,
-                      border: Border(
-                          bottom: BorderSide(width: 0.3, color: Colors.grey))),
-                  child: Row(
-                    children: <Widget>[
-                      RawMaterialButton(
-                          onPressed: () {},
-                          constraints:
-                              BoxConstraints(minWidth: 45, minHeight: 45),
-                          shape: CircleBorder(),
-                          child: Icon(
-                            selectedIcon,
-                            color: Colors.white,
-                          ),
-                          fillColor: selectedColor),
-                      Expanded(
-                          child: Padding(
-                        padding:
-                            const EdgeInsets.only(left: 15, top: 5, bottom: 5),
-                        child: TextField(
-                          controller: _textController,
-                          decoration: InputDecoration(hintText: 'Type name'),
-                        ),
-                      ))
-                    ],
-                  ),
-                )),
-          ],
-        ));
+            )),
+        ],
+      ));
   }
 }

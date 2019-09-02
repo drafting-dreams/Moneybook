@@ -1,4 +1,5 @@
 import 'package:money_book/localDB/service/expense_type.dart';
+import 'package:money_book/localDB/service/transaction.dart';
 import 'package:money_book/model/expense_type.dart';
 
 class ExpenseTypeAPI {
@@ -47,6 +48,7 @@ class ExpenseTypeAPI {
   }
 
   static Future<void> deleteType(String name) async {
-    await ExpenseTypeService.deleteType(name);
+    ExpenseTypeService.deleteType(name);
+    await TransactionService.deleteTransactionsByType(name);
   }
 }

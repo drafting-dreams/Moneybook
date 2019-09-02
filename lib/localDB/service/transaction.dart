@@ -76,6 +76,15 @@ class TransactionService {
         'Delete transaction by account', sql, null, null, params);
   }
 
+  static Future<void> deleteTransactionsByType(String type) async {
+    final sql = '''DELETE FROM ${DatabaseCreator.transactionTable}
+    WHERE ${DatabaseCreator.transactionType} = ?''';
+    List<dynamic> params = [type];
+    await db.rawDelete(sql, params);
+    DatabaseCreator.databaseLog(
+      'Delete transaction by type', sql, null, null, params);
+  }
+
   static Future<List<Transaction>> getAll(String accountId) async {
     final sql = '''SELECT * FROM ${DatabaseCreator.transactionTable}
     WHERE ${DatabaseCreator.accountId} = ?

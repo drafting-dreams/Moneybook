@@ -30,7 +30,12 @@ class Transactions extends ChangeNotifier {
 
   void removeById(String id) {
     transactions
-        .removeAt(transactions.indexWhere((Transaction t) => t.id == id));
+      .removeAt(transactions.indexWhere((Transaction t) => t.id == id));
+    notifyListeners();
+  }
+
+  void removeByType(String type) {
+    transactions = transactions.where((t) => t.type != type).toList();
     notifyListeners();
   }
 
@@ -45,13 +50,12 @@ class Transactions extends ChangeNotifier {
     }
     Transaction firstTransaction = transactions[0];
     if (t.date.compareTo(firstTransaction.date) < 0 &&
-        (t.date.month != firstTransaction.date.month ||
-            t.date.year != firstTransaction.date.year)) {
-    } else {
+      (t.date.month != firstTransaction.date.month ||
+        t.date.year != firstTransaction.date.year)) {} else {
       // Find the first transaction's date which is after the added one, and insert it here
       final idx = this
-          .transactions
-          .indexWhere((element) => t.date.compareTo(element.date) < 0);
+        .transactions
+        .indexWhere((element) => t.date.compareTo(element.date) < 0);
       if (idx >= 0) {
         this.transactions.insert(idx, t);
         notifyListeners();
@@ -65,8 +69,8 @@ class Transactions extends ChangeNotifier {
   void update(String id, Transaction info) {
     final idx = transactions.indexWhere((element) => id == element.id);
     if (info.date.compareTo(transactions[0].date) < 0 &&
-        (info.date.month != transactions[0].date.month ||
-            info.date.year != transactions[0].date.year)) {
+      (info.date.month != transactions[0].date.month ||
+        info.date.year != transactions[0].date.year)) {
       transactions.removeAt(idx);
     } else {
       Transaction old = transactions[idx];
@@ -108,12 +112,12 @@ class Transactions extends ChangeNotifier {
 
   double getTotalOfMonth(DateTime dt) {
     return this
-        .filtered
-        .where((transaction) =>
-            dt.year == transaction.date.year &&
-            dt.month == transaction.date.month)
-        .toList()
-        .fold(0.0, (current, next) => current + next.value);
+      .filtered
+      .where((transaction) =>
+    dt.year == transaction.date.year &&
+      dt.month == transaction.date.month)
+      .toList()
+      .fold(0.0, (current, next) => current + next.value);
   }
 }
 
