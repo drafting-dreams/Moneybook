@@ -61,6 +61,11 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
     var transactions = Provider.of<Transactions>(context);
     var accountState = Provider.of<AccountState>(context);
     var typeInfo = Provider.of<ExpenseTypeInfo>(context);
+    if (selectedType == null) {
+      setState(() {
+        selectedType = typeInfo.types[0].name;
+      });
+    }
 
     return Scaffold(
         appBar: AppBar(title: Text('Moneybook'), actions: [
