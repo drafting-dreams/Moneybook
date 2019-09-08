@@ -38,7 +38,7 @@ class _SettingScreenState extends State<SettingScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Settings')),
       bottomNavigationBar: BottomNavigator(
-        initialIndex: 2,
+        initialIndex: 3,
       ),
       body: ListView(
         children: <Widget>[

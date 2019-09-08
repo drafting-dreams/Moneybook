@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:money_book/screens/expense_edit_screen.dart';
 import 'package:money_book/screens/income_edit_screen.dart';
 import 'package:money_book/api/transaction.dart';
+import 'package:money_book/model/expense_type.dart';
 
 enum DeleteType { NORMAL, CASCADE }
 
@@ -64,8 +65,11 @@ class _DefaultListState extends State<DefaultList> {
           itemCount: transactions.length,
           itemBuilder: (BuildContext context, int index) {
             final transaction = transactions.get(index);
-            final icon = expenseTypeInfo.types
-                .firstWhere((info) => info.name == transaction.type);
+            final icon = transaction.value < 0
+                ? expenseTypeInfo.types
+                    .firstWhere((info) => info.name == transaction.type)
+                : ExpenseType('income', Icons.monetization_on.toString(),
+                    Colors.yellow.toString());
             final previous = index > 0 ? transactions.get(index - 1) : null;
             Widget leading = Container(height: 0);
             String total = '';

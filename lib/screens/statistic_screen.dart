@@ -196,7 +196,7 @@ class _StatisticScreen extends State<StatisticScreen> {
           ],
         ),
         bottomNavigationBar: BottomNavigator(
-          initialIndex: 1,
+          initialIndex: 2,
         ),
         body: ListView(
 //          crossAxisAlignment: CrossAxisAlignment.stretch,

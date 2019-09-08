@@ -54,9 +54,15 @@ class _BookScreen extends State<BookScreen> {
             });
             break;
           case ActionTypes.byMonth:
+            setState(() {
+              expand = false;
+            });
             updateMonthList(accountId, ts.tc);
             break;
           case ActionTypes.byYear:
+            setState(() {
+              expand = false;
+            });
             updateYearList(accountId, ts.tc);
             break;
           case ActionTypes.customize:

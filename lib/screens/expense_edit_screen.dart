@@ -113,64 +113,119 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 15.0),
                     child: Column(
                       children: <Widget>[
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'Amount'),
-                          controller: amountController,
-                          keyboardType: TextInputType.number,
-                          validator: (v) {
-                            String value = amountController.text;
-                            if (value.isEmpty) {
-                              return 'Please enter your income amount';
-                            }
-                            if (!Util.isNumeric(value) ||
-                                double.parse(value) <= 0) {
-                              return 'Please enter a positive Number';
-                            }
-                          },
+                        Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(right: 15.0),
+                              child: Icon(
+                                Icons.attach_money,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                decoration:
+                                    InputDecoration(labelText: 'Amount'),
+                                controller: amountController,
+                                keyboardType: TextInputType.number,
+                                validator: (v) {
+                                  String value = amountController.text;
+                                  if (value.isEmpty) {
+                                    return 'Please enter your income amount';
+                                  }
+                                  if (!Util.isNumeric(value) ||
+                                      double.parse(value) <= 0) {
+                                    return 'Please enter a positive Number';
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                        TextFormField(
-                            decoration:
-                                InputDecoration(labelText: 'Description'),
-                            controller: descriptionController,
-                            validator: (v) {
-                              String value = descriptionController.text;
-                              if (value.trim().isEmpty) {
-                                return 'Please input some description about the income';
-                              }
-                            }),
-                        DropdownButton<String>(
-                          isExpanded: true,
-                          items: typeInfo.types
-                              .map((ExpenseType type) =>
-                                  DropdownMenuItem<String>(
-                                      value: type.name,
-                                      child: Row(
-                                        children: <Widget>[
-                                          RawMaterialButton(
-                                            constraints: BoxConstraints(minWidth: 30, minHeight: 30, maxHeight: 45, maxWidth: 45),
-                                            onPressed: () {},
-                                            shape: CircleBorder(),
-                                            child: Icon(type.icon,
-                                                color: Colors.white),
-                                            fillColor: type.color,
-                                          ),
-                                          Expanded(child: Text(type.name))
-                                        ],
-                                      )))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectedType = value;
-                            });
-                          },
-                          value: selectedType,
+                        Row(
+                          children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.only(right: 15),
+                                child: Icon(
+                                  Icons.subject,
+                                  color: Theme.of(context).primaryColor,
+                                )),
+                            Expanded(
+                              child: TextFormField(
+                                  decoration:
+                                      InputDecoration(labelText: 'Description'),
+                                  controller: descriptionController,
+                                  validator: (v) {
+                                    String value = descriptionController.text;
+                                    if (value.trim().isEmpty) {
+                                      return 'Please input some description about the income';
+                                    }
+                                  }),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(right: 15.0),
+                              child: Icon(Icons.category,
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            Expanded(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                items: typeInfo.types
+                                    .map((ExpenseType type) =>
+                                        DropdownMenuItem<String>(
+                                            value: type.name,
+                                            child: Row(
+                                              children: <Widget>[
+                                                RawMaterialButton(
+                                                  constraints: BoxConstraints(
+                                                      minWidth: 30,
+                                                      minHeight: 30,
+                                                      maxHeight: 45,
+                                                      maxWidth: 45),
+                                                  onPressed: () {},
+                                                  shape: CircleBorder(),
+                                                  child: Icon(type.icon,
+                                                      color: Colors.white),
+                                                  fillColor: type.color,
+                                                ),
+                                                Expanded(child: Text(type.name))
+                                              ],
+                                            )))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedType = value;
+                                  });
+                                },
+                                value: selectedType,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     )),
                 InkWell(
                   onTap: _selectDate,
-                  child: ListTile(
-                      title: Text('${date.year}-${date.month}-${date.day}')),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0, vertical: 10),
+                    child: Row(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15.0),
+                        child: Icon(
+                          Icons.date_range,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      Expanded(
+                          child: Text('${date.year}-${date.month}-${date.day}',
+                              style: TextStyle(fontSize: 16)))
+                    ]),
+                  ),
                 )
               ],
             ))));

@@ -31,18 +31,7 @@ class _FloatingAddButtonState extends State<FloatingAddButton> {
                     builder: (BuildContext context) =>
                         ExpenseEditScreen(update: this.widget.update)));
           },
-          child: Icon(Icons.train)),
-    ));
-    childrenButtons.add(UnicornButton(
-      hasLabel: true,
-      labelText: 'Bill',
-      currentButton: FloatingActionButton(
-          heroTag: 'bill',
-          mini: true,
-          onPressed: () {
-            debugPrint('hahhhh');
-          },
-          child: Icon(Icons.directions_bike)),
+          child: Icon(Icons.credit_card)),
     ));
     childrenButtons.add(UnicornButton(
       hasLabel: true,
@@ -58,7 +47,7 @@ class _FloatingAddButtonState extends State<FloatingAddButton> {
                           update: this.widget.update,
                         )));
           },
-          child: Icon(Icons.directions_bike)),
+          child: Icon(Icons.monetization_on)),
     ));
 
     return UnicornDialer(

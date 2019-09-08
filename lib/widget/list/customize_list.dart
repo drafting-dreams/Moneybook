@@ -3,8 +3,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:money_book/screens/expense_edit_screen.dart';
 import 'package:money_book/screens/income_edit_screen.dart';
 import 'package:money_book/shared_state/transactions.dart';
+import 'package:money_book/shared_state/expense_type_info.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/api/transaction.dart';
+import 'package:money_book/model/expense_type.dart';
 
 enum DeleteType { NORMAL, CASCADE }
 
@@ -67,11 +69,18 @@ class _CustomizeListState extends State<CustomizeList> {
 
   Widget build(BuildContext context) {
     var transactions = Provider.of<Transactions>(context);
+    var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
+
     return ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: transactions.length,
         itemBuilder: (BuildContext context, int index) {
           final transaction = transactions.get(index);
+          final icon = transaction.value < 0
+            ? expenseTypeInfo.types
+            .firstWhere((info) => info.name == transaction.type)
+            : ExpenseType('income', Icons.monetization_on.toString(),
+            Colors.yellow.toString());
           final previous = index > 0 ? transactions.get(index - 1) : null;
           Widget leading = Container(height: 0);
           String total = '';
@@ -175,6 +184,17 @@ class _CustomizeListState extends State<CustomizeList> {
                         )
                       ],
                       child: ListTile(
+                        leading: RawMaterialButton(
+                          constraints: BoxConstraints(
+                            minWidth: 45,
+                            minHeight: 45,
+                            maxHeight: 45,
+                            maxWidth: 45),
+                          onPressed: () {},
+                          shape: CircleBorder(),
+                          child: Icon(icon.icon, color: Colors.white),
+                          fillColor: icon.color,
+                        ),
                         title: Text('${transaction.name}'),
                         subtitle: Text(
                           (transaction.value > 0 ? '+' : '') +
