@@ -7,6 +7,14 @@ class Util {
     }
     return true;
   }
+  static bool isInt(String str) {
+    try {
+      int.parse(str);
+    } on FormatException {
+      return false;
+    }
+    return true;
+  }
 
   static String date2DBString(DateTime dt) {
     return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';

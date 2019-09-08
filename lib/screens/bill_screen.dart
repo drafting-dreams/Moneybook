@@ -22,7 +22,7 @@ class _BillScreenState extends State<BillScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => BillScreen()));
+                    builder: (BuildContext context) => BillEditScreen()));
           }),
       body: Container(),
       bottomNavigationBar: BottomNavigator(initialIndex: 1),
