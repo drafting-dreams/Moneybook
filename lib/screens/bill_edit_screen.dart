@@ -4,6 +4,9 @@ import 'package:money_book/utils/util.dart';
 import 'package:money_book/shared_state/expense_type_info.dart';
 import 'package:money_book/model/expense_type.dart';
 import 'package:money_book/widget/expanded_section.dart';
+import 'package:money_book/model/bill.dart';
+import 'package:money_book/shared_state/account.dart';
+import 'package:money_book/api/bill.dart';
 
 class BillEditScreen extends StatefulWidget {
   State<StatefulWidget> createState() {
@@ -75,46 +78,47 @@ class _BillEditScreen extends State<BillEditScreen> {
 
   Future _selectRepeatDate() async {
     DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: _repeatDate != null ? _repeatDate : DateTime.now(),
-      firstDate: DateTime(2019),
-      lastDate: DateTime(DateTime.now().year + 70));
+        context: context,
+        initialDate: _repeatDate != null ? _repeatDate : DateTime.now(),
+        firstDate: DateTime(2019),
+        lastDate: DateTime(DateTime.now().year + 70));
     if (picked != null) {
       final DateTime today = DateTime.now();
       // bill date should be before today and can't be today !!!
       if (picked.compareTo(today) < 0 &&
-        (!(picked.year == today.year &&
-          picked.month == today.month &&
-          picked.day == today.day))) {
+          (!(picked.year == today.year &&
+              picked.month == today.month &&
+              picked.day == today.day))) {
         showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => AlertDialog(
-            title: Text('Inappropriate Bill Date'),
-            content: Text('Bill date should be on or after today.'),
-            actions: [
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _selectDate();
-                },
-                child: Text('OK'))
-            ]));
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+                    title: Text('Inappropriate Bill Date'),
+                    content: Text('Bill date should be on or after today.'),
+                    actions: [
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _selectDate();
+                          },
+                          child: Text('OK'))
+                    ]));
       } else if (picked.day > 28) {
         showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => AlertDialog(
-            title: Text('Inappropriate Bill Date'),
-            content: Text('Repeat Bill day should be on or before 28 of each month.'),
-            actions: [
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _selectRepeatDate();
-                },
-                child: Text('OK'))
-            ]));
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+                    title: Text('Inappropriate Bill Date'),
+                    content: Text(
+                        'Repeat Bill day should be on or before 28 of each month.'),
+                    actions: [
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _selectRepeatDate();
+                          },
+                          child: Text('OK'))
+                    ]));
       } else {
         setState(() {
           _repeatDate = picked;
@@ -124,6 +128,7 @@ class _BillEditScreen extends State<BillEditScreen> {
   }
 
   Widget build(BuildContext context) {
+    var accountState = Provider.of<AccountState>(context);
     var typeInfo = Provider.of<ExpenseTypeInfo>(context);
     if (_selectedType == null) {
       setState(() {
@@ -132,7 +137,55 @@ class _BillEditScreen extends State<BillEditScreen> {
     }
 
     return Scaffold(
-        appBar: AppBar(title: Text('Bill')),
+        appBar: AppBar(
+          title: Text('Bill'),
+          actions: <Widget>[
+            IconButton(
+                onPressed: () async {
+                  if (_formKey.currentState.validate()) {
+                    if (_repeat) {
+                      for (int i = 0;
+                          i < int.parse(_repeatTimeController.text);
+                          i++) {
+                        int addedMonth = _repeatDate.month +
+                            i * int.parse(_frequencyController.text);
+                        int yearToBeAdd = 0;
+                        int newMonth = 0;
+                        if (addedMonth > 12) {
+                          yearToBeAdd = (addedMonth / 12).floor();
+                          newMonth = addedMonth % 12;
+                        } else {
+                          newMonth = addedMonth;
+                        }
+                        Bill bill = Bill(
+                            -double.parse(_amountController.text),
+                            DateTime(
+                                _repeatDate.year + yearToBeAdd,
+                                newMonth,
+                                _repeatDate.day),
+                            accountState.currentAccount.id,
+                            _selectedType,
+                            _autoPay,
+                            false,
+                            name: _descriptionController.text);
+                        await BillAPI.add(bill);
+                      }
+                    } else {
+                      Bill bill = Bill(
+                          -double.parse(_amountController.text),
+                          date,
+                          accountState.currentAccount.id,
+                          _selectedType,
+                          _autoPay,
+                          false,
+                          name: _descriptionController.text);
+                      await BillAPI.add(bill);
+                    }
+                  }
+                },
+                icon: Icon(Icons.check, color: Colors.white))
+          ],
+        ),
         body: Form(
             key: _formKey,
             autovalidate: _autoValidate,
@@ -305,7 +358,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                   ExpandedSection(
                     expand: _repeat,
                     child: Padding(
-                      padding: const EdgeInsets.only(left:35.0),
+                      padding: const EdgeInsets.only(left: 35.0),
                       child: Column(
                         children: <Widget>[
                           Row(
@@ -328,8 +381,8 @@ class _BillEditScreen extends State<BillEditScreen> {
                                     if (value.isEmpty ||
                                         !Util.isInt(value) ||
                                         int.parse(value) < 1 ||
-                                        int.parse(value) > 12) {
-                                      return 'Please enter an integer ranged from 1 to 12';
+                                        int.parse(value) > 60) {
+                                      return 'Please enter an integer ranged from 1 to 60';
                                     }
                                   },
                                 ),
@@ -347,8 +400,8 @@ class _BillEditScreen extends State<BillEditScreen> {
                               ),
                               Expanded(
                                 child: TextFormField(
-                                  decoration:
-                                      InputDecoration(labelText: 'Repeat Times'),
+                                  decoration: InputDecoration(
+                                      labelText: 'Repeat Times'),
                                   controller: _repeatTimeController,
                                   keyboardType: TextInputType.number,
                                   validator: (v) {
@@ -357,7 +410,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                                         !Util.isInt(value) ||
                                         int.parse(value) < 2 ||
                                         int.parse(value) > 60) {
-                                      return 'Please enter an integer ranged from 3 to 60';
+                                      return 'Please enter an integer ranged from 2 to 60';
                                     }
                                   },
                                 ),
@@ -365,24 +418,24 @@ class _BillEditScreen extends State<BillEditScreen> {
                             ],
                           ),
                           InkWell(
-                            onTap: _selectRepeatDate,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 15),
-                                    child: Icon(
-                                      Icons.date_range,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      '${_repeatDate.year}-${_repeatDate.month}-${_repeatDate.day}',
-                                      style: TextStyle(fontSize: 16)))
-                                ],
-                              )))
+                              onTap: _selectRepeatDate,
+                              child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 15),
+                                        child: Icon(
+                                          Icons.date_range,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                      Expanded(
+                                          child: Text(
+                                              '${_repeatDate.year}-${_repeatDate.month}-${_repeatDate.day}',
+                                              style: TextStyle(fontSize: 16)))
+                                    ],
+                                  )))
                         ],
                       ),
                     ),

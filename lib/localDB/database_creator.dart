@@ -21,6 +21,14 @@ class DatabaseCreator {
   static const expenseTypeName = 'expenseTypeName';
   static const expenseTypeIcon = 'expenseTypeIcon';
   static const expenseTypeColor = 'expenseTypeColor';
+  static const billTable='billTable';
+  static const billAutoPay = 'billAutoPay';
+  static const billPaid = 'billPaid';
+  static const billAmount = 'billAmount';
+  static const billType = 'billType';
+  static const billDescription = 'billDescription';
+  static const billDueDate = 'billDueDate';
+  static const billId = 'billId';
 
   static void databaseLog(String functionName, String sql,
       [List<Map<String, dynamic>> selectQueryResult,
@@ -75,6 +83,21 @@ class DatabaseCreator {
     await db.execute(todoSql);
   }
 
+  Future<void> createBillTable(Database db) async {
+    final todoSql = '''CREATE TABLE $billTable
+    (
+      $billId Text PRIMARY KEY,
+      $billAutoPay Integer,
+      $billPaid Integer,
+      $billAmount REAL,
+      $billDescription TEXT,
+      $billType TEXT,
+      $billDueDate TEXT,
+      $accountId TEXT
+    )''';
+    await db.execute(todoSql);
+  }
+
   Future<String> getDatabasePath(String dbName) async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, dbName);
@@ -97,5 +120,6 @@ class DatabaseCreator {
     await createAccountTable(db);
     await createTransactionTable(db);
     await createExpenseTypeTable(db);
+    await createBillTable(db);
   }
 }

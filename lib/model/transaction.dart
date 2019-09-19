@@ -15,7 +15,6 @@ class Transaction {
       {String type, String name}) {
     this.id = RandomGenerator.str(ID_PREFIX_LENGTH) +
         new DateTime.now().millisecondsSinceEpoch.toString();
-    this.date = new DateTime.now();
     this.accountId = accountId;
     if (name != null) {
       this.name = name;
