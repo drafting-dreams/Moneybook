@@ -36,8 +36,8 @@ class Bill {
     this.dueDate = DateTime(date[0], date[1], date[2]);
     this.accountId = json[DatabaseCreator.accountId];
     this.type = json[DatabaseCreator.billType];
-    this.autoPay = json[DatabaseCreator.billAutoPay];
-    this.paid = json[DatabaseCreator.billPaid];
+    this.autoPay = json[DatabaseCreator.billAutoPay] == 1 ? true : false;
+    this.paid = json[DatabaseCreator.billPaid] == 1 ? true : false;
     this.value = json[DatabaseCreator.billAmount];
   }
 }
