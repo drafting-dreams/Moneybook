@@ -9,6 +9,8 @@ import 'package:money_book/api/account.dart';
 import 'package:money_book/shared_state/expense_type_info.dart';
 import 'package:provider/provider.dart';
 
+enum DeleteType { YES, NO }
+
 class BillScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -18,8 +20,8 @@ class BillScreen extends StatefulWidget {
 
 class _BillScreenState extends State<BillScreen> {
   final SlidableController slidableController = SlidableController();
-  final List<Bill> defaultList = [];
-  final List<Bill> customizedList = [];
+  List<Bill> defaultList = [];
+  List<Bill> customizedList = [];
   final List<Map<String, int>> defaultHiddenList = [];
   final List<Map<String, int>> customizedHiddenList = [];
   String mode = 'default';
@@ -44,6 +46,30 @@ class _BillScreenState extends State<BillScreen> {
         });
       });
     });
+  }
+
+  Future<DeleteType> _deletionDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text('Delete Bill'),
+              content: Text("Delete this bill record."),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Yes', style: TextStyle(color: Colors.red[600])),
+                  onPressed: () {
+                    Navigator.of(context).pop(DeleteType.YES);
+                  },
+                ),
+                FlatButton(
+                  child: Text('No'),
+                  onPressed: () {
+                    Navigator.of(context).pop(DeleteType.NO);
+                  },
+                )
+              ],
+            ));
   }
 
   @override
@@ -88,6 +114,29 @@ class _BillScreenState extends State<BillScreen> {
                             key: ValueKey(index),
                             controller: slidableController,
                             actionPane: SlidableDrawerActionPane(),
+                            secondaryActions: <Widget>[
+                              IconSlideAction(
+                                  caption: 'Delete',
+                                  color: Colors.red,
+                                  icon: Icons.delete,
+                                  onTap: () {
+                                    _deletionDialog(context)
+                                        .then((DeleteType type) {
+                                      if (type == DeleteType.YES) {
+                                        BillAPI.deleteById(bill.id);
+                                        setState(() {
+                                          if (mode == 'default') {
+                                            defaultList.removeWhere(
+                                                (item) => item.id == bill.id);
+                                          } else {
+                                            customizedList.removeWhere(
+                                                (item) => item.id == bill.id);
+                                          }
+                                        });
+                                      }
+                                    });
+                                  })
+                            ],
                             child: ListTile(
                               leading: RawMaterialButton(
                                 constraints:
