@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_book/api/expense_type.dart';
+import 'package:money_book/api/transaction.dart';
+import 'package:money_book/api/bill.dart';
 import 'package:money_book/screens/expense_type_add_screen.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:money_book/shared_state/expense_type_info.dart';
@@ -28,7 +30,7 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
           return AlertDialog(
             title: Text('Delete type'),
             content: Text(
-                'This will delete the $type  type and all related transactions on all accounts!\n\nAre you sure?'),
+                'This will delete the $type type, all related transactions and bills on all accounts!\n\nAre you sure?'),
             actions: <Widget>[
               FlatButton(
                 textColor: Colors.red,
@@ -131,13 +133,14 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
                                     context, expenseTypeInfo.types[index].name)
                                 .then((Confirmation confirmation) {
                               if (confirmation == Confirmation.ACCEPT) {
-                                ExpenseTypeAPI.deleteType(
-                                        expenseTypeInfo.types[index].name)
+                                final String typeName =
+                                    expenseTypeInfo.types[index].name;
+                                BillAPI.deleteByType(typeName);
+                                TransactionAPI.deleteByType(typeName);
+                                ExpenseTypeAPI.deleteType(typeName)
                                     .then((void v) {
-                                  transacitons.removeByType(
-                                      expenseTypeInfo.types[index].name);
-                                  expenseTypeInfo.delete(
-                                      expenseTypeInfo.types[index].name);
+                                  transacitons.removeByType(typeName);
+                                  expenseTypeInfo.delete(typeName);
                                 });
                               }
                             });

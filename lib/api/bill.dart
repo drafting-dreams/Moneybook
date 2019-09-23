@@ -22,4 +22,11 @@ class BillAPI {
     return bills;
   }
 
+  static Future<void> deleteById(String id) async {
+    await BillService.deleteBill(id);
+  }
+
+  static Future<void> deleteByType(String type) async {
+    await BillService.deleteBillsByType(type);
+  }
 }

@@ -49,4 +49,20 @@ class BillService {
     }
     return bills;
   }
+
+  static Future<void> deleteBill(String id) async {
+    final sql = '''DELETE FROM ${DatabaseCreator.billTable}
+    WHERE ${DatabaseCreator.billId} = ?''';
+    List<dynamic> params = [id];
+    await db.rawDelete(sql, params);
+    DatabaseCreator.databaseLog('Delete bill by id', sql, null, null, params);
+  }
+
+  static Future<void> deleteBillsByType(String type) async {
+    final sql = '''DELETE FROM ${DatabaseCreator.billTable}
+    WHERE ${DatabaseCreator.billType} = ?''';
+    List<dynamic> params = [type];
+    await db.rawDelete(sql, params);
+    DatabaseCreator.databaseLog('Delete bill by type', sql, null, null, params);
+  }
 }

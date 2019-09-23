@@ -27,6 +27,10 @@ class TransactionAPI {
     }
   }
 
+  static Future<void> deleteByType(String type) async {
+    await TransactionService.deleteTransactionsByType(type);
+  }
+
   static Future<void> modify(String id, Transaction newTransactionInfo) async {
     await TransactionService.updateTransaction(id, newTransactionInfo);
   }

@@ -181,6 +181,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                           name: _descriptionController.text);
                       await BillAPI.add(bill);
                     }
+                    Navigator.of(context).pop();
                   }
                 },
                 icon: Icon(Icons.check, color: Colors.white))
