@@ -12,6 +12,12 @@ class BillAPI {
     return bills;
   }
 
+  static Future<List<Bill>> getListAfterDate(
+      String accountId, DateTime date) async {
+    List<Bill> bills = await BillService.getListAfterDate(accountId, date);
+    return bills;
+  }
+
   static Future<List<Bill>> getOneMonthList(
       String accountId, DateTime referenceDate) async {
     final start = new DateTime(referenceDate.year, referenceDate.month, 1);
@@ -20,6 +26,20 @@ class BillAPI {
         : DateTime(referenceDate.year, referenceDate.month + 1, 0);
     List<Bill> bills = await BillService.getListByDate(accountId, start, end);
     return bills;
+  }
+
+  static Future<List<Bill>> loadNext(
+      String accountId, DateTime referenceDate) async {
+    DateTime nearestDate;
+    try {
+      nearestDate =
+          await BillService.getNextNearestDate(accountId, referenceDate);
+      print(nearestDate.toIso8601String());
+    } on NoNearestDateException {
+      return List<Bill>();
+    }
+    final re = await getOneMonthList(accountId, nearestDate);
+    return re;
   }
 
   static Future<void> deleteById(String id) async {
