@@ -1,9 +1,16 @@
 import 'package:money_book/localDB/service/bill.dart';
+import 'package:money_book/api/transaction.dart';
 import 'package:money_book/model/bill.dart';
+import 'package:money_book/model/transaction.dart';
 
 class BillAPI {
   static Future<void> add(Bill bill) async {
     await BillService.addBill(bill);
+  }
+
+  static Future<void> pay(String billId, Transaction t) async {
+    await BillService.pay(billId);
+    await TransactionAPI.add(t);
   }
 
   static Future<List<Bill>> getListByDate(

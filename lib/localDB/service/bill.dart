@@ -3,6 +3,15 @@ import 'package:money_book/model/bill.dart';
 import 'package:money_book/utils/util.dart';
 
 class BillService {
+  static Future<void> pay(String id) async {
+    final sql = '''UPDATE ${DatabaseCreator.billTable}
+    SET ${DatabaseCreator.billPaid} = ?
+    WHERE ${DatabaseCreator.billId} = ?''';
+    List<dynamic> params = [1, id];
+    final result = await db.rawUpdate(sql, params);
+    DatabaseCreator.databaseLog('Pay bill', sql, null, result, params);
+  }
+
   static Future<void> addBill(Bill bill) async {
     final sql = '''INSERT INTO ${DatabaseCreator.billTable}
     (
@@ -50,7 +59,8 @@ class BillService {
     return bills;
   }
 
-  static Future<List<Bill>> getListAfterDate(String accountId, DateTime date) async {
+  static Future<List<Bill>> getListAfterDate(
+      String accountId, DateTime date) async {
     final d = Util.date2DBString(date);
     final sql = '''SELECT * FROM ${DatabaseCreator.billTable}
     WHERE ${DatabaseCreator.accountId} = ?

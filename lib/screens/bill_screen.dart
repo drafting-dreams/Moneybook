@@ -5,9 +5,11 @@ import 'package:money_book/widget/bottom_navigator.dart';
 import 'package:money_book/screens/bill_edit_screen.dart';
 import 'package:money_book/model/bill.dart';
 import 'package:money_book/model/account.dart';
+import 'package:money_book/model/transaction.dart';
 import 'package:money_book/api/bill.dart';
 import 'package:money_book/api/account.dart';
 import 'package:money_book/shared_state/expense_type_info.dart';
+import 'package:money_book/shared_state/transactions.dart';
 import 'package:provider/provider.dart';
 
 enum DeleteType { YES, NO }
@@ -82,6 +84,24 @@ class _BillScreenState extends State<BillScreen> {
 //    });
 //  }
 
+  Future<void> _paySuccessfulDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text('Bill paid'),
+              content: Text('The bill has been successfully paid.'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
+  }
+
   Future<DeleteType> _deletionDialog(BuildContext context) async {
     return showDialog(
         context: context,
@@ -109,10 +129,54 @@ class _BillScreenState extends State<BillScreen> {
   @override
   Widget build(BuildContext context) {
     var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
+    var transactions = Provider.of<Transactions>(context);
 
     List<Bill> bills = mode == 'default' ? defaultList : customizedList;
     List<Map<String, int>> hiddenList =
         mode == 'default' ? defaultHiddenList : customizedHiddenList;
+    List<Widget> actions(Bill bill) {
+      final list = [
+        IconSlideAction(
+            caption: 'Pay',
+            color: Colors.green,
+            icon: Icons.account_balance_wallet,
+            onTap: () {
+              Transaction t = Transaction(
+                  bill.value, DateTime.now(), bill.accountId,
+                  type: bill.type, name: bill.name);
+              BillAPI.pay(bill.id, t);
+              _paySuccessfulDialog(context);
+              setState(() {
+                bills.firstWhere((element) => element.id == bill.id).paid =
+                    true;
+              });
+              transactions.add(t);
+            }),
+        IconSlideAction(
+            caption: 'Delete',
+            color: Colors.red,
+            icon: Icons.delete,
+            onTap: () {
+              _deletionDialog(context).then((DeleteType type) {
+                if (type == DeleteType.YES) {
+                  BillAPI.deleteById(bill.id);
+                  setState(() {
+                    if (mode == 'default') {
+                      defaultList.removeWhere((item) => item.id == bill.id);
+                    } else {
+                      customizedList.removeWhere((item) => item.id == bill.id);
+                    }
+                  });
+                }
+              });
+            })
+      ];
+      if (bill.paid) {
+        list.removeAt(0);
+      }
+      return list;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Bill'),
@@ -186,29 +250,7 @@ class _BillScreenState extends State<BillScreen> {
                           key: ValueKey(index),
                           controller: slidableController,
                           actionPane: SlidableDrawerActionPane(),
-                          secondaryActions: <Widget>[
-                            IconSlideAction(
-                                caption: 'Delete',
-                                color: Colors.red,
-                                icon: Icons.delete,
-                                onTap: () {
-                                  _deletionDialog(context)
-                                      .then((DeleteType type) {
-                                    if (type == DeleteType.YES) {
-                                      BillAPI.deleteById(bill.id);
-                                      setState(() {
-                                        if (mode == 'default') {
-                                          defaultList.removeWhere(
-                                              (item) => item.id == bill.id);
-                                        } else {
-                                          customizedList.removeWhere(
-                                              (item) => item.id == bill.id);
-                                        }
-                                      });
-                                    }
-                                  });
-                                })
-                          ],
+                          secondaryActions: actions(bill),
                           child: ListTile(
                             leading: RawMaterialButton(
                               constraints:
