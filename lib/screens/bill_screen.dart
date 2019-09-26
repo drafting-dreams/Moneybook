@@ -11,6 +11,8 @@ import 'package:money_book/api/account.dart';
 import 'package:money_book/shared_state/expense_type_info.dart';
 import 'package:money_book/shared_state/transactions.dart';
 import 'package:provider/provider.dart';
+import 'package:money_book/widget/expanded_section.dart';
+import 'package:money_book/utils/util.dart';
 
 enum DeleteType { YES, NO }
 
@@ -29,8 +31,11 @@ class _BillScreenState extends State<BillScreen> {
   final List<Map<String, int>> customizedHiddenList = [];
   String mode = 'default';
   Account currentAccount;
-  bool loading = false;
-  int timestamp = DateTime.now().millisecondsSinceEpoch;
+  int startYear = DateTime.now().year;
+  int endYear = DateTime.now().year;
+  int startMonth = 1;
+  int endMonth = 12;
+  bool expand = false;
 
   bool hiddenContained(
           List<Map<String, int>> hiddenList, int year, int month) =>
@@ -63,6 +68,35 @@ class _BillScreenState extends State<BillScreen> {
       setState(() {
         defaultList.clear();
         defaultList.addAll(bills);
+      });
+    });
+  }
+
+  Future<void> _onRefresh() async {
+    loadPreviousMonth();
+  }
+
+  loadPreviousMonth() {
+    if (mode == 'default') {
+      BillAPI.loadPrevious(currentAccount.id, defaultList.first.dueDate)
+          .then((previousMonthBills) {
+        setState(() {
+          defaultList = previousMonthBills..addAll(defaultList);
+        });
+      });
+    }
+  }
+
+  getCustomeList() {
+    BillAPI.getListByDate(
+            currentAccount.id,
+            DateTime(startYear, startMonth),
+            endMonth == 12
+                ? DateTime(endYear + 1, 1, 0)
+                : DateTime(endYear, endMonth + 1, 0))
+        .then((data) {
+      setState(() {
+        customizedList = data;
       });
     });
   }
@@ -180,6 +214,14 @@ class _BillScreenState extends State<BillScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Bill'),
+        actions: <Widget>[
+          Builder(
+            builder: (innerContext) => IconButton(
+                  icon: Icon(Icons.tune),
+                  onPressed: () => Scaffold.of(innerContext).openEndDrawer(),
+                ),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
@@ -192,8 +234,164 @@ class _BillScreenState extends State<BillScreen> {
               reload();
             });
           }),
+      endDrawer: Drawer(
+          child: Column(
+        children: <Widget>[
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 26, vertical: 10),
+                  child: Text('Time',
+                      style:
+                          TextStyle(fontSize: 18, color: Colors.grey[700])))),
+          RadioListTile<String>(
+              value: 'default',
+              title: Text('Default'),
+              groupValue: mode,
+              onChanged: (String newMode) {
+                if (newMode != mode) {
+                  setState(() {
+                    mode = newMode;
+                    expand = false;
+                  });
+                  reload();
+                }
+              }),
+          RadioListTile<String>(
+            value: 'customize',
+            title: Text('Customize'),
+            groupValue: mode,
+            onChanged: (String newMode) {
+              if (newMode != mode) {
+                setState(() {
+                  mode = newMode;
+                  expand = true;
+                });
+                getCustomeList();
+              }
+            },
+          ),
+          ExpandedSection(
+              expand: expand,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                              width: 50,
+                              margin: EdgeInsets.only(left: 26),
+                              child: Text('From ')),
+                          DropdownButton<int>(
+                              value: startYear,
+                              items: <int>[
+                                for (var i = 2019;
+                                    i <= DateTime.now().year;
+                                    i += 1)
+                                  i
+                              ]
+                                  .map<DropdownMenuItem<int>>((int value) =>
+                                      DropdownMenuItem<int>(
+                                          value: value,
+                                          child: Text(value.toString())))
+                                  .toList(),
+                              onChanged: (int i) {
+                                startYear = i;
+                              }),
+                          Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('-')),
+                          DropdownButton<int>(
+                              value: startMonth,
+                              onChanged: (int i) {
+                                setState(() {
+                                  startMonth = i;
+                                });
+                              },
+                              items: <int>[for (var i = 1; i <= 12; i += 1) i]
+                                  .map<DropdownMenuItem<int>>((int value) =>
+                                      DropdownMenuItem<int>(
+                                          value: value,
+                                          child:
+                                              Text(Util.getMonthName(value))))
+                                  .toList()),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                              width: 50,
+                              margin: EdgeInsets.only(left: 26),
+                              child: Text(' to ')),
+                          DropdownButton<int>(
+                              value: endYear,
+                              onChanged: (int i) {
+                                setState(() {
+                                  endYear = i;
+                                });
+                              },
+                              items: <int>[
+                                for (var i = 2019;
+                                    i <= DateTime.now().year;
+                                    i += 1)
+                                  i
+                              ]
+                                  .map<DropdownMenuItem<int>>((int value) =>
+                                      DropdownMenuItem<int>(
+                                          value: value,
+                                          child: Text(value.toString())))
+                                  .toList()),
+                          Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('-')),
+                          DropdownButton<int>(
+                              value: endMonth,
+                              onChanged: (int i) {
+                                setState(() {
+                                  endMonth = i;
+                                });
+                              },
+                              items: <int>[for (var i = 1; i <= 12; i += 1) i]
+                                  .map<DropdownMenuItem<int>>((int value) =>
+                                      DropdownMenuItem<int>(
+                                          value: value,
+                                          child:
+                                              Text(Util.getMonthName(value))))
+                                  .toList()),
+                        ],
+                      )
+                    ],
+                  ),
+                  Transform.translate(
+                    offset: Offset(0, 4),
+                    child: Container(
+                        padding: EdgeInsets.only(
+                          left: 1,
+                        ),
+                        child: SizedBox(
+                          width: 72,
+                          child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              color: Colors.lightBlueAccent,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 19,
+                              ),
+                              onPressed: () {
+                                getCustomeList();
+                              },
+                              child: Text('Filter\nRange')),
+                        )),
+                  )
+                ],
+              ))
+        ],
+      )),
       body: RefreshIndicator(
-        onRefresh: () {},
+        onRefresh: _onRefresh,
         child: ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
             itemCount: bills.length,

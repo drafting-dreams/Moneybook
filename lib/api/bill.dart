@@ -35,13 +35,23 @@ class BillAPI {
     return bills;
   }
 
-  static Future<List<Bill>> loadNext(
-      String accountId, DateTime referenceDate) async {
+//  static Future<List<Bill>> loadNext(
+//      String accountId, DateTime referenceDate) async {
+//    DateTime nearestDate;
+//    try {
+//      nearestDate =
+//          await BillService.getPreviousNearestDate(accountId, referenceDate);
+//    } on NoNearestDateException {
+//      return List<Bill>();
+//    }
+//    final re = await getOneMonthList(accountId, nearestDate);
+//    return re;
+//  }
+
+  static Future<List<Bill>> loadPrevious(String accountId, DateTime referenceDate) async {
     DateTime nearestDate;
     try {
-      nearestDate =
-          await BillService.getNextNearestDate(accountId, referenceDate);
-      print(nearestDate.toIso8601String());
+      nearestDate = await BillService.getPreviousNearestDate(accountId, referenceDate);
     } on NoNearestDateException {
       return List<Bill>();
     }

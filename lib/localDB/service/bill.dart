@@ -76,16 +76,14 @@ class BillService {
     return bills;
   }
 
-  static Future<DateTime> getNextNearestDate(
+  static Future<DateTime> getPreviousNearestDate(
       String accountId, DateTime referenceDate) async {
-    final nextMonthFirstDay = referenceDate.month == 12
-        ? DateTime(referenceDate.year + 1, 1, 1)
-        : DateTime(referenceDate.year, referenceDate.month + 1, 1);
-    final d = Util.date2DBString(nextMonthFirstDay);
+    final previousMonthLastDay = DateTime(referenceDate.year, referenceDate.month, 0);
+    final d = Util.date2DBString(previousMonthLastDay);
     final sql =
         '''SELECT ${DatabaseCreator.billDueDate} FROM ${DatabaseCreator.billTable}
     WHERE ${DatabaseCreator.accountId} = ?
-    AND ${DatabaseCreator.billDueDate} >= ?
+    AND ${DatabaseCreator.billDueDate} <= ?
     ORDER BY ${DatabaseCreator.billDueDate} ASC LIMIT 1''';
     List<dynamic> params = [accountId, d];
     final data = await db.rawQuery(sql, params);
