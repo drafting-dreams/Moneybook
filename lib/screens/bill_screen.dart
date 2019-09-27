@@ -15,6 +15,7 @@ import 'package:money_book/widget/expanded_section.dart';
 import 'package:money_book/utils/util.dart';
 
 enum DeleteType { YES, NO }
+enum Payment { ALL, PAID, UNPAID }
 
 class BillScreen extends StatefulWidget {
   @override
@@ -36,6 +37,13 @@ class _BillScreenState extends State<BillScreen> {
   int startMonth = 1;
   int endMonth = 12;
   bool expand = false;
+  Payment paymentFilter = Payment.ALL;
+
+  setPayment(Payment p) {
+    setState(() {
+      paymentFilter = p;
+    });
+  }
 
   bool hiddenContained(
           List<Map<String, int>> hiddenList, int year, int month) =>
@@ -166,6 +174,11 @@ class _BillScreenState extends State<BillScreen> {
     var transactions = Provider.of<Transactions>(context);
 
     List<Bill> bills = mode == 'default' ? defaultList : customizedList;
+    if (paymentFilter == Payment.PAID) {
+      bills = bills.where((b) => b.paid).toList();
+    } else if (paymentFilter == Payment.UNPAID) {
+      bills = bills.where((b) => !b.paid).toList();
+    }
     List<Map<String, int>> hiddenList =
         mode == 'default' ? defaultHiddenList : customizedHiddenList;
     List<Widget> actions(Bill bill) {
@@ -237,6 +250,32 @@ class _BillScreenState extends State<BillScreen> {
       endDrawer: Drawer(
           child: Column(
         children: <Widget>[
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 26, vertical: 10),
+                  child: Text('Payment Status',
+                      style:
+                          TextStyle(fontSize: 18, color: Colors.grey[700])))),
+          RadioListTile<Payment>(
+            value: Payment.ALL,
+            title: Text('All'),
+            groupValue: paymentFilter,
+            onChanged: setPayment,
+          ),
+          RadioListTile<Payment>(
+            value: Payment.PAID,
+            title: Text('Paid'),
+            groupValue: paymentFilter,
+            onChanged: setPayment,
+          ),
+          RadioListTile<Payment>(
+            value: Payment.UNPAID,
+            title: Text('Unpaid'),
+            groupValue: paymentFilter,
+            onChanged: setPayment,
+          ),
+          Divider(height: 2.0),
           Align(
               alignment: Alignment.centerLeft,
               child: Padding(
