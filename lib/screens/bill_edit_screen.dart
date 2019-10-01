@@ -9,9 +9,12 @@ import 'package:money_book/widget/expanded_section.dart';
 import 'package:money_book/model/bill.dart';
 import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/api/bill.dart';
-import 'package:money_book/widget/paid_dialog.dart';
 
 class BillEditScreen extends StatefulWidget {
+  String id;
+
+  BillEditScreen({this.id});
+
   State<StatefulWidget> createState() {
     return _BillEditScreen();
   }
@@ -41,6 +44,18 @@ class _BillEditScreen extends State<BillEditScreen> {
       } else {
         _repeatDate = DateTime(_repeatDate.year + 1, 1, 1);
       }
+    }
+
+    if (widget.id != null) {
+      BillAPI.getBillById(widget.id).then((Bill bill) {
+        setState(() {
+          _amountController.text = (-bill.value).toString();
+          _descriptionController.text = bill.name;
+          date = bill.dueDate;
+          _selectedType = bill.type;
+          _autoPay = bill.autoPay;
+        });
+      });
     }
   }
 
@@ -148,32 +163,53 @@ class _BillEditScreen extends State<BillEditScreen> {
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
                     bool paidToday = false;
-                    if (_repeat) {
-                      for (int i = 0;
-                          i < int.parse(_repeatTimeController.text);
-                          i++) {
-                        int addedMonth = _repeatDate.month +
-                            i * int.parse(_frequencyController.text);
-                        int yearToBeAdd = 0;
-                        int newMonth = 0;
-                        if (addedMonth > 12) {
-                          yearToBeAdd = (addedMonth / 12).floor();
-                          newMonth = addedMonth % 12;
-                        } else {
-                          newMonth = addedMonth;
+                    if (widget.id == null) {
+                      if (_repeat) {
+                        for (int i = 0;
+                            i < int.parse(_repeatTimeController.text);
+                            i++) {
+                          int addedMonth = _repeatDate.month +
+                              i * int.parse(_frequencyController.text);
+                          int yearToBeAdd = 0;
+                          int newMonth = 0;
+                          if (addedMonth > 12) {
+                            yearToBeAdd = (addedMonth / 12).floor();
+                            newMonth = addedMonth % 12;
+                          } else {
+                            newMonth = addedMonth;
+                          }
+                          Bill bill = Bill(
+                              -double.parse(_amountController.text),
+                              DateTime(_repeatDate.year + yearToBeAdd, newMonth,
+                                  _repeatDate.day),
+                              accountState.currentAccount.id,
+                              _selectedType,
+                              _autoPay,
+                              false,
+                              name: _descriptionController.text);
+                          await BillAPI.add(bill);
+                          if (i == 0 &&
+                              bill.autoPay &&
+                              Util.isTheSameDay(DateTime.now(), bill.dueDate)) {
+                            Transaction t = Transaction(
+                                bill.value, DateTime.now(), bill.accountId,
+                                type: bill.type, name: bill.name);
+                            await BillAPI.pay(bill.id, t);
+                            transactions.add(t);
+                            paidToday = true;
+                          }
                         }
+                      } else {
                         Bill bill = Bill(
                             -double.parse(_amountController.text),
-                            DateTime(_repeatDate.year + yearToBeAdd, newMonth,
-                                _repeatDate.day),
+                            date,
                             accountState.currentAccount.id,
                             _selectedType,
                             _autoPay,
                             false,
                             name: _descriptionController.text);
                         await BillAPI.add(bill);
-                        if (i == 0 &&
-                            bill.autoPay &&
+                        if (bill.autoPay &&
                             Util.isTheSameDay(DateTime.now(), bill.dueDate)) {
                           Transaction t = Transaction(
                               bill.value, DateTime.now(), bill.accountId,
@@ -192,13 +228,14 @@ class _BillEditScreen extends State<BillEditScreen> {
                           _autoPay,
                           false,
                           name: _descriptionController.text);
-                      await BillAPI.add(bill);
+                      await BillAPI.modify(widget.id, bill);
                       if (bill.autoPay &&
                           Util.isTheSameDay(DateTime.now(), bill.dueDate)) {
+                        print("I'm in");
                         Transaction t = Transaction(
                             bill.value, DateTime.now(), bill.accountId,
                             type: bill.type, name: bill.name);
-                        await BillAPI.pay(bill.id, t);
+                        await BillAPI.pay(widget.id, t);
                         transactions.add(t);
                         paidToday = true;
                       }
@@ -354,30 +391,32 @@ class _BillEditScreen extends State<BillEditScreen> {
                               ],
                             ))),
                   ),
-                  Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 15.0),
-                            child: Icon(
-                              Icons.repeat,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          Expanded(
-                              child: Text('Repeat',
-                                  style: TextStyle(fontSize: 16))),
-                          Switch(
-                            value: _repeat,
-                            onChanged: (bool newVal) {
-                              setState(() {
-                                _repeat = newVal;
-                              });
-                            },
-                          )
-                        ],
-                      )),
+                  widget.id != null
+                      ? Container()
+                      : Padding(
+                          padding: EdgeInsets.symmetric(vertical: 5),
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(right: 15.0),
+                                child: Icon(
+                                  Icons.repeat,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              Expanded(
+                                  child: Text('Repeat',
+                                      style: TextStyle(fontSize: 16))),
+                              Switch(
+                                value: _repeat,
+                                onChanged: (bool newVal) {
+                                  setState(() {
+                                    _repeat = newVal;
+                                  });
+                                },
+                              )
+                            ],
+                          )),
                   ExpandedSection(
                     expand: _repeat,
                     child: Padding(

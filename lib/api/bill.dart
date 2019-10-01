@@ -4,6 +4,11 @@ import 'package:money_book/model/bill.dart';
 import 'package:money_book/model/transaction.dart';
 
 class BillAPI {
+  static Future<Bill> getBillById(String id) async {
+    final bill = await BillService.getBillById(id);
+    return bill;
+  }
+
   static Future<void> add(Bill bill) async {
     await BillService.addBill(bill);
   }
@@ -11,6 +16,10 @@ class BillAPI {
   static Future<void> pay(String billId, Transaction t) async {
     await BillService.pay(billId);
     await TransactionAPI.add(t);
+  }
+
+  static Future<void> modify(String id, Bill newBillInfo) async {
+    await BillService.updateBill(id, newBillInfo);
   }
 
   static Future<List<Bill>> getListByDate(
@@ -48,10 +57,12 @@ class BillAPI {
 //    return re;
 //  }
 
-  static Future<List<Bill>> loadPrevious(String accountId, DateTime referenceDate) async {
+  static Future<List<Bill>> loadPrevious(
+      String accountId, DateTime referenceDate) async {
     DateTime nearestDate;
     try {
-      nearestDate = await BillService.getPreviousNearestDate(accountId, referenceDate);
+      nearestDate =
+          await BillService.getPreviousNearestDate(accountId, referenceDate);
     } on NoNearestDateException {
       return List<Bill>();
     }

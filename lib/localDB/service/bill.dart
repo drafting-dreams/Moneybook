@@ -3,6 +3,22 @@ import 'package:money_book/model/bill.dart';
 import 'package:money_book/utils/util.dart';
 
 class BillService {
+  static Future<Bill> getBillById(String id) async {
+    final sql = '''SELECT * FROM ${DatabaseCreator.billTable}
+    WHERE ${DatabaseCreator.billId} = ?''';
+
+    List<dynamic> params = [id];
+    final data = await db.rawQuery(sql, params);
+    List<Bill> bills = List();
+
+    for (final node in data) {
+      final bill = Bill.fromJson(node);
+      bills.add(bill);
+    }
+
+    return bills[0];
+  }
+
   static Future<void> pay(String id) async {
     final sql = '''UPDATE ${DatabaseCreator.billTable}
     SET ${DatabaseCreator.billPaid} = ?
@@ -37,6 +53,27 @@ class BillService {
     ];
     final result = await db.rawInsert(sql, params);
     DatabaseCreator.databaseLog('Add bill', sql, null, result, params);
+  }
+
+  static Future<void> updateBill(String id, Bill bill) async {
+    final sql = '''UPDATE ${DatabaseCreator.billTable}
+    SET ${DatabaseCreator.billAutoPay} = ?,
+    ${DatabaseCreator.billAmount} = ?,
+    ${DatabaseCreator.billDescription} = ?,
+    ${DatabaseCreator.billType} = ?,
+    ${DatabaseCreator.billDueDate} = ?
+    WHERE ${DatabaseCreator.billId} = ?''';
+
+    List<dynamic> params = [
+      bill.autoPay,
+      bill.value,
+      bill.name,
+      bill.type,
+      Util.date2DBString(bill.dueDate),
+      id
+    ];
+    final result = await db.rawUpdate(sql, params);
+    DatabaseCreator.databaseLog('Update bill', sql, null, result, params);
   }
 
   static Future<List<Bill>> getListByDate(
@@ -78,7 +115,8 @@ class BillService {
 
   static Future<DateTime> getPreviousNearestDate(
       String accountId, DateTime referenceDate) async {
-    final previousMonthLastDay = DateTime(referenceDate.year, referenceDate.month, 0);
+    final previousMonthLastDay =
+        DateTime(referenceDate.year, referenceDate.month, 0);
     final d = Util.date2DBString(previousMonthLastDay);
     final sql =
         '''SELECT ${DatabaseCreator.billDueDate} FROM ${DatabaseCreator.billTable}

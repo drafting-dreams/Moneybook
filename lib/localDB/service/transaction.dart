@@ -49,7 +49,7 @@ class TransactionService {
       transaction.name,
       transaction.value,
       Util.date2DBString(transaction.date),
-      transaction.type.toString(),
+      transaction.type,
       id
     ];
     final result = await db.rawUpdate(sql, params);
