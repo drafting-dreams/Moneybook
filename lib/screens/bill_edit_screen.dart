@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:money_book/model/transaction.dart';
+import 'package:money_book/shared_state/transactions.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/shared_state/expense_type_info.dart';
@@ -7,6 +9,7 @@ import 'package:money_book/widget/expanded_section.dart';
 import 'package:money_book/model/bill.dart';
 import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/api/bill.dart';
+import 'package:money_book/widget/paid_dialog.dart';
 
 class BillEditScreen extends StatefulWidget {
   State<StatefulWidget> createState() {
@@ -130,6 +133,7 @@ class _BillEditScreen extends State<BillEditScreen> {
   Widget build(BuildContext context) {
     var accountState = Provider.of<AccountState>(context);
     var typeInfo = Provider.of<ExpenseTypeInfo>(context);
+    var transactions = Provider.of<Transactions>(context);
     if (_selectedType == null) {
       setState(() {
         _selectedType = typeInfo.types[0].name;
@@ -143,6 +147,7 @@ class _BillEditScreen extends State<BillEditScreen> {
             IconButton(
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
+                    bool paidToday = false;
                     if (_repeat) {
                       for (int i = 0;
                           i < int.parse(_repeatTimeController.text);
@@ -159,9 +164,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                         }
                         Bill bill = Bill(
                             -double.parse(_amountController.text),
-                            DateTime(
-                                _repeatDate.year + yearToBeAdd,
-                                newMonth,
+                            DateTime(_repeatDate.year + yearToBeAdd, newMonth,
                                 _repeatDate.day),
                             accountState.currentAccount.id,
                             _selectedType,
@@ -169,6 +172,16 @@ class _BillEditScreen extends State<BillEditScreen> {
                             false,
                             name: _descriptionController.text);
                         await BillAPI.add(bill);
+                        if (i == 0 &&
+                            bill.autoPay &&
+                            Util.isTheSameDay(DateTime.now(), bill.dueDate)) {
+                          Transaction t = Transaction(
+                              bill.value, DateTime.now(), bill.accountId,
+                              type: bill.type, name: bill.name);
+                          await BillAPI.pay(bill.id, t);
+                          transactions.add(t);
+                          paidToday = true;
+                        }
                       }
                     } else {
                       Bill bill = Bill(
@@ -180,8 +193,17 @@ class _BillEditScreen extends State<BillEditScreen> {
                           false,
                           name: _descriptionController.text);
                       await BillAPI.add(bill);
+                      if (bill.autoPay &&
+                          Util.isTheSameDay(DateTime.now(), bill.dueDate)) {
+                        Transaction t = Transaction(
+                            bill.value, DateTime.now(), bill.accountId,
+                            type: bill.type, name: bill.name);
+                        await BillAPI.pay(bill.id, t);
+                        transactions.add(t);
+                        paidToday = true;
+                      }
                     }
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(paidToday);
                   }
                 },
                 icon: Icon(Icons.check, color: Colors.white))
