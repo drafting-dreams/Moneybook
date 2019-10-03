@@ -415,7 +415,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                                 });
                               },
                               items: <int>[
-                                for (var i = 2019;
+                                for (var i = startYear;
                                     i <= DateTime.now().year;
                                     i += 1)
                                   i
@@ -435,7 +435,13 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                                   endMonth = i;
                                 });
                               },
-                              items: <int>[for (var i = 1; i <= 12; i += 1) i]
+                              items: <int>[
+                                for (var i =
+                                        startYear == endYear ? startMonth : 1;
+                                    i <= 12;
+                                    i += 1)
+                                  i
+                              ]
                                   .map<DropdownMenuItem<int>>((int value) =>
                                       DropdownMenuItem<int>(
                                           value: value,

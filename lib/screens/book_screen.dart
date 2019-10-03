@@ -103,7 +103,7 @@ class _BookScreen extends State<BookScreen> {
 
   void updateMonthList(String accountId, TransactionClass tc) {
     TransactionAPI.getListByMonth(accountId, DateTime.now().year, tc)
-      .then((data) {
+        .then((data) {
       setState(() {
         transactionByMonth = data;
       });
@@ -326,7 +326,7 @@ class _BookScreen extends State<BookScreen> {
                                   });
                                 },
                                 items: <int>[
-                                  for (var i = 2019;
+                                  for (var i = startYear;
                                       i <= DateTime.now().year;
                                       i += 1)
                                     i
@@ -346,7 +346,13 @@ class _BookScreen extends State<BookScreen> {
                                     endMonth = i;
                                   });
                                 },
-                                items: <int>[for (var i = 1; i <= 12; i += 1) i]
+                                items: <int>[
+                                  for (var i =
+                                          startYear == endYear ? startMonth : 1;
+                                      i <= 12;
+                                      i += 1)
+                                    i
+                                ]
                                     .map<DropdownMenuItem<int>>((int value) =>
                                         DropdownMenuItem<int>(
                                             value: value,
@@ -383,7 +389,11 @@ class _BookScreen extends State<BookScreen> {
                 )),
           ],
         )),
-        floatingActionButton: FloatingAddButton(update: () {this.updateBoth(accountState.currentAccount.id, transactions.tc);},),
+        floatingActionButton: FloatingAddButton(
+          update: () {
+            this.updateBoth(accountState.currentAccount.id, transactions.tc);
+          },
+        ),
         body: bodyWidgets[_currentActionType](),
         bottomNavigationBar: BottomNavigator(initialIndex: 0));
   }
