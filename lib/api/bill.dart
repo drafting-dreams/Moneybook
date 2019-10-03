@@ -28,6 +28,11 @@ class BillAPI {
     return bills;
   }
 
+  static Future<List<Bill>> getPreviousUnpaidBills() async {
+    List<Bill> bills = await BillService.getPreviousUnpaidBills();
+    return bills;
+  }
+
   static Future<List<Bill>> getListAfterDate(
       String accountId, DateTime date) async {
     List<Bill> bills = await BillService.getListAfterDate(accountId, date);
@@ -43,19 +48,6 @@ class BillAPI {
     List<Bill> bills = await BillService.getListByDate(accountId, start, end);
     return bills;
   }
-
-//  static Future<List<Bill>> loadNext(
-//      String accountId, DateTime referenceDate) async {
-//    DateTime nearestDate;
-//    try {
-//      nearestDate =
-//          await BillService.getPreviousNearestDate(accountId, referenceDate);
-//    } on NoNearestDateException {
-//      return List<Bill>();
-//    }
-//    final re = await getOneMonthList(accountId, nearestDate);
-//    return re;
-//  }
 
   static Future<List<Bill>> loadPrevious(
       String accountId, DateTime referenceDate) async {

@@ -25,7 +25,7 @@ class BillScreen extends StatefulWidget {
   }
 }
 
-class _BillScreenState extends State<BillScreen> {
+class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
   final SlidableController slidableController = SlidableController();
   List<Bill> defaultList = [];
   List<Bill> customizedList = [];
@@ -67,6 +67,20 @@ class _BillScreenState extends State<BillScreen> {
         });
       });
     });
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      Timer(Duration(milliseconds: 500), () => reload());
+    }
   }
 
   reload() {
@@ -82,12 +96,12 @@ class _BillScreenState extends State<BillScreen> {
   }
 
   Future<void> _onRefresh() async {
-    loadPreviousMonth();
+    await loadPreviousMonth();
   }
 
-  loadPreviousMonth() {
+  loadPreviousMonth() async {
     if (mode == 'default') {
-      BillAPI.loadPrevious(
+      await BillAPI.loadPrevious(
               currentAccount.id,
               defaultList.length > 0
                   ? defaultList.first.dueDate
@@ -123,6 +137,28 @@ class _BillScreenState extends State<BillScreen> {
     });
   }
 
+  Future<String> _payDialog(BuildContext context) => showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) => AlertDialog(
+            title: Text('Pay bill'),
+            content: Text('Are you sure you wanna pay this bill TODAY?'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Yes', style: TextStyle(color: Colors.green)),
+                onPressed: () {
+                  Navigator.of(context).pop('yes');
+                },
+              ),
+              FlatButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop('no');
+                },
+              )
+            ],
+          ));
+
   Future<DeleteType> _deletionDialog(BuildContext context) async {
     return showDialog(
         context: context,
@@ -132,13 +168,14 @@ class _BillScreenState extends State<BillScreen> {
               content: Text("Delete this bill record."),
               actions: <Widget>[
                 FlatButton(
-                  child: Text('Yes', style: TextStyle(color: Colors.red[600])),
+                  child:
+                      Text('Delete', style: TextStyle(color: Colors.red[600])),
                   onPressed: () {
                     Navigator.of(context).pop(DeleteType.YES);
                   },
                 ),
                 FlatButton(
-                  child: Text('No'),
+                  child: Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop(DeleteType.NO);
                   },
@@ -184,17 +221,21 @@ class _BillScreenState extends State<BillScreen> {
             color: Colors.green,
             icon: Icons.account_balance_wallet,
             onTap: () {
-              Transaction t = Transaction(
-                  bill.value, DateTime.now(), bill.accountId,
-                  type: bill.type, name: bill.name);
-              BillAPI.pay(bill.id, t);
-              paySuccessfulDialog(
-                  context, 'The bill has been successfully paid.');
-              setState(() {
-                bills.firstWhere((element) => element.id == bill.id).paid =
-                    true;
+              _payDialog(context).then((result) {
+                if (result == 'yes') {
+                  Transaction t = Transaction(
+                      bill.value, DateTime.now(), bill.accountId,
+                      type: bill.type, name: bill.name);
+                  BillAPI.pay(bill.id, t);
+                  paySuccessfulDialog(
+                      context, 'The bill has been successfully paid.');
+                  setState(() {
+                    bills.firstWhere((element) => element.id == bill.id).paid =
+                        true;
+                  });
+                  transactions.add(t);
+                }
               });
-              transactions.add(t);
             }),
         IconSlideAction(
             caption: 'Delete',

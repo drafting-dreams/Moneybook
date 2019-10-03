@@ -96,6 +96,25 @@ class BillService {
     return bills;
   }
 
+  static Future<List<Bill>> getPreviousUnpaidBills() async {
+    DateTime today = DateTime.now();
+    final t = Util.date2DBString(today);
+    final sql = '''SELECT * FROM ${DatabaseCreator.billTable}
+    WHERE ${DatabaseCreator.billAutoPay} = 1
+    AND ${DatabaseCreator.billPaid} = 0
+    AND ${DatabaseCreator.billDueDate} <= ?''';
+
+    List <dynamic> params = [t];
+    final data = await db.rawQuery(sql, params);
+    List<Bill> bills = List();
+
+    for (final node in data) {
+      final bill = Bill.fromJson(node);
+      bills.add(bill);
+    }
+    return bills;
+  }
+
   static Future<List<Bill>> getListAfterDate(
       String accountId, DateTime date) async {
     final d = Util.date2DBString(date);
@@ -122,7 +141,7 @@ class BillService {
         '''SELECT ${DatabaseCreator.billDueDate} FROM ${DatabaseCreator.billTable}
     WHERE ${DatabaseCreator.accountId} = ?
     AND ${DatabaseCreator.billDueDate} <= ?
-    ORDER BY ${DatabaseCreator.billDueDate} ASC LIMIT 1''';
+    ORDER BY ${DatabaseCreator.billDueDate} DESC LIMIT 1''';
     List<dynamic> params = [accountId, d];
     final data = await db.rawQuery(sql, params);
     if (data.length < 1) {

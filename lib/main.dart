@@ -3,6 +3,7 @@
 // This sample shows adding an action to an [AppBar] that opens a shopping cart.
 
 import 'package:flutter/material.dart';
+import 'package:money_book/api/bill.dart';
 import 'package:money_book/screens/book_screen.dart';
 import 'package:money_book/screens/income_edit_screen.dart';
 import 'package:money_book/screens/expense_edit_screen.dart';
@@ -33,10 +34,44 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final AccountState accountState = AccountState();
   final Transactions transactions = Transactions();
   final ExpenseTypeInfo expenseTypes = ExpenseTypeInfo();
+  bool popup = false;
+  final navigatorKey = GlobalKey<NavigatorState>();
+
+  Future _showDialog() => showDialog(
+      context: navigatorKey.currentState.overlay.context,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+            title: Text('Autopay notification'),
+            content: Text('Autopay bills has been paid.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Got it'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          ));
+
+  Future checkAndPay() {
+    return BillAPI.getPreviousUnpaidBills().then((unpaidBills) {
+      if (unpaidBills.length > 0) {
+        for (var b in unpaidBills) {
+          Transaction t = Transaction(b.value, b.dueDate, b.accountId,
+              type: b.type, name: b.name);
+          BillAPI.pay(b.id, t);
+          transactions.add(t);
+        }
+        setState(() {
+          popup = true;
+        });
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -60,17 +95,40 @@ class _MyAppState extends State<MyApp> {
         });
       });
     });
+    WidgetsBinding.instance.addObserver(this);
+    checkAndPay();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      await checkAndPay();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (popup) {
+      _showDialog().then((_) {
+        setState(() {
+          popup = false;
+        });
+      });
+    }
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(notifier: transactions),
         ChangeNotifierProvider.value(notifier: accountState),
         ChangeNotifierProvider.value(notifier: expenseTypes)
       ],
-      child: MaterialApp(title: MyApp._title, routes: {
+      child:
+          MaterialApp(title: MyApp._title, navigatorKey: navigatorKey, routes: {
         '/': (context) => BookScreen(),
         '/edit/income': (context) => IncomeEditScreen(),
         '/edit/expense': (context) => ExpenseEditScreen(),
