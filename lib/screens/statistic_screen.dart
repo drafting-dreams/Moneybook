@@ -3,6 +3,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:money_book/widget/statistic/pie_chart.dart';
 import 'package:money_book/widget/bottom_navigator.dart';
 import 'package:money_book/widget/statistic/line_chart.dart' as lineChart;
+import 'package:money_book/widget/statistic/time_line_chart.dart' as timeChart;
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/api/account.dart';
 import 'package:money_book/utils/util.dart';
@@ -25,9 +26,10 @@ class _StatisticScreen extends State<StatisticScreen> {
   String accountId;
   Map<String, double> pieChartData;
   List<Map<String, double>> lineChartData = [];
-  List<lineChart.TransactionStatistic> selectionBoard = [];
+  List<dynamic> selectionBoard = [];
   List<String> typeList;
   List<String> selectedTypes;
+  List<DateTime> sevenDates;
 
   @override
   void initState() {
@@ -92,6 +94,34 @@ class _StatisticScreen extends State<StatisticScreen> {
         pieChartData = json;
       });
     });
+    if (currentMode == Mode.seven) {
+      var futures = <Future<Map<String, double>>>[];
+      var dates = <DateTime>[];
+      DateTime today = DateTime.now();
+      DateTime sixDaysAgo = today.subtract(Duration(days: 6));
+      for (var d = sixDaysAgo;
+          d.compareTo(today) <= 0;
+          d = d.add(Duration(days: 1))) {
+        dates.add(d);
+        futures.add(TransactionAPI.getSumByDayByGroup(accountId, d));
+      }
+      Future.wait(futures).then((List<Map<String, double>> data) {
+        final List<String> typeList = [];
+        data.forEach((map) {
+          map.forEach((key, value) {
+            if (!typeList.contains(key)) {
+              typeList.add(key);
+            }
+          });
+        });
+        setState(() {
+          this.typeList = typeList;
+          this.selectedTypes = typeList;
+          this.lineChartData = data;
+          this.sevenDates = dates;
+        });
+      });
+    }
   }
 
   void loadByGroup() {
@@ -145,27 +175,10 @@ class _StatisticScreen extends State<StatisticScreen> {
         pieTotal += v;
       });
     }
-    final List<Map<String, double>> lineChartData = [];
-    this.lineChartData.forEach((ele) {
-      Map<String, double> temp = Map<String, double>.from(ele);
-      List<String> keys = [];
-      temp.forEach((k, v) {
-        keys.add(k);
-      });
-      keys.forEach((k) {
-        if (!this.selectedTypes.contains(k)) {
-          temp.remove(k);
-        }
-      });
-      lineChartData.add(temp);
-    });
     bool showLineChart = false;
-    if (lineChartData.length > 0 && currentMode == Mode.month) {
-      lineChartData.forEach((ele) {
-        ele.forEach((k, v) {
-          showLineChart = true;
-        });
-      });
+    if (lineChartData.any((element) => element.length != 0) &&
+        (currentMode == Mode.month || currentMode == Mode.seven)) {
+      showLineChart = true;
     }
     return Scaffold(
         appBar: AppBar(
@@ -282,7 +295,12 @@ class _StatisticScreen extends State<StatisticScreen> {
                       children: <Widget>[
                         Container(
                             margin: EdgeInsets.only(top: 40),
-                            child: lineChart.LineChart(
+                            child: currentMode == Mode.seven ? timeChart.TimeLineChart(
+                              lineChartData,
+                              this._onSelectionChanged,
+                              sevenDates,
+                              animate: false
+                            ) : lineChart.LineChart(
                               lineChartData,
                               year,
                               this._onSelectionChanged,
@@ -296,16 +314,18 @@ class _StatisticScreen extends State<StatisticScreen> {
                                   width: 220,
                                   padding: EdgeInsets.all(6),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
                                       color: Color.fromRGBO(0, 0, 0, .6)),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: selectionBoard
                                         .map((datum) => Text(
-                                            '${datum.type}: ${datum.value < 0 ? -datum.value : datum.value}',
-                                              style: TextStyle(color: Colors.white),
-                                    ))
+                                              '${datum.type}: ${datum.value < 0 ? -datum.value : datum.value}',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ))
                                         .toList(),
                                   ),
                                 ))

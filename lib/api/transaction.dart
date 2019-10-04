@@ -135,4 +135,9 @@ class TransactionAPI {
       String accountId, DateTime start, DateTime end) {
     return TransactionService.getSumByDateGroupByType(accountId, start, end);
   }
+
+  static Future<Map<String, double>> getSumByDayByGroup(
+      String accountId, DateTime day) {
+    return TransactionService.getSumByDayByGroup(accountId, day);
+  }
 }

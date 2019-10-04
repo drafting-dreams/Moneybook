@@ -82,7 +82,7 @@ class TransactionService {
     List<dynamic> params = [type];
     await db.rawDelete(sql, params);
     DatabaseCreator.databaseLog(
-      'Delete transaction by type', sql, null, null, params);
+        'Delete transaction by type', sql, null, null, params);
   }
 
   static Future<List<Transaction>> getAll(String accountId) async {
@@ -167,6 +167,27 @@ class TransactionService {
     ''';
     final result = await db.rawQuery(sql, params);
     DatabaseCreator.databaseLog('GetSumByGroup', sql, result, null, params);
+    Map<String, double> re = {};
+    for (var item in result) {
+      re[item[DatabaseCreator.transactionType]] =
+          item['SUM(${DatabaseCreator.transactionValue})'];
+    }
+    return re;
+  }
+
+  static Future<Map<String, double>> getSumByDayByGroup(
+      String accountId, DateTime day) async {
+    final d = Util.date2DBString(day);
+    final sql = '''SELECT ${DatabaseCreator.transactionType},
+        SUM(${DatabaseCreator.transactionValue}) FROM ${DatabaseCreator.transactionTable}
+        WHERE ${DatabaseCreator.accountId} = ?
+        AND ${DatabaseCreator.transactionDate} = ?
+        AND ${DatabaseCreator.transactionValue} < 0
+        GROUP BY ${DatabaseCreator.transactionType}''';
+    List<dynamic> params = [accountId, d];
+    final result = await db.rawQuery(sql, params);
+    DatabaseCreator.databaseLog(
+        'GetSumByDayByGroup', sql, result, null, params);
     Map<String, double> re = {};
     for (var item in result) {
       re[item[DatabaseCreator.transactionType]] =
