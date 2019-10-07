@@ -25,7 +25,7 @@ class FileUtil {
       String contents = await file.readAsString();
       return contents;
     } catch (e) {
-      throw Exception('Read file failed');
+      throw e;
     }
   }
 }

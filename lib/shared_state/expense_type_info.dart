@@ -14,6 +14,11 @@ class ExpenseTypeInfo extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clear() {
+    types.clear();
+    notifyListeners();
+  }
+
   void delete(String name) {
     types.removeAt(types.indexWhere((t) => t.name == name));
     notifyListeners();

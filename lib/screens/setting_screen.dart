@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:money_book/api/account.dart';
+import 'package:money_book/api/bill.dart';
+import 'package:money_book/api/expense_type.dart';
+import 'package:money_book/api/transaction.dart';
+import 'package:money_book/model/account.dart';
+import 'package:money_book/shared_state/account.dart';
+import 'package:money_book/shared_state/expense_type_info.dart';
+import 'package:money_book/shared_state/transactions.dart';
 import 'package:money_book/widget/no_animation_route.dart';
 import 'package:money_book/screens/account_screen.dart';
 import 'package:money_book/screens/expense_type_setting_screen.dart';
 import 'package:money_book/widget/bottom_navigator.dart';
 import 'package:money_book/widget/radio_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite_porter/sqflite_porter.dart';
 import 'package:money_book/localDB/database_creator.dart';
 import 'package:money_book/utils/file_util.dart';
 import 'package:money_book/widget/simple_information_dialog.dart'
     as simpleDialog;
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:money_book/model/transaction.dart' as myTransaction;
+
+const Map<String, Widget> items = {
+  'local': Text('Locally'),
+  'dropbox': Text('Dropbox'),
+  'onedrive': Text('OneDrive'),
+  'googledrive': Text('GoogleDrive')
+};
 
 class SettingScreen extends StatefulWidget {
   @override
@@ -25,29 +44,95 @@ class _SettingScreenState extends State<SettingScreen> {
     this.utilizer = FileUtil();
   }
 
-  Widget renderTile(String text, IconData icon, Function handleTap) => InkWell(
-      onTap: () {
-        handleTap();
-      },
-      child: ListTile(
-        title: Row(
-          children: <Widget>[
-            Container(
-                width: 28,
-                margin: EdgeInsets.only(right: 20),
-                child: Icon(
-                  icon,
-                  color: Theme.of(context).accentColor,
-                )),
-            Text(
-              text,
-            )
-          ],
-        ),
-      ));
+  Widget renderTile(BuildContext context, String text, IconData icon,
+          Function handleTap) =>
+      InkWell(
+          onTap: () {
+            handleTap();
+          },
+          child: ListTile(
+            title: Row(
+              children: <Widget>[
+                Container(
+                    width: 28,
+                    margin: EdgeInsets.only(right: 20),
+                    child: Icon(
+                      icon,
+                      color: Theme.of(context).accentColor,
+                    )),
+                Text(
+                  text,
+                )
+              ],
+            ),
+          ));
+
+  Future importBackup(
+      BuildContext context,
+      String contents,
+      Transactions transactions,
+      ExpenseTypeInfo expenseType,
+      AccountState accountState) async {
+    final databasePath = await getDatabasesPath();
+    final path = join(databasePath, DatabaseCreator.dbName);
+    db.close();
+    await deleteDatabase(path);
+    db = await openDatabase(path,
+        version: 1, onCreate: DatabaseCreator().onCreate);
+    List<String> listString = contents.split('^^^');
+    dbImportSql(db, listString).then((v) {
+      ExpenseTypeAPI.list().then((types) {
+        expenseType.clear();
+        expenseType.addAll(types);
+      });
+      AccountAPI.getCurrentAccount().then((Account account) {
+        accountState.setCurrentAccount(account);
+        final now = DateTime.now();
+        final nextMonth = now.month == 12
+            ? DateTime(now.year + 1, now.month, 1)
+            : DateTime(now.year, now.month + 1, 1);
+        TransactionAPI.loadPrevious(account.id, nextMonth).then((ts) {
+          transactions.clear();
+          transactions.addAll(ts);
+        });
+      });
+      BillAPI.getPreviousUnpaidBills().then((unpaidBills) {
+        if (unpaidBills.length > 0) {
+          for (var b in unpaidBills) {
+            myTransaction.Transaction t = myTransaction.Transaction(
+                b.value, b.dueDate, b.accountId,
+                type: b.type, name: b.name);
+            BillAPI.pay(b.id, t);
+            transactions.add(t);
+          }
+          showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (context) => AlertDialog(
+                    title: Text('Autopay notification'),
+                    content: Text('Autopay bills has been paid.'),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('Got it'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  ));
+        }
+      });
+      simpleDialog.showSimpleDialog(
+          context, 'Import Success', 'Backup data is imported successfully');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    var transactions = Provider.of<Transactions>(context);
+    var accountState = Provider.of<AccountState>(context);
+    var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
+
     return Scaffold(
       appBar: AppBar(title: Text('Settings')),
       bottomNavigationBar: BottomNavigator(
@@ -55,31 +140,27 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       body: ListView(
         children: <Widget>[
-          renderTile('Accounts', Icons.account_box, () {
+          renderTile(context, 'Accounts', Icons.account_box, () {
             Navigator.push(
                 context,
                 NoAnimationMaterialPageRoute(
                     builder: (BuildContext context) => AccountScreen()));
           }),
-          renderTile('Expense Type', Icons.category, () {
+          renderTile(context, 'Expense Type', Icons.category, () {
             Navigator.push(
                 context,
                 NoAnimationMaterialPageRoute(
                     builder: (BuildContext context) =>
                         ExpenseTypeSettingScreen()));
           }),
-          renderTile('Back up', Icons.backup, () {
-            final Map<String, Widget> items = {
-              'local': Text('Locally'),
-              'dropbox': Text('Dropbox'),
-              'onedrive': Text('OneDrive'),
-              'googledrive': Text('GoogleDrive')
-            };
+          renderTile(context, 'Backup', Icons.backup, () {
             showRadioDialog(context, 'Backup', items, '').then((method) async {
               switch (method) {
                 case 'local':
                   dbExportSql(db).then((listString) {
-                    String str = listString.join('^^^');
+                    String str = listString
+                        .where((s) => !s.startsWith('CREATE'))
+                        .join('^^^');
                     utilizer.writeTo('.moneybookbackup', str).then((f) {
                       simpleDialog.showSimpleDialog(context, 'Backup Success',
                           'Backup file was saved at ${f.path}');
@@ -95,6 +176,53 @@ class _SettingScreenState extends State<SettingScreen> {
               }
             });
           }),
+          renderTile(context, 'Import Backup', Icons.cloud_download, () {
+            showRadioDialog(context, 'Import', items, '').then((method) {
+              switch (method) {
+                case 'local':
+                  showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (context) => AlertDialog(
+                            title: Text('Import Backup'),
+                            content: Text(
+                                'This will wipe all your current data on you device. Are you sure?'),
+                            actions: <Widget>[
+                              FlatButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(1);
+                                  },
+                                  child: Text('Yes')),
+                              FlatButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('No'))
+                            ],
+                          )).then((answer) {
+                    if (answer == 1) {
+                      utilizer.readFrom('.moneybookbackup').then((contents) {
+                        importBackup(context, contents, transactions,
+                            expenseTypeInfo, accountState);
+                      }).catchError((error) async {
+                        final localPath = await utilizer.localPath;
+                        simpleDialog.showSimpleDialog(
+                            context,
+                            'Read File Failed',
+                            'Make sure this file ($localPath/.moneybookbackup) exist on you device.');
+                      });
+                    }
+                  });
+                  break;
+                case 'dropbox':
+                  break;
+                case 'onedrive':
+                  break;
+                case 'googledrive':
+                  break;
+              }
+            });
+          })
         ],
       ),
     );
