@@ -47,7 +47,6 @@ class _RadioDialogState<T> extends State<RadioDialog> {
         borderRadius: BorderRadius.circular(10),
       ),
       elevation: 0.0,
-      backgroundColor: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

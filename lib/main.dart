@@ -4,20 +4,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:money_book/api/bill.dart';
-import 'package:money_book/screens/book_screen.dart';
-import 'package:money_book/screens/income_edit_screen.dart';
-import 'package:money_book/screens/expense_edit_screen.dart';
-import 'package:money_book/screens/account_screen.dart';
+import 'app.dart' as app;
 import 'package:provider/provider.dart';
 import 'package:money_book/shared_state/transactions.dart';
 import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/shared_state/expense_type_info.dart';
+import 'package:money_book/shared_state/theme.dart';
 import 'package:money_book/model/transaction.dart';
 import 'package:money_book/localDB/database_creator.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/api/account.dart';
 import 'package:money_book/api/expense_type.dart';
 import 'package:money_book/model/account.dart';
+import 'const/themes.dart';
 
 void main() async {
   await DatabaseCreator().initDatabase();
@@ -28,8 +27,6 @@ void main() async {
 
 /// This Widget is the main application widget.
 class MyApp extends StatefulWidget {
-  static const String _title = 'Moneybook';
-
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -38,11 +35,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final AccountState accountState = AccountState();
   final Transactions transactions = Transactions();
   final ExpenseTypeInfo expenseTypes = ExpenseTypeInfo();
+  final ThemeChanger themeChanger = ThemeChanger(getTheme('noble purple'));
   bool popup = false;
-  final navigatorKey = GlobalKey<NavigatorState>();
 
   Future _showDialog() => showDialog(
-      context: navigatorKey.currentState.overlay.context,
+      context: app.navigatorKey.currentState.overlay.context,
       barrierDismissible: true,
       builder: (context) => AlertDialog(
             title: Text('Autopay notification'),
@@ -125,15 +122,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       providers: [
         ChangeNotifierProvider.value(notifier: transactions),
         ChangeNotifierProvider.value(notifier: accountState),
-        ChangeNotifierProvider.value(notifier: expenseTypes)
+        ChangeNotifierProvider.value(notifier: expenseTypes),
+        ChangeNotifierProvider.value(notifier: themeChanger)
       ],
-      child:
-          MaterialApp(title: MyApp._title, navigatorKey: navigatorKey, routes: {
-        '/': (context) => BookScreen(),
-        '/edit/income': (context) => IncomeEditScreen(),
-        '/edit/expense': (context) => ExpenseEditScreen(),
-        '/accounts': (context) => AccountScreen()
-      }),
+      child: app.App(),
     );
   }
 }

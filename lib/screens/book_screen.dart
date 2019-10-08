@@ -374,7 +374,7 @@ class _BookScreen extends State<BookScreen> {
                             child: RaisedButton(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
-                                color: Colors.lightBlueAccent,
+                                color: Theme.of(context).accentColor,
                                 padding: EdgeInsets.symmetric(
                                   vertical: 19,
                                 ),

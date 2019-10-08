@@ -463,7 +463,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                           child: RaisedButton(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
-                              color: Colors.lightBlueAccent,
+                              color: Theme.of(context).accentColor,
                               padding: EdgeInsets.symmetric(
                                 vertical: 19,
                               ),
@@ -509,7 +509,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                       });
                     },
                     child: Container(
-                        decoration: BoxDecoration(color: Colors.blue[100]),
+                        decoration: BoxDecoration(color: Theme.of(context).dividerColor),
                         padding: EdgeInsets.fromLTRB(10, 15, 5, 15),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

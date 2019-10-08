@@ -69,9 +69,9 @@ class _MonthListState extends State<MonthList> {
                     });
                   },
                   child: Container(
-                    decoration: BoxDecoration(color: Colors.blue[100]),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                    decoration:
+                        BoxDecoration(color: Theme.of(context).dividerColor),
+                    padding: EdgeInsets.fromLTRB(10, 15, 5, 15),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
