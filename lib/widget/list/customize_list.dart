@@ -107,7 +107,7 @@ class _CustomizeListState extends State<CustomizeList> {
                   });
                 },
                 child: Container(
-                  decoration: BoxDecoration(color: Colors.blue[100]),
+                  decoration: BoxDecoration(color: Theme.of(context).dividerColor),
                   padding: EdgeInsets.fromLTRB(10, 15, 5, 15),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

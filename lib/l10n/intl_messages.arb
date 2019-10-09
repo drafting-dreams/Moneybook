@@ -1,0 +1,373 @@
+{
+  "@@last_modified": "2019-10-09T19:20:54.011094",
+  "moneyBook": "MoneyBook",
+  "@moneyBook": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "statistic": "Statistic",
+  "@statistic": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "history": "History",
+  "@history": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "bill": "Bill",
+  "@bill": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings": "Settings",
+  "@settings": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "general": "General",
+  "@general": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "theme": "Theme",
+  "@theme": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "accounts": "Accounts",
+  "@accounts": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "expenseType": "Expense Type",
+  "@expenseType": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "backup": "Backup",
+  "@backup": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "import": "Import Backup",
+  "@import": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "transactionClass": "Class",
+  "@transactionClass": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "all": "All",
+  "@all": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "income": "Income",
+  "@income": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "expense": "Expense",
+  "@expense": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "time": "Time",
+  "@time": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "myDefault": "Default",
+  "@myDefault": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "byMonth": "By Month",
+  "@byMonth": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "byYear": "By Year",
+  "@byYear": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "customize": "Customize",
+  "@customize": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "amount": "Amount",
+  "@amount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "description": "Description",
+  "@description": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "autopay": "AutoPay",
+  "@autopay": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "repeat": "Repeat",
+  "@repeat": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "repeatTimes": "Repeat Times",
+  "@repeatTimes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "repeatFrequency": "Repeat Frequency By Month",
+  "@repeatFrequency": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "from": "From",
+  "@from": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "to": "to",
+  "@to": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "jan": "Jan",
+  "@jan": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "feb": "Feb",
+  "@feb": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "mar": "Mar",
+  "@mar": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "apr": "Apr",
+  "@apr": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "may": "May",
+  "@may": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "jun": "Jun",
+  "@jun": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "jul": "Jul",
+  "@jul": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "aug": "Aug",
+  "@aug": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sep": "Sep",
+  "@sep": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "oct": "Oct",
+  "@oct": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "nov": "Nov",
+  "@nov": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "dec": "Dec",
+  "@dec": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "filterRange": "Filter\nRange",
+  "@filterRange": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "paymentStatus": "Payment Status",
+  "@paymentStatus": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "paid": "Paid",
+  "@paid": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "unpaid": "Unpaid",
+  "@unpaid": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "chartWarn": "No data for this period of time",
+  "@chartWarn": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "seven": "recent 7 days",
+  "@seven": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "thirty": "recent 30 days",
+  "@thirty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "lastSix": "last 6 months",
+  "@lastSix": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "edit": "Edit",
+  "@edit": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete": "Delete",
+  "@delete": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "pay": "Pay",
+  "@pay": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "ratioChart": "Expense type ratio chart",
+  "@ratioChart": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "trendChart": "Expense trend chart",
+  "@trendChart": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "account": "Account",
+  "@account": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "typeName": "Type Name",
+  "@typeName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "housing": "Housing",
+  "@housing": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "commuting": "Commuting",
+  "@commuting": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "food": "Food",
+  "@food": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "shopping": "Shopping",
+  "@shopping": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "digital": "Digital",
+  "@digital": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "individual": "Individual",
+  "@individual": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "education": "Education",
+  "@education": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "entertainment": "Entertainment",
+  "@entertainment": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "exercising": "Exercising",
+  "@exercising": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "family": "Family",
+  "@family": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "medical": "Medical",
+  "@medical": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "others": "Others",
+  "@others": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "locally": "Locally",
+  "@locally": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "blue": "Alien Blue",
+  "@blue": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "green": "Tree",
+  "@green": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "pony": "Pony",
+  "@pony": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "purple": "Noble Purple",
+  "@purple": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "dark": "Dark",
+  "@dark": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "chocolate": "Chocolate",
+  "@chocolate": {
+    "type": "text",
+    "placeholders": {}
+  }
+}

@@ -24,6 +24,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:money_book/model/transaction.dart' as myTransaction;
 import 'package:money_book/const/themes.dart';
+import 'package:money_book/locale/locales.dart';
 
 const Map<String, Widget> items = {
   'local': Text('Locally'),
@@ -163,38 +164,38 @@ class _SettingScreenState extends State<SettingScreen> {
     var themeChanger = Provider.of<ThemeChanger>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Settings')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).settings)),
       bottomNavigationBar: BottomNavigator(
         initialIndex: 3,
       ),
       body: ListView(
         children: <Widget>[
-          renderHeader(context, 'General'),
-          renderTile(context, 'Accounts', Icons.account_box, () {
+          renderHeader(context, AppLocalizations.of(context).general),
+          renderTile(context, AppLocalizations.of(context).accounts, Icons.account_box, () {
             Navigator.push(
                 context,
                 NoAnimationMaterialPageRoute(
                     builder: (BuildContext context) => AccountScreen()));
           }),
-          renderTile(context, 'Expense Type', Icons.category, () {
+          renderTile(context, AppLocalizations.of(context).expenseType, Icons.category, () {
             Navigator.push(
                 context,
                 NoAnimationMaterialPageRoute(
                     builder: (BuildContext context) =>
                         ExpenseTypeSettingScreen()));
           }),
-          renderHeader(context, 'Theme'),
-          renderTile(context, 'Theme', Icons.remove_red_eye, () {
+          renderHeader(context, AppLocalizations.of(context).theme),
+          renderTile(context, AppLocalizations.of(context).theme, Icons.remove_red_eye, () {
             showRadioDialog(
-                    context, 'Theme', themeItems, themeChanger.themeName)
+                    context, AppLocalizations.of(context).theme, themeItems, themeChanger.themeName)
                 .then((theme) {
               themeChanger.setTheme(theme, getTheme(theme));
               ThemeAPI.setTheme(theme);
             });
           }),
-          renderHeader(context, 'Backup'),
-          renderTile(context, 'Backup', Icons.backup, () {
-            showRadioDialog(context, 'Backup', items, '').then((method) async {
+          renderHeader(context, AppLocalizations.of(context).backup),
+          renderTile(context, AppLocalizations.of(context).backup, Icons.backup, () {
+            showRadioDialog(context, AppLocalizations.of(context).backup, items, '').then((method) async {
               switch (method) {
                 case 'local':
                   dbExportSql(db).then((listString) {
@@ -216,15 +217,15 @@ class _SettingScreenState extends State<SettingScreen> {
               }
             });
           }),
-          renderTile(context, 'Import Backup', Icons.cloud_download, () {
-            showRadioDialog(context, 'Import', items, '').then((method) {
+          renderTile(context, AppLocalizations.of(context).import, Icons.cloud_download, () {
+            showRadioDialog(context, AppLocalizations.of(context).import, items, '').then((method) {
               switch (method) {
                 case 'local':
                   showDialog(
                       context: context,
                       barrierDismissible: true,
                       builder: (context) => AlertDialog(
-                            title: Text('Import Backup'),
+                            title: Text(AppLocalizations.of(context).import),
                             content: Text(
                                 'This will wipe all your current data on you device. Are you sure?'),
                             actions: <Widget>[

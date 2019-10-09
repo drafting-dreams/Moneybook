@@ -1,0 +1,367 @@
+{
+  "statistic": "统计",
+  "@statistic": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "history": "记录",
+  "@history": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "bill": "账单",
+  "@bill": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings": "设置",
+  "@settings": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "general": "通用",
+  "@general": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "theme": "主题",
+  "@theme": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "accounts": "账户",
+  "@accounts": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "expenseType": "消费类型",
+  "@expenseType": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "backup": "备份",
+  "@backup": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "import": "导入备份",
+  "@import": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "transactionClass": "类型",
+    "@transactionClass": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "all": "全部",
+    "@all": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "income": "收入",
+    "@income": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "expense": "消费",
+    "@expense": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "time": "时间",
+    "@time": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "myDefault": "默认",
+    "@myDefault": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "byMonth": "按月",
+    "@byMonth": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "byYear": "按年",
+    "@byYear": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "customize": "自定义",
+    "@customize": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "amount": "金额",
+    "@amount": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "description": "备注",
+    "@description": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "autopay": "自动支付",
+    "@autopay": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "repeat": "重复",
+    "@repeat": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "repeatTimes": "重复次数",
+    "@repeatTimes": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "repeatFrequency": "重复频率（按月）",
+    "@repeatFrequency": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "from": "起",
+    "@from": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "to": "止",
+    "@to": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "jan": "一月",
+    "@jan": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "feb": "二月",
+    "@feb": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "mar": "三月",
+    "@mar": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "apr": "四月",
+    "@apr": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "may": "五月",
+    "@may": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "jun": "六月",
+    "@jun": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "jul": "七月",
+    "@jul": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "aug": "八月",
+    "@aug": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "sep": "九月",
+    "@sep": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "oct": "十月",
+    "@oct": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "nov": "十一月",
+    "@nov": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "dec": "十二月",
+    "@dec": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "filterRange": "筛选",
+    "@filterRange": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "paymentStatus": "支付状况",
+    "@paymentStatus": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "paid": "已支付",
+    "@paid": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "unpaid": "未支付",
+    "@unpaid": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "chartWarn": "该时间段内没有消费数据",
+    "@chartWarn": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "seven": "最近7天",
+    "@seven": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "thirty": "最近30天",
+    "@thirty": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "lastSix": "最近6个月",
+    "@lastSix": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "edit": "编辑",
+    "@edit": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "delete": "删除",
+    "@delete": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "pay": "支付",
+    "@pay": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "ratioChart": "消费比例图",
+    "@ratioChart": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "trendChart": "消费趋势图",
+    "@trendChart": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "account": "支付",
+    "@account": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "typeName": "类型名称",
+    "@typeName": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "housing": "住房",
+    "@housing": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "commuting": "通勤",
+    "@commuting": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "food": "饮食",
+    "@food": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "shopping": "购物",
+    "@shopping": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "digital": "电子",
+    "@digital": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "individual": "个人",
+    "@individual": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "education": "教育",
+    "@education": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "entertainment": "娱乐",
+    "@entertainment": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "exercising": "运动",
+    "@exercising": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "family": "家庭",
+    "@family": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "medical": "医疗",
+    "@medical": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "others": "其它",
+    "@others": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "locally": "本地",
+    "@locally": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "blue": "外星蓝",
+    "@blue": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "green": "清新绿",
+    "@green": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "pony": "少女粉",
+    "@pony": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "purple": "高贵紫",
+    "@purple": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "dark": "黑暗",
+    "@dark": {
+      "type": "text",
+      "placeholders": {}
+    },
+    "chocolate": "巧克力",
+    "@chocolate": {
+      "type": "text",
+      "placeholders": {}
+    }
+}

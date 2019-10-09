@@ -4,6 +4,7 @@ import 'package:money_book/screens/setting_screen.dart';
 import 'package:money_book/screens/book_screen.dart';
 import 'package:money_book/screens/statistic_screen.dart';
 import 'package:money_book/screens/bill_screen.dart';
+import 'package:money_book/locale/locales.dart';
 
 class BottomNavigator extends StatelessWidget {
   final int initialIndex;
@@ -50,12 +51,20 @@ class BottomNavigator extends StatelessWidget {
     return BottomNavigationBar(
 //      type: BottomNavigationBarType.fixed,
       items: [
-        BottomNavigationBarItem(icon: Icon(Icons.list), title: Text('History')),
-        BottomNavigationBarItem(icon: Icon(Icons.event_note), title: Text('Bill')),
         BottomNavigationBarItem(
-            icon: Icon(Icons.equalizer), title: Text('Statistic')),
+            icon: Icon(Icons.list),
+            title: Text(
+              AppLocalizations.of(context).history,
+            )),
         BottomNavigationBarItem(
-            icon: Icon(Icons.settings), title: Text('Settings'))
+            icon: Icon(Icons.event_note),
+            title: Text(AppLocalizations.of(context).bill)),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.equalizer),
+            title: Text(AppLocalizations.of(context).statistic)),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            title: Text(AppLocalizations.of(context).settings))
       ],
       selectedItemColor: Theme.of(context).accentColor,
       unselectedItemColor: Colors.grey,
