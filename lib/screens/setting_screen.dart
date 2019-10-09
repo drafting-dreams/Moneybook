@@ -3,10 +3,12 @@ import 'package:money_book/api/account.dart';
 import 'package:money_book/api/bill.dart';
 import 'package:money_book/api/expense_type.dart';
 import 'package:money_book/api/transaction.dart';
+import 'package:money_book/api/theme.dart';
 import 'package:money_book/model/account.dart';
 import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/shared_state/expense_type_info.dart';
 import 'package:money_book/shared_state/transactions.dart';
+import 'package:money_book/shared_state/theme.dart';
 import 'package:money_book/widget/no_animation_route.dart';
 import 'package:money_book/screens/account_screen.dart';
 import 'package:money_book/screens/expense_type_setting_screen.dart';
@@ -21,12 +23,22 @@ import 'package:money_book/widget/simple_information_dialog.dart'
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:money_book/model/transaction.dart' as myTransaction;
+import 'package:money_book/const/themes.dart';
 
 const Map<String, Widget> items = {
   'local': Text('Locally'),
   'dropbox': Text('Dropbox'),
   'onedrive': Text('OneDrive'),
   'googledrive': Text('GoogleDrive')
+};
+
+const Map<String, Widget> themeItems = {
+  'alien blue': Text('Alien Blue'),
+  'tree': Text('Tree'),
+  'pony': Text('Pony'),
+  'noble purple': Text('Noble Purple'),
+  'chocolate': Text('Chocolate'),
+  'dark': Text('Dark')
 };
 
 class SettingScreen extends StatefulWidget {
@@ -67,12 +79,25 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
           ));
 
+  Widget renderHeader(BuildContext context, String title) => Container(
+        decoration: BoxDecoration(color: Theme.of(context).dividerColor),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Text(title, style: TextStyle(fontSize: 16)),
+            )
+          ],
+        ),
+      );
+
   Future importBackup(
       BuildContext context,
       String contents,
       Transactions transactions,
       ExpenseTypeInfo expenseType,
-      AccountState accountState) async {
+      AccountState accountState,
+      ThemeChanger themeChanger) async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, DatabaseCreator.dbName);
     db.close();
@@ -81,6 +106,9 @@ class _SettingScreenState extends State<SettingScreen> {
         version: 1, onCreate: DatabaseCreator().onCreate);
     List<String> listString = contents.split('^^^');
     dbImportSql(db, listString).then((v) {
+      ThemeAPI.getUsing().then((theme) {
+        themeChanger.setTheme(theme, getTheme(theme));
+      });
       ExpenseTypeAPI.list().then((types) {
         expenseType.clear();
         expenseType.addAll(types);
@@ -132,6 +160,7 @@ class _SettingScreenState extends State<SettingScreen> {
     var transactions = Provider.of<Transactions>(context);
     var accountState = Provider.of<AccountState>(context);
     var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
+    var themeChanger = Provider.of<ThemeChanger>(context);
 
     return Scaffold(
       appBar: AppBar(title: Text('Settings')),
@@ -140,6 +169,7 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       body: ListView(
         children: <Widget>[
+          renderHeader(context, 'General'),
           renderTile(context, 'Accounts', Icons.account_box, () {
             Navigator.push(
                 context,
@@ -153,6 +183,16 @@ class _SettingScreenState extends State<SettingScreen> {
                     builder: (BuildContext context) =>
                         ExpenseTypeSettingScreen()));
           }),
+          renderHeader(context, 'Theme'),
+          renderTile(context, 'Theme', Icons.remove_red_eye, () {
+            showRadioDialog(
+                    context, 'Theme', themeItems, themeChanger.themeName)
+                .then((theme) {
+              themeChanger.setTheme(theme, getTheme(theme));
+              ThemeAPI.setTheme(theme);
+            });
+          }),
+          renderHeader(context, 'Backup'),
           renderTile(context, 'Backup', Icons.backup, () {
             showRadioDialog(context, 'Backup', items, '').then((method) async {
               switch (method) {
@@ -203,7 +243,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     if (answer == 1) {
                       utilizer.readFrom('.moneybookbackup').then((contents) {
                         importBackup(context, contents, transactions,
-                            expenseTypeInfo, accountState);
+                            expenseTypeInfo, accountState, themeChanger);
                       }).catchError((error) async {
                         final localPath = await utilizer.localPath;
                         simpleDialog.showSimpleDialog(

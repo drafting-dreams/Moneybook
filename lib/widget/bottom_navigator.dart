@@ -57,7 +57,7 @@ class BottomNavigator extends StatelessWidget {
         BottomNavigationBarItem(
             icon: Icon(Icons.settings), title: Text('Settings'))
       ],
-      selectedItemColor: Theme.of(context).primaryColor,
+      selectedItemColor: Theme.of(context).accentColor,
       unselectedItemColor: Colors.grey,
       currentIndex: initialIndex,
       onTap: tapWrapper(context),

@@ -158,7 +158,7 @@ class _AccountScreen extends State<AccountScreen> {
                                   margin: EdgeInsets.only(right: 10),
                                   child: Icon(
                                     Icons.check,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context).accentColor,
                                   ),
                                 ),
                                 Text(accounts[index].name)

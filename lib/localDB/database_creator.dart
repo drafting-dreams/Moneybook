@@ -29,6 +29,9 @@ class DatabaseCreator {
   static const billDescription = 'billDescription';
   static const billDueDate = 'billDueDate';
   static const billId = 'billId';
+  static const themeTable = 'themeTable';
+  static const theme = 'theme';
+  static const themeUsing = 'themeUsing';
 
   static void databaseLog(String functionName, String sql,
       [List<Map<String, dynamic>> selectQueryResult,
@@ -98,12 +101,21 @@ class DatabaseCreator {
     await db.execute(todoSql);
   }
 
+  Future<void> createThemeTable(Database db) async {
+    final todoSql = '''CREATE TABLE $themeTable
+    (
+      $theme Text PRIMARY KEY,
+      $themeUsing INTEGER
+    )''';
+    await db.execute(todoSql);
+  }
+
   Future<String> getDatabasePath(String dbName) async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, dbName);
 
     if (await Directory(dirname(path)).exists()) {
-//      await deleteDatabase(path);
+      await deleteDatabase(path);
     } else {
       Directory(path).create(recursive: true);
     }
@@ -121,5 +133,6 @@ class DatabaseCreator {
     await createTransactionTable(db);
     await createExpenseTypeTable(db);
     await createBillTable(db);
+    await createThemeTable(db);
   }
 }

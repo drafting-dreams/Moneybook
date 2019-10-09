@@ -261,7 +261,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                             padding: const EdgeInsets.only(right: 15.0),
                             child: Icon(
                               Icons.autorenew,
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).accentColor,
                             ),
                           ),
                           Expanded(
@@ -283,7 +283,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                         padding: const EdgeInsets.only(right: 15.0),
                         child: Icon(
                           Icons.attach_money,
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).accentColor,
                         ),
                       ),
                       Expanded(
@@ -311,7 +311,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                           padding: EdgeInsets.only(right: 15),
                           child: Icon(
                             Icons.subject,
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).accentColor,
                           )),
                       Expanded(
                         child: TextFormField(
@@ -332,7 +332,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                       Padding(
                         padding: const EdgeInsets.only(right: 15.0),
                         child: Icon(Icons.category,
-                            color: Theme.of(context).primaryColor),
+                            color: Theme.of(context).accentColor),
                       ),
                       Expanded(
                         child: DropdownButton<String>(
@@ -381,7 +381,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                                   padding: EdgeInsets.only(right: 15),
                                   child: Icon(
                                     Icons.date_range,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context).accentColor,
                                   ),
                                 ),
                                 Expanded(
@@ -401,7 +401,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                                 padding: const EdgeInsets.only(right: 15.0),
                                 child: Icon(
                                   Icons.repeat,
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).accentColor,
                                 ),
                               ),
                               Expanded(
@@ -429,7 +429,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                                 padding: const EdgeInsets.only(right: 15.0),
                                 child: Icon(
                                   Icons.av_timer,
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).accentColor,
                                 ),
                               ),
                               Expanded(
@@ -457,7 +457,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                                 padding: const EdgeInsets.only(right: 15.0),
                                 child: Icon(
                                   Icons.update,
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).accentColor,
                                 ),
                               ),
                               Expanded(
@@ -489,7 +489,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                                         padding: EdgeInsets.only(right: 15),
                                         child: Icon(
                                           Icons.date_range,
-                                          color: Theme.of(context).primaryColor,
+                                          color: Theme.of(context).accentColor,
                                         ),
                                       ),
                                       Expanded(

@@ -106,7 +106,7 @@ class _IncomeEdit extends State<IncomeEditScreen> {
                               padding: const EdgeInsets.only(right: 15.0),
                               child: Icon(
                                 Icons.attach_money,
-                                color: Theme.of(context).primaryColor,
+                                color: Theme.of(context).accentColor,
                               ),
                             ),
                             Expanded(
@@ -135,7 +135,7 @@ class _IncomeEdit extends State<IncomeEditScreen> {
                                 padding: EdgeInsets.only(right: 15),
                                 child: Icon(
                                   Icons.subject,
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).accentColor,
                                 )),
                             Expanded(
                               child: TextFormField(
@@ -162,7 +162,7 @@ class _IncomeEdit extends State<IncomeEditScreen> {
                       Padding(
                         padding: const EdgeInsets.only(right: 15.0),
                         child: Icon(Icons.date_range,
-                            color: Theme.of(context).primaryColor),
+                            color: Theme.of(context).accentColor),
                       ),
                       Expanded(
                           child: Text('${date.year}-${date.month}-${date.day}',

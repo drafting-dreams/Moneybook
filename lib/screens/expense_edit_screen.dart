@@ -119,7 +119,7 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                               padding: const EdgeInsets.only(right: 15.0),
                               child: Icon(
                                 Icons.attach_money,
-                                color: Theme.of(context).primaryColor,
+                                color: Theme.of(context).accentColor,
                               ),
                             ),
                             Expanded(
@@ -148,7 +148,7 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                                 padding: EdgeInsets.only(right: 15),
                                 child: Icon(
                                   Icons.subject,
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).accentColor,
                                 )),
                             Expanded(
                               child: TextFormField(
@@ -169,7 +169,7 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                             Padding(
                               padding: const EdgeInsets.only(right: 15.0),
                               child: Icon(Icons.category,
-                                  color: Theme.of(context).primaryColor),
+                                  color: Theme.of(context).accentColor),
                             ),
                             Expanded(
                               child: DropdownButton<String>(
@@ -218,7 +218,7 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                         padding: const EdgeInsets.only(right: 15.0),
                         child: Icon(
                           Icons.date_range,
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).accentColor,
                         ),
                       ),
                       Expanded(

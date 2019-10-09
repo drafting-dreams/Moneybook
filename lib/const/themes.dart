@@ -30,7 +30,10 @@ final themes = {
 
 ThemeData getTheme(String color) {
   if (color == 'dark') {
-    return ThemeData.dark();
+    final darkTheme = ThemeData.dark();
+    return darkTheme.copyWith(
+        cursorColor: darkTheme.accentColor,
+        textSelectionHandleColor: darkTheme.accentColor);
   }
 
   return ThemeData.light().copyWith(

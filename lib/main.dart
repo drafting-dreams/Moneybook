@@ -15,6 +15,7 @@ import 'package:money_book/localDB/database_creator.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/api/account.dart';
 import 'package:money_book/api/expense_type.dart';
+import 'package:money_book/api/theme.dart';
 import 'package:money_book/model/account.dart';
 import 'const/themes.dart';
 
@@ -22,6 +23,7 @@ void main() async {
   await DatabaseCreator().initDatabase();
   await AccountAPI.initializingAccount();
   await ExpenseTypeAPI.initializingTypes();
+  await ThemeAPI.initializingThemes();
   runApp(MyApp());
 }
 
@@ -35,8 +37,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final AccountState accountState = AccountState();
   final Transactions transactions = Transactions();
   final ExpenseTypeInfo expenseTypes = ExpenseTypeInfo();
-  final ThemeChanger themeChanger = ThemeChanger(getTheme('noble purple'));
+  final ThemeChanger themeChanger = ThemeChanger();
   bool popup = false;
+  bool themeLoaded = false;
 
   Future _showDialog() => showDialog(
       context: app.navigatorKey.currentState.overlay.context,
@@ -73,6 +76,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    ThemeAPI.getUsing().then((theme) {
+      themeChanger.setTheme(theme, getTheme(theme));
+      setState(() {
+        themeLoaded = true;
+      });
+    });
     Account currentAccount;
     ExpenseTypeAPI.list().then((types) {
       expenseTypes.addAll(types);
@@ -125,7 +134,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ChangeNotifierProvider.value(notifier: expenseTypes),
         ChangeNotifierProvider.value(notifier: themeChanger)
       ],
-      child: app.App(),
+      child: themeLoaded ? app.App() : Container(),
     );
   }
 }
