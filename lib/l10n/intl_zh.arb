@@ -1,4 +1,9 @@
 {
+  "moneyBook": "钱书",
+  "@moneyBook": {
+    "type": "text",
+    "placeholders": {}
+  },
   "statistic": "统计",
   "@statistic": {
     "type": "text",
@@ -363,5 +368,50 @@
     "@chocolate": {
       "type": "text",
       "placeholders": {}
-    }
+    },
+    "enterExpenseAmount": "请输入消费金额",
+      "@enterExpenseAmount": {
+        "type": "text",
+        "placeholders": {}
+      },
+      "enterIncomeAmount": "请输入收入金额",
+      "@enterExpenseIncome": {
+        "type": "text",
+        "placeholders": {}
+      },
+      "enterBillAmount": "请输入每期账单金额",
+      "@enterBillAmount": {
+        "type": "text",
+        "placeholders": {}
+      },
+      "enterPositive": "金额不能为负数",
+      "@enterPositive": {
+        "type": "text",
+        "placeholders": {}
+      },
+      "incomeDescription": "请输入收入备注",
+      "@incomeDescription": {
+        "type": "text",
+        "placeholders": {}
+      },
+      "expenseDescription": "请输入消费备注",
+      "@expenseDescription": {
+        "type": "text",
+        "placeholders": {}
+      },
+      "billDescription": "请输入账单备注",
+        "@billDescription": {
+          "type": "text",
+          "placeholders": {}
+        },
+        "frequencyRange": "请输入一个1到60的整数",
+        "@frequencyRange": {
+          "type": "text",
+          "placeholders": {}
+        },
+        "repeatTimesRange": "请输入一个2到60的整数",
+        "@repeatTimesRange": {
+          "type": "text",
+          "placeholders": {}
+        }
 }

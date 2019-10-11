@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_book/app.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/shared_state/transactions.dart';
 import 'package:money_book/shared_state/account.dart';
@@ -7,6 +8,7 @@ import 'package:money_book/model/transaction.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/model/expense_type.dart';
+import 'package:money_book/locale/locales.dart';
 
 class ExpenseEditScreen extends StatefulWidget {
   String id;
@@ -61,6 +63,8 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
     var transactions = Provider.of<Transactions>(context);
     var accountState = Provider.of<AccountState>(context);
     var typeInfo = Provider.of<ExpenseTypeInfo>(context);
+    var localizer = AppLocalizations.of(context);
+
     if (selectedType == null) {
       setState(() {
         selectedType = typeInfo.types[0].name;
@@ -68,7 +72,7 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
     }
 
     return Scaffold(
-        appBar: AppBar(title: Text('Moneybook'), actions: [
+        appBar: AppBar(title: Text(localizer.expense), actions: [
           IconButton(
             onPressed: () async {
               if (_formKey.currentState.validate()) {
@@ -125,17 +129,17 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                             Expanded(
                               child: TextFormField(
                                 decoration:
-                                    InputDecoration(labelText: 'Amount'),
+                                    InputDecoration(labelText: localizer.amount),
                                 controller: amountController,
                                 keyboardType: TextInputType.number,
                                 validator: (v) {
                                   String value = amountController.text;
                                   if (value.isEmpty) {
-                                    return 'Please enter your income amount';
+                                    return localizer.enterExpenseAmount;
                                   }
                                   if (!Util.isNumeric(value) ||
                                       double.parse(value) <= 0) {
-                                    return 'Please enter a positive Number';
+                                    return localizer.enterPositive;
                                   }
                                 },
                               ),
@@ -153,12 +157,12 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                             Expanded(
                               child: TextFormField(
                                   decoration:
-                                      InputDecoration(labelText: 'Description'),
+                                      InputDecoration(labelText: localizer.description),
                                   controller: descriptionController,
                                   validator: (v) {
                                     String value = descriptionController.text;
                                     if (value.trim().isEmpty) {
-                                      return 'Please input some description about the income';
+                                      return localizer.expenseDescription;
                                     }
                                   }),
                             ),

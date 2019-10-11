@@ -92,6 +92,15 @@ class AppLocalizations {
   String get purple => Intl.message('Noble Purple', name: 'purple');
   String get dark => Intl.message('Dark', name: 'dark');
   String get chocolate => Intl.message('Chocolate', name: 'chocolate');
+  String get enterExpenseAmount => Intl.message('Please enter your expense amount', name: 'enterExpenseAmount');
+  String get enterIncomeAmount => Intl.message('Please enter your income amount', name: 'enterIncomeAmount');
+  String get enterBillAmount => Intl.message('Please enter your bill amount for each period', name: 'enterBillAmount');
+  String get enterPositive => Intl.message('Please enter a positive Number', name: 'enterPositive');
+  String get incomeDescription => Intl.message('Please input some description about the income', name: 'incomeDescription');
+  String get expenseDescription => Intl.message('Please input some description about the expense', name: 'expenseDescription');
+  String get billDescription => Intl.message('Please input some description about the bill', name: 'billDescription');
+  String get frequencyRange => Intl.message('Please enter an integer ranged from 1 to 60', name: 'frequencyRange');
+  String get repeatTimesRange => Intl.message('Please enter an integer ranged from 2 to 60', name: 'repeatTimesRange');
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

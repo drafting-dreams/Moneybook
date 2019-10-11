@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-10-09T19:20:54.011094",
+  "@@last_modified": "2019-10-11T21:00:51.829028",
   "moneyBook": "MoneyBook",
   "@moneyBook": {
     "type": "text",
@@ -367,6 +367,51 @@
   },
   "chocolate": "Chocolate",
   "@chocolate": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterExpenseAmount": "Please enter your expense amount",
+  "@enterExpenseAmount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterIncomeAmount": "Please enter your income amount",
+  "@enterIncomeAmount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterBillAmount": "Please enter your bill amount for each period",
+  "@enterBillAmount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterPositive": "Please enter a positive Number",
+  "@enterPositive": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "incomeDescription": "Please input some description about the income",
+  "@incomeDescription": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "expenseDescription": "Please input some description about the expense",
+  "@expenseDescription": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "billDescription": "Please input some description about the bill",
+  "@billDescription": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "frequencyRange": "Please enter an integer ranged from 1 to 60",
+  "@frequencyRange": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "repeatTimesRange": "Please enter an integer ranged from 2 to 60",
+  "@repeatTimesRange": {
     "type": "text",
     "placeholders": {}
   }

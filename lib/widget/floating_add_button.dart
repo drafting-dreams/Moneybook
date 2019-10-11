@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:money_book/screens/income_edit_screen.dart';
 import 'package:money_book/screens/expense_edit_screen.dart';
+import 'package:money_book/locale/locales.dart';
 
 class FloatingAddButton extends StatefulWidget {
   Function update;
@@ -17,10 +18,11 @@ class _FloatingAddButtonState extends State<FloatingAddButton> {
   @override
   Widget build(BuildContext context) {
     var childrenButtons = List<UnicornButton>();
+    var localizer = AppLocalizations.of(context);
 
     childrenButtons.add(UnicornButton(
       hasLabel: true,
-      labelText: 'Expense',
+      labelText: localizer.expense,
       currentButton: FloatingActionButton(
           heroTag: 'expense',
           mini: true,
@@ -35,7 +37,7 @@ class _FloatingAddButtonState extends State<FloatingAddButton> {
     ));
     childrenButtons.add(UnicornButton(
       hasLabel: true,
-      labelText: 'Income',
+      labelText: localizer.income,
       currentButton: FloatingActionButton(
           heroTag: 'income',
           mini: true,

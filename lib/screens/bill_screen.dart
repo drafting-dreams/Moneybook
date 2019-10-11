@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:money_book/widget/expanded_section.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/widget/paid_dialog.dart';
+import 'package:money_book/locale/locales.dart';
 
 enum DeleteType { YES, NO }
 enum Payment { ALL, PAID, UNPAID }
@@ -188,6 +189,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
     var transactions = Provider.of<Transactions>(context);
+    var localizer = AppLocalizations.of(context);
 
     List<Bill> bills = mode == 'default' ? defaultList : customizedList;
     if (paymentFilter == Payment.PAID) {
@@ -264,7 +266,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bill'),
+        title: Text(localizer.bill),
         actions: <Widget>[
           Builder(
             builder: (innerContext) => IconButton(
@@ -296,24 +298,24 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
               alignment: Alignment.centerLeft,
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 26, vertical: 10),
-                  child: Text('Payment Status',
+                  child: Text(localizer.paymentStatus,
                       style:
                           TextStyle(fontSize: 18, color: Colors.grey[700])))),
           RadioListTile<Payment>(
             value: Payment.ALL,
-            title: Text('All'),
+            title: Text(localizer.all),
             groupValue: paymentFilter,
             onChanged: setPayment,
           ),
           RadioListTile<Payment>(
             value: Payment.PAID,
-            title: Text('Paid'),
+            title: Text(localizer.paid),
             groupValue: paymentFilter,
             onChanged: setPayment,
           ),
           RadioListTile<Payment>(
             value: Payment.UNPAID,
-            title: Text('Unpaid'),
+            title: Text(localizer.unpaid),
             groupValue: paymentFilter,
             onChanged: setPayment,
           ),
@@ -322,12 +324,12 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
               alignment: Alignment.centerLeft,
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 26, vertical: 10),
-                  child: Text('Time',
+                  child: Text(localizer.time,
                       style:
                           TextStyle(fontSize: 18, color: Colors.grey[700])))),
           RadioListTile<String>(
               value: 'default',
-              title: Text('Default'),
+              title: Text(localizer.myDefault),
               groupValue: mode,
               onChanged: (String newMode) {
                 if (newMode != mode) {
@@ -340,7 +342,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
               }),
           RadioListTile<String>(
             value: 'customize',
-            title: Text('Customize'),
+            title: Text(localizer.customize),
             groupValue: mode,
             onChanged: (String newMode) {
               if (newMode != mode) {
@@ -365,7 +367,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                           Container(
                               width: 50,
                               margin: EdgeInsets.only(left: 26),
-                              child: Text('From ')),
+                              child: Text(localizer.from)),
                           DropdownButton<int>(
                               value: startYear,
                               items: <int>[
@@ -406,7 +408,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                           Container(
                               width: 50,
                               margin: EdgeInsets.only(left: 26),
-                              child: Text(' to ')),
+                              child: Text(localizer.to)),
                           DropdownButton<int>(
                               value: endYear,
                               onChanged: (int i) {
@@ -470,7 +472,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                               onPressed: () {
                                 getCustomeList();
                               },
-                              child: Text('Filter\nRange')),
+                              child: Text(localizer.filterRange)),
                         )),
                   )
                 ],

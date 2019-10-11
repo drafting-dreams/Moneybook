@@ -12,6 +12,7 @@ import 'package:money_book/widget/list/customize_list.dart';
 import 'package:money_book/widget/bottom_navigator.dart';
 import 'package:money_book/widget/expanded_section.dart';
 import 'package:money_book/utils/util.dart';
+import 'package:money_book/locale/locales.dart';
 
 enum ActionTypes { byDay, byMonth, byYear, customize }
 
@@ -166,6 +167,7 @@ class _BookScreen extends State<BookScreen> {
   Widget build(BuildContext context) {
     var transactions = Provider.of<Transactions>(context);
     var accountState = Provider.of<AccountState>(context);
+    var localizer = AppLocalizations.of(context);
 
     final String currentAccountId = accountState.currentAccount == null
         ? ''
@@ -184,7 +186,7 @@ class _BookScreen extends State<BookScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('MoneyBook'),
+          title: Text(localizer.moneyBook),
           actions: <Widget>[
             Builder(
               builder: (innerContext) => IconButton(
@@ -203,7 +205,7 @@ class _BookScreen extends State<BookScreen> {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 26.0, vertical: 10.0),
                 child: Text(
-                  'Class',
+                  localizer.transactionClass,
                   style: TextStyle(fontSize: 18, color: Colors.grey[700]),
                   textAlign: TextAlign.left,
                 ),
@@ -211,19 +213,19 @@ class _BookScreen extends State<BookScreen> {
             ),
             RadioListTile<TransactionClass>(
               value: TransactionClass.all,
-              title: Text('All'),
+              title: Text(localizer.all),
               groupValue: transactions.tc,
               onChanged: setClassWrapper(currentAccountId, transactions),
             ),
             RadioListTile<TransactionClass>(
               value: TransactionClass.income,
-              title: Text('Income'),
+              title: Text(localizer.income),
               groupValue: transactions.tc,
               onChanged: setClassWrapper(currentAccountId, transactions),
             ),
             RadioListTile<TransactionClass>(
               value: TransactionClass.expense,
-              title: Text('Expense'),
+              title: Text(localizer.expense),
               groupValue: transactions.tc,
               onChanged: setClassWrapper(currentAccountId, transactions),
             ),
@@ -233,31 +235,31 @@ class _BookScreen extends State<BookScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 26.0, vertical: 10.0),
-                child: Text('Time',
+                child: Text(localizer.time,
                     style: TextStyle(fontSize: 18, color: Colors.grey[700])),
               ),
             ),
             RadioListTile<ActionTypes>(
               value: ActionTypes.byDay,
-              title: Text('Default'),
+              title: Text(localizer.myDefault),
               groupValue: _currentActionType,
               onChanged: setActionTypeWrapper(currentAccountId, transactions),
             ),
             RadioListTile<ActionTypes>(
               value: ActionTypes.byMonth,
-              title: Text('By Month'),
+              title: Text(localizer.byMonth),
               groupValue: _currentActionType,
               onChanged: setActionTypeWrapper(currentAccountId, transactions),
             ),
             RadioListTile<ActionTypes>(
               value: ActionTypes.byYear,
-              title: Text('By Year'),
+              title: Text(localizer.byYear),
               groupValue: _currentActionType,
               onChanged: setActionTypeWrapper(currentAccountId, transactions),
             ),
             RadioListTile<ActionTypes>(
                 value: ActionTypes.customize,
-                title: Text('Customize'),
+                title: Text(localizer.customize),
                 groupValue: _currentActionType,
                 onChanged:
                     setActionTypeWrapper(currentAccountId, transactions)),
@@ -274,7 +276,7 @@ class _BookScreen extends State<BookScreen> {
                             Container(
                                 width: 50,
                                 margin: EdgeInsets.only(left: 26),
-                                child: Text('From ')),
+                                child: Text(localizer.from)),
                             DropdownButton<int>(
                                 value: startYear,
                                 onChanged: (int i) {
@@ -317,7 +319,7 @@ class _BookScreen extends State<BookScreen> {
                             Container(
                                 width: 50,
                                 margin: EdgeInsets.only(left: 26),
-                                child: Text(' to ')),
+                                child: Text(localizer.to)),
                             DropdownButton<int>(
                                 value: endYear,
                                 onChanged: (int i) {
@@ -382,7 +384,7 @@ class _BookScreen extends State<BookScreen> {
                                   getFilteredList(
                                       currentAccountId, transactions);
                                 },
-                                child: Text('Filter\nRange')),
+                                child: Text(localizer.filterRange)),
                           )),
                     )
                   ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_book/app.dart';
 import 'package:money_book/model/transaction.dart';
 import 'package:money_book/shared_state/transactions.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ import 'package:money_book/widget/expanded_section.dart';
 import 'package:money_book/model/bill.dart';
 import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/api/bill.dart';
+import 'package:money_book/locale/locales.dart';
 
 class BillEditScreen extends StatefulWidget {
   String id;
@@ -149,6 +151,8 @@ class _BillEditScreen extends State<BillEditScreen> {
     var accountState = Provider.of<AccountState>(context);
     var typeInfo = Provider.of<ExpenseTypeInfo>(context);
     var transactions = Provider.of<Transactions>(context);
+    var localizer = AppLocalizations.of(context);
+
     if (_selectedType == null) {
       setState(() {
         _selectedType = typeInfo.types[0].name;
@@ -157,7 +161,7 @@ class _BillEditScreen extends State<BillEditScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Bill'),
+          title: Text(localizer.bill),
           actions: <Widget>[
             IconButton(
                 onPressed: () async {
@@ -231,7 +235,6 @@ class _BillEditScreen extends State<BillEditScreen> {
                       await BillAPI.modify(widget.id, bill);
                       if (bill.autoPay &&
                           Util.isTheSameDay(DateTime.now(), bill.dueDate)) {
-                        print("I'm in");
                         Transaction t = Transaction(
                             bill.value, DateTime.now(), bill.accountId,
                             type: bill.type, name: bill.name);
@@ -265,7 +268,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                             ),
                           ),
                           Expanded(
-                              child: Text('AutoPay',
+                              child: Text(localizer.autopay,
                                   style: TextStyle(fontSize: 16))),
                           Switch(
                             value: _autoPay,
@@ -288,17 +291,17 @@ class _BillEditScreen extends State<BillEditScreen> {
                       ),
                       Expanded(
                         child: TextFormField(
-                          decoration: InputDecoration(labelText: 'Amount'),
+                          decoration: InputDecoration(labelText: localizer.amount),
                           controller: _amountController,
                           keyboardType: TextInputType.number,
                           validator: (v) {
                             String value = _amountController.text;
                             if (value.isEmpty) {
-                              return 'Please enter your income amount';
+                              return localizer.enterBillAmount;
                             }
                             if (!Util.isNumeric(value) ||
                                 double.parse(value) <= 0) {
-                              return 'Please enter a positive Number';
+                              return localizer.enterPositive;
                             }
                           },
                         ),
@@ -316,12 +319,12 @@ class _BillEditScreen extends State<BillEditScreen> {
                       Expanded(
                         child: TextFormField(
                             decoration:
-                                InputDecoration(labelText: 'Description'),
+                                InputDecoration(labelText: localizer.description),
                             controller: _descriptionController,
                             validator: (v) {
                               String value = _descriptionController.text;
                               if (value.trim().isEmpty) {
-                                return 'Please input some description about the income';
+                                return localizer.billDescription;
                               }
                             }),
                       ),
@@ -405,7 +408,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                                 ),
                               ),
                               Expanded(
-                                  child: Text('Repeat',
+                                  child: Text(localizer.repeat,
                                       style: TextStyle(fontSize: 16))),
                               Switch(
                                 value: _repeat,
@@ -435,7 +438,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                               Expanded(
                                 child: TextFormField(
                                   decoration: InputDecoration(
-                                      labelText: 'Repeat Frequency By Month'),
+                                      labelText: localizer.repeatFrequency),
                                   controller: _frequencyController,
                                   keyboardType: TextInputType.number,
                                   validator: (v) {
@@ -444,7 +447,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                                         !Util.isInt(value) ||
                                         int.parse(value) < 1 ||
                                         int.parse(value) > 60) {
-                                      return 'Please enter an integer ranged from 1 to 60';
+                                      return localizer.frequencyRange;
                                     }
                                   },
                                 ),
@@ -463,7 +466,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                               Expanded(
                                 child: TextFormField(
                                   decoration: InputDecoration(
-                                      labelText: 'Repeat Times'),
+                                      labelText: localizer.repeatTimes),
                                   controller: _repeatTimeController,
                                   keyboardType: TextInputType.number,
                                   validator: (v) {
@@ -472,7 +475,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                                         !Util.isInt(value) ||
                                         int.parse(value) < 2 ||
                                         int.parse(value) > 60) {
-                                      return 'Please enter an integer ranged from 2 to 60';
+                                      return localizer.repeatTimesRange;
                                     }
                                   },
                                 ),
