@@ -26,21 +26,26 @@ import 'package:money_book/model/transaction.dart' as myTransaction;
 import 'package:money_book/const/themes.dart';
 import 'package:money_book/locale/locales.dart';
 
-const Map<String, Widget> items = {
-  'local': Text('Locally'),
-  'dropbox': Text('Dropbox'),
-  'onedrive': Text('OneDrive'),
-  'googledrive': Text('GoogleDrive')
-};
+Map<String, Widget> items(BuildContext context) {
+  return {
+    'local': Text(AppLocalizations.of(context).locally),
+    'dropbox': Text('Dropbox'),
+    'onedrive': Text('OneDrive'),
+    'googledrive': Text('GoogleDrive')
+  };
+}
 
-const Map<String, Widget> themeItems = {
-  'alien blue': Text('Alien Blue'),
-  'tree': Text('Tree'),
-  'pony': Text('Pony'),
-  'noble purple': Text('Noble Purple'),
-  'chocolate': Text('Chocolate'),
-  'dark': Text('Dark')
-};
+Map<String, Widget> themeItems(BuildContext context) {
+  final localizer = AppLocalizations.of(context);
+  return {
+    'alien blue': Text(localizer.blue),
+    'tree': Text(localizer.green),
+    'pony': Text(localizer.pony),
+    'noble purple': Text(localizer.purple),
+    'chocolate': Text(localizer.chocolate),
+    'dark': Text(localizer.dark)
+  };
+}
 
 class SettingScreen extends StatefulWidget {
   @override
@@ -99,6 +104,7 @@ class _SettingScreenState extends State<SettingScreen> {
       ExpenseTypeInfo expenseType,
       AccountState accountState,
       ThemeChanger themeChanger) async {
+    final localizer = AppLocalizations.of(context);
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, DatabaseCreator.dbName);
     db.close();
@@ -138,11 +144,11 @@ class _SettingScreenState extends State<SettingScreen> {
               context: context,
               barrierDismissible: true,
               builder: (context) => AlertDialog(
-                    title: Text('Autopay notification'),
-                    content: Text('Autopay bills has been paid.'),
+                    title: Text(localizer.autoPayNotification),
+                    content: Text(localizer.autoPayNotificationMessage),
                     actions: <Widget>[
                       FlatButton(
-                        child: Text('Got it'),
+                        child: Text(localizer.gotIt),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -152,7 +158,7 @@ class _SettingScreenState extends State<SettingScreen> {
         }
       });
       simpleDialog.showSimpleDialog(
-          context, 'Import Success', 'Backup data is imported successfully');
+          context, localizer.importSuccess, localizer.importSuccessMessage);
     });
   }
 
@@ -162,6 +168,7 @@ class _SettingScreenState extends State<SettingScreen> {
     var accountState = Provider.of<AccountState>(context);
     var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
     var themeChanger = Provider.of<ThemeChanger>(context);
+    final localizer = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context).settings)),
@@ -171,13 +178,17 @@ class _SettingScreenState extends State<SettingScreen> {
       body: ListView(
         children: <Widget>[
           renderHeader(context, AppLocalizations.of(context).general),
-          renderTile(context, AppLocalizations.of(context).accounts, Icons.account_box, () {
+          renderTile(
+              context, AppLocalizations.of(context).accounts, Icons.account_box,
+              () {
             Navigator.push(
                 context,
                 NoAnimationMaterialPageRoute(
                     builder: (BuildContext context) => AccountScreen()));
           }),
-          renderTile(context, AppLocalizations.of(context).expenseType, Icons.category, () {
+          renderTile(
+              context, AppLocalizations.of(context).expenseType, Icons.category,
+              () {
             Navigator.push(
                 context,
                 NoAnimationMaterialPageRoute(
@@ -185,17 +196,22 @@ class _SettingScreenState extends State<SettingScreen> {
                         ExpenseTypeSettingScreen()));
           }),
           renderHeader(context, AppLocalizations.of(context).theme),
-          renderTile(context, AppLocalizations.of(context).theme, Icons.remove_red_eye, () {
-            showRadioDialog(
-                    context, AppLocalizations.of(context).theme, themeItems, themeChanger.themeName)
+          renderTile(
+              context, AppLocalizations.of(context).theme, Icons.remove_red_eye,
+              () {
+            showRadioDialog(context, AppLocalizations.of(context).theme,
+                    themeItems(context), themeChanger.themeName)
                 .then((theme) {
               themeChanger.setTheme(theme, getTheme(theme));
               ThemeAPI.setTheme(theme);
             });
           }),
           renderHeader(context, AppLocalizations.of(context).backup),
-          renderTile(context, AppLocalizations.of(context).backup, Icons.backup, () {
-            showRadioDialog(context, AppLocalizations.of(context).backup, items, '').then((method) async {
+          renderTile(context, AppLocalizations.of(context).backup, Icons.backup,
+              () {
+            showRadioDialog(context, AppLocalizations.of(context).backup,
+                    items(context), '')
+                .then((method) async {
               switch (method) {
                 case 'local':
                   dbExportSql(db).then((listString) {
@@ -203,8 +219,10 @@ class _SettingScreenState extends State<SettingScreen> {
                         .where((s) => !s.startsWith('CREATE'))
                         .join('^^^');
                     utilizer.writeTo('.moneybookbackup', str).then((f) {
-                      simpleDialog.showSimpleDialog(context, 'Backup Success',
-                          'Backup file was saved at ${f.path}');
+                      simpleDialog.showSimpleDialog(
+                          context,
+                          localizer.backupSuccess,
+                          '${localizer.backupMessage}${f.path}');
                     });
                   });
                   break;
@@ -217,8 +235,11 @@ class _SettingScreenState extends State<SettingScreen> {
               }
             });
           }),
-          renderTile(context, AppLocalizations.of(context).import, Icons.cloud_download, () {
-            showRadioDialog(context, AppLocalizations.of(context).import, items, '').then((method) {
+          renderTile(context, AppLocalizations.of(context).import,
+              Icons.cloud_download, () {
+            showRadioDialog(context, AppLocalizations.of(context).import,
+                    items(context), '')
+                .then((method) {
               switch (method) {
                 case 'local':
                   showDialog(
@@ -226,19 +247,18 @@ class _SettingScreenState extends State<SettingScreen> {
                       barrierDismissible: true,
                       builder: (context) => AlertDialog(
                             title: Text(AppLocalizations.of(context).import),
-                            content: Text(
-                                'This will wipe all your current data on you device. Are you sure?'),
+                            content: Text(localizer.confirmImport),
                             actions: <Widget>[
                               FlatButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(1);
                                   },
-                                  child: Text('Yes')),
+                                  child: Text(localizer.yes)),
                               FlatButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('No'))
+                                  child: Text(localizer.no))
                             ],
                           )).then((answer) {
                     if (answer == 1) {
@@ -249,8 +269,8 @@ class _SettingScreenState extends State<SettingScreen> {
                         final localPath = await utilizer.localPath;
                         simpleDialog.showSimpleDialog(
                             context,
-                            'Read File Failed',
-                            'Make sure this file ($localPath/.moneybookbackup) exist on you device.');
+                            localizer.importFailed,
+                            '${localizer.importFailedMessage1}$localPath${localizer.importFailedMessage2}');
                       });
                     }
                   });

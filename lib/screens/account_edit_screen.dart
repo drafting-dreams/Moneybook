@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/model/account.dart';
 import 'package:money_book/api/account.dart';
+import 'package:money_book/locale/locales.dart';
 
 
 class AccountEditScreen extends StatefulWidget {
@@ -35,9 +36,10 @@ class _AccountEditScreen extends State<AccountEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizer = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Moneybook'),
+        title: Text(localizer.createAccount),
         actions: <Widget>[
           IconButton(
             onPressed: () async {
@@ -69,28 +71,28 @@ class _AccountEditScreen extends State<AccountEditScreen> {
           child: Column(
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(labelText: 'Account Name'),
+                decoration: InputDecoration(labelText: localizer.accountName),
                 controller: nameController,
                 validator: (v) {
                   String value = nameController.text;
                   if (value
                     .trim()
                     .isEmpty) {
-                    return "Please input account's name";
+                    return localizer.inputAccountName;
                   }
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Account Balance'),
+                decoration: InputDecoration(labelText: localizer.accountBalance),
                 controller: balanceController,
                 keyboardType: TextInputType.number,
                 validator: (v) {
                   String value = balanceController.text;
                   if (value.isEmpty) {
-                    return "Please enter account's balance";
+                    return localizer.enterAccountBalance;
                   }
                   if (!Util.isNumeric(value)) {
-                    return 'Invalid number';
+                    return localizer.invalidNumber;
                   }
                 })
             ],

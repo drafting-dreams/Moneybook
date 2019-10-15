@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const icons = {
   'Housing': {
+    'zh': '住房',
     'color': Colors.indigoAccent,
     'icons': [
       Icons.business,
@@ -21,6 +22,7 @@ const icons = {
     ]
   },
   'Commuting': {
+    'zh': '通勤',
     'color': Colors.orangeAccent,
     'icons': [
       Icons.airplanemode_active,
@@ -39,6 +41,7 @@ const icons = {
     ]
   },
   'Food': {
+    'zh': '饮食',
     'color': Colors.redAccent,
     'icons': [
       Icons.fastfood,
@@ -53,6 +56,7 @@ const icons = {
     ]
   },
   'Shopping': {
+    'zh': '购物',
     'color': Colors.deepPurpleAccent,
     'icons': [
       Icons.shopping_cart,
@@ -65,6 +69,7 @@ const icons = {
     ]
   },
   'Digital': {
+    'zh': '电子',
     'color': Colors.teal,
     'icons': [
       Icons.laptop_chromebook,
@@ -76,10 +81,12 @@ const icons = {
     ]
   },
   'Individual': {
+    'zh': '个人',
     'color': Colors.brown,
     'icons': [Icons.work, Icons.call, Icons.mail_outline, Icons.smoking_rooms]
   },
   'Education': {
+    'zh': '教育',
     'color': Colors.cyan,
     'icons': [
       Icons.account_balance,
@@ -91,6 +98,7 @@ const icons = {
     ]
   },
   'Entertainment': {
+    'zh': '娱乐',
     'color': Colors.amber,
     'icons': [
       Icons.videogame_asset,
@@ -101,6 +109,7 @@ const icons = {
     ]
   },
   'Travel': {
+    'zh': '旅行',
     'color': Colors.cyanAccent,
     'icons': [
       Icons.landscape,
@@ -113,10 +122,12 @@ const icons = {
     ]
   },
   'Exercising': {
+    'zh': '运动',
     'color': Colors.lightGreenAccent,
     'icons': [Icons.fitness_center, Icons.pool]
   },
   'Family': {
+    'zh': '家庭',
     'color': Colors.pinkAccent,
     'icons': [
       Icons.child_friendly,
@@ -126,10 +137,12 @@ const icons = {
     ]
   },
   'Medical': {
+    'zh': '医疗',
     'color': Colors.red,
     'icons': [Icons.local_hospital]
   },
   'Others': {
+    'zh': '其它',
     'color': Colors.yellow,
     'icons': [Icons.attach_money, Icons.monetization_on, Icons.style]
   }

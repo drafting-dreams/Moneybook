@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-10-11T21:00:51.829028",
+  "@@last_modified": "2019-10-15T19:08:10.906063",
   "moneyBook": "MoneyBook",
   "@moneyBook": {
     "type": "text",
@@ -412,6 +412,171 @@
   },
   "repeatTimesRange": "Please enter an integer ranged from 2 to 60",
   "@repeatTimesRange": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "createAccount": "Create Account",
+  "@createAccount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "accountName": "Account Name",
+  "@accountName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "accountBalance": "Account Balance",
+  "@accountBalance": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "inputAccountName": "Please input account's name",
+  "@inputAccountName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterAccountBalance": "Please enter account's balance",
+  "@enterAccountBalance": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "invalidNumber": "Invalid number",
+  "@invalidNumber": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteAccount": "Delete Account",
+  "@deleteAccount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "bigDelete": "DELETE",
+  "@bigDelete": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmDeleteAccount": "All related information including transactions and bills will be deleted, are you sure?",
+  "@confirmDeleteAccount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "ok": "OK",
+  "@ok": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "oneType": "There must be at least one expense type.",
+  "@oneType": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "maximumType": "The maximum number of expense type is 11.",
+  "@maximumType": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "typeNumberLimit": "Types number limit",
+  "@typeNumberLimit": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "addExpenseType": "Add Expense Type",
+  "@addExpenseType": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel": "CANCEL",
+  "@cancel": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteType": "Delete Type",
+  "@deleteType": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmDeleteType1": "This will delete the ",
+  "@confirmDeleteType1": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmDeleteType2": " type, all related transactions and bills on all accounts!\n\nAre you sure?",
+  "@confirmDeleteType2": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "wrongName": "Wrong name",
+  "@wrongName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterTypeName": "Please enter a name",
+  "@enterTypeName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupSuccess": "Backup Success",
+  "@backupSuccess": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupMessage": "Backup file was saved at ",
+  "@backupMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmImport": "This will wipe all your current data on you device. Are you sure?",
+  "@confirmImport": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "yes": "Yes",
+  "@yes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "no": "No",
+  "@no": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importFailed": "Read File Failed",
+  "@importFailed": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importFailedMessage1": "Make sure this file (",
+  "@importFailedMessage1": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importFailedMessage2": "/.moneybookbackup) exist on you device.",
+  "@importFailedMessage2": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importSuccess": "Import Success",
+  "@importSuccess": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importSuccessMessage": "Backup data is imported successfully",
+  "@importSuccessMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "autoPayNotification": "Autopay Notification",
+  "@autoPayNotification": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "autoPayNotificationMessage": "Expired autopay bills has been paid.",
+  "@autoPayNotificationMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "gotIt": "Got it",
+  "@gotIt": {
     "type": "text",
     "placeholders": {}
   }

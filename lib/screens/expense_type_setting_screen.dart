@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:money_book/api/expense_type.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/api/bill.dart';
+import 'package:money_book/app.dart';
 import 'package:money_book/screens/expense_type_add_screen.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:money_book/shared_state/expense_type_info.dart';
 import 'package:money_book/shared_state/transactions.dart';
 import 'package:money_book/model/expense_type.dart';
 import 'package:provider/provider.dart';
+import 'package:money_book/locale/locales.dart';
 
 enum Confirmation { CANCEL, ACCEPT }
 
@@ -23,24 +25,25 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
 
   Future<Confirmation> _deletionConfirmDialog(
       BuildContext context, String type) async {
+    final localizer = AppLocalizations.of(context);
     return showDialog(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Delete type'),
+            title: Text(localizer.deleteType),
             content: Text(
-                'This will delete the $type type, all related transactions and bills on all accounts!\n\nAre you sure?'),
+                '${localizer.confirmDeleteType1}$type${localizer.confirmDeleteType2}'),
             actions: <Widget>[
               FlatButton(
                 textColor: Colors.red,
-                child: Text('DELETE'),
+                child: Text(localizer.delete),
                 onPressed: () {
                   Navigator.of(context).pop(Confirmation.ACCEPT);
                 },
               ),
               FlatButton(
-                child: Text('CANCEL'),
+                child: Text(localizer.cancel),
                 onPressed: () {
                   Navigator.of(context).pop(Confirmation.CANCEL);
                 },
@@ -51,22 +54,21 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
   }
 
   Future<Confirmation> _fallbackDialog(BuildContext context, int len) {
-    final content = len == 1
-        ? 'There must be at least one expense type.'
-        : "The  maximum number of expense type is 11.";
+    final localizer = AppLocalizations.of(context);
+    final content = len == 1 ? localizer.oneType : localizer.maximumType;
     return showDialog(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Types number limit'),
+            title: Text(localizer.typeNumberLimit),
             content: Text(content),
             actions: <Widget>[
               FlatButton(
                   onPressed: () {
                     Navigator.of(context).pop(Confirmation.ACCEPT);
                   },
-                  child: Text('OK'))
+                  child: Text(localizer.ok))
             ],
           );
         });
@@ -83,10 +85,11 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
   Widget build(BuildContext context) {
     var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
     var transacitons = Provider.of<Transactions>(context);
+    final localizer = AppLocalizations.of(context);
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Expense Type'),
+          title: Text(localizer.expenseType),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.add_circle_outline),
@@ -113,7 +116,7 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
                       actionPane: SlidableDrawerActionPane(),
                       secondaryActions: <Widget>[
                         IconSlideAction(
-                            caption: 'Edit',
+                            caption: localizer.edit,
                             color: Colors.grey[350],
                             icon: Icons.edit,
                             onTap: () {
@@ -121,7 +124,7 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
                                   context, expenseTypeInfo.types[index]);
                             }),
                         IconSlideAction(
-                          caption: 'Delete',
+                          caption: localizer.delete,
                           color: Colors.red,
                           icon: Icons.delete,
                           onTap: () {

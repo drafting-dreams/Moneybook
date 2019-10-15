@@ -8,6 +8,7 @@ import 'package:money_book/shared_state/transactions.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/model/transaction.dart';
+import 'package:money_book/locale/locales.dart';
 
 enum Confirmation { CANCEL, ACCEPT }
 
@@ -36,24 +37,24 @@ class _AccountScreen extends State<AccountScreen> {
   }
 
   Future<Confirmation> _deletionConfirmDialog(BuildContext context) async {
+    final localizer = AppLocalizations.of(context);
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Delete Account'),
-            content: Text(
-                'All related information including transactions and bills will be deleted, are you sure?'),
+            title: Text(localizer.deleteAccount),
+            content: Text(localizer.confirmDeleteAccount),
             actions: <Widget>[
               FlatButton(
                 textColor: Colors.red,
-                child: Text('DELETE'),
+                child: Text(localizer.bigDelete),
                 onPressed: () {
                   Navigator.of(context).pop(Confirmation.ACCEPT);
                 },
               ),
               FlatButton(
-                child: Text('CANCEL'),
+                child: Text(localizer.cancel),
                 onPressed: () {
                   Navigator.of(context).pop(Confirmation.CANCEL);
                 },
@@ -67,11 +68,12 @@ class _AccountScreen extends State<AccountScreen> {
   Widget build(BuildContext context) {
     var accountState = Provider.of<AccountState>(context);
     var transactions = Provider.of<Transactions>(context);
+    final localizer = AppLocalizations.of(context);
 
     List<Widget> actions(index) {
       var secondaryActions = <Widget>[
         IconSlideAction(
-          caption: 'Edit',
+          caption: localizer.edit,
           color: Colors.grey[350],
           icon: Icons.edit,
           onTap: () {
@@ -86,7 +88,7 @@ class _AccountScreen extends State<AccountScreen> {
           },
         ),
         IconSlideAction(
-          caption: 'Delete',
+          caption: localizer.delete,
           color: Colors.red,
           icon: Icons.delete,
           onTap: () {
@@ -107,7 +109,7 @@ class _AccountScreen extends State<AccountScreen> {
     }
 
     return Scaffold(
-        appBar: AppBar(title: Text('Account'), actions: <Widget>[
+        appBar: AppBar(title: Text(localizer.account), actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add_circle_outline),
             onPressed: () {

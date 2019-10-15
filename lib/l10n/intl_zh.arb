@@ -413,5 +413,170 @@
         "@repeatTimesRange": {
           "type": "text",
           "placeholders": {}
-        }
+        },
+        "createAccount": "创建账户",
+          "@createAccount": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "accountName": "账户名",
+          "@accountName": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "accountBalance": "余额",
+          "@accountBalance": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "inputAccountName": "请输入账户名",
+          "@inputAccountName": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "enterAccountBalance": "请输入账户余额",
+          "@enterAccountBalance": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "invalidNumber": "无效数字",
+          "@invalidNumber": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "deleteAccount": "删除账户",
+          "@deleteAccount": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "bigDelete": "删除",
+          "@bigDelete": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "confirmDeleteAccount": "该账户下的所有消费、收入和账单等信息将会一并删除，你确定要删除此账户吗？",
+          "@confirmDeleteAccount": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "ok": "确定",
+          "@ok": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "oneType": "至少要有一种消费类型",
+          "@oneType": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "maximumType": "消费类型最多11种",
+          "@maximumType": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "typeNumberLimit": "类型数量限制",
+          "@typeNumberLimit": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "addExpenseType": "添加消费类型",
+          "@addExpenseType": {
+            "type": "text",
+            "placeholders": {}
+          },
+          "cancel": "取消",
+            "@cancel": {
+              "type": "text",
+              "placeholders": {}
+           },
+           "deleteType": "删除类型",
+             "@deleteType": {
+               "type": "text",
+               "placeholders": {}
+             },
+             "confirmDeleteType1": "这将会删除",
+             "@confirmDeleteType1": {
+               "type": "text",
+               "placeholders": {}
+             },
+             "confirmDeleteType2": "类型，所有账户上与此类型相关的消费、收入和账单等都将会一并被删除。\n\n你确定要删除该类型吗？",
+             "@confirmDeleteType2": {
+               "type": "text",
+               "placeholders": {}
+             },
+             "wrongName": "名称错误",
+               "@wrongName": {
+                 "type": "text",
+                 "placeholders": {}
+               },
+               "enterTypeName": "请输入类型名称",
+               "@enterTypeName": {
+                 "type": "text",
+                 "placeholders": {}
+               },
+               "backupSuccess": "备份成功",
+                 "@backupSuccess": {
+                   "type": "text",
+                   "placeholders": {}
+                 },
+                 "backupMessage": "备份文件被保存在",
+                 "@backupMessage": {
+                   "type": "text",
+                   "placeholders": {}
+                 },
+                 "confirmImport": "导入备份会覆盖你设备上当前的所有数据，你确定要导入吗？",
+                 "@confirmImport": {
+                   "type": "text",
+                   "placeholders": {}
+                 },
+                 "yes": "是",
+                 "@yes": {
+                   "type": "text",
+                   "placeholders": {}
+                 },
+                 "no": "否",
+                 "@no": {
+                   "type": "text",
+                   "placeholders": {}
+                 },
+                 "importFailed": "读取文件失败",
+                 "@importFailed": {
+                   "type": "text",
+                   "placeholders": {}
+                 },
+                 "importFailedMessage1": "请确认该文件(",
+                 "@importFailedMessage1": {
+                   "type": "text",
+                   "placeholders": {}
+                 },
+                 "importFailedMessage2": "/.moneybookbackup)是否存在于你的设备上",
+                 "@importFailedMessage2": {
+                   "type": "text",
+                   "placeholders": {}
+                 },
+                 "importSuccess": "导入成功",
+                   "@importSuccess": {
+                     "type": "text",
+                     "placeholders": {}
+                   },
+                   "importSuccessMessage": "备份数据已成功导入",
+                   "@importSuccessMessage": {
+                     "type": "text",
+                     "placeholders": {}
+                   },
+                 "autoPayNotification": "自动支付提示",
+                   "@autoPayNotification": {
+                     "type": "text",
+                     "placeholders": {}
+                   },
+                   "autoPayNotificationMessage": "到期的自动支付账单已被支付",
+                   "@autoPayNotificationMessage": {
+                     "type": "text",
+                     "placeholders": {}
+                   },
+                   "gotIt": "了解",
+                   "@gotIt": {
+                     "type": "text",
+                     "placeholders": {}
+                   }
 }
