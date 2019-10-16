@@ -618,5 +618,15 @@
                        "@payBillMessage": {
                          "type": "text",
                          "placeholders": {}
-                       }
+                       },
+                       "total": "合计",
+                     "@total": {
+                       "type": "text",
+                       "placeholders": {}
+                     },
+                     "trend7": "最近7天消费趋势图",
+                     "@trend7": {
+                       "type": "text",
+                       "placeholders": {}
+                     }
 }

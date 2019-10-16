@@ -284,6 +284,8 @@ class AppLocalizations {
   String get deleteBillMessage => Intl.message('Delete this bill record.', name: 'deleteBillMessage');
   String get payBill => Intl.message('Pay Bill', name: 'payBill');
   String get payBillMessage => Intl.message('Are you sure you wanna pay this bill TODAY?', name: 'payBillMessage');
+  String get total => Intl.message('Total', name: 'total');
+  String get trend7 => Intl.message("Recent 7 days' expense trend chart", name: 'trend7');
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

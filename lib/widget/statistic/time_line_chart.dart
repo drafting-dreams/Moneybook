@@ -1,5 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:money_book/locale/locales.dart';
 
 class TimeLineChart extends StatelessWidget {
   List<Map<String, double>> data;
@@ -63,6 +64,8 @@ class TimeLineChart extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
+    final localizer = AppLocalizations.of(context);
+
     if (data.length != dates.length) {
       return Container();
     }
@@ -76,7 +79,7 @@ class TimeLineChart extends StatelessWidget {
       defaultRenderer: new charts.LineRendererConfig(includePoints: true),
       behaviors: [
         charts.ChartTitle(
-          "Recent 7 days' expense trend chart",
+          localizer.trend7,
           behaviorPosition: charts.BehaviorPosition.top,
           titleOutsideJustification: charts.OutsideJustification.middle,
           innerPadding: 30,

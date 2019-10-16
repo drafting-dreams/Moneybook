@@ -1,6 +1,7 @@
 /// Simple pie chart with outside labels example.
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:money_book/locale/locales.dart';
 
 class PieOutsideLabelChart extends StatelessWidget {
   Map<String, double> data;
@@ -31,6 +32,8 @@ class PieOutsideLabelChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizer = AppLocalizations.of(context);
+
     if (data.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +50,7 @@ class PieOutsideLabelChart extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'No data for this period of time.',
+                localizer.chartWarn,
                 style: TextStyle(),
               ),
             ],
@@ -57,7 +60,7 @@ class PieOutsideLabelChart extends StatelessWidget {
     }
     return new charts.PieChart(data2Series(data),
         behaviors: [
-          charts.ChartTitle('Expense type ratio chart',
+          charts.ChartTitle(localizer.ratioChart,
               behaviorPosition: charts.BehaviorPosition.top,
               titleOutsideJustification: charts.OutsideJustification.middle,
               innerPadding: 10,

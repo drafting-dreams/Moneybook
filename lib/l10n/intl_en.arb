@@ -618,5 +618,15 @@
                      "@payBillMessage": {
                        "type": "text",
                        "placeholders": {}
-                     }
+                     },
+                     "total": "Total",
+                   "@total": {
+                     "type": "text",
+                     "placeholders": {}
+                   },
+                   "trend7": "Recent 7 days' expense trend chart",
+                   "@trend7": {
+                     "type": "text",
+                     "placeholders": {}
+                   }
 }

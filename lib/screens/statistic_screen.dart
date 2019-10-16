@@ -7,6 +7,7 @@ import 'package:money_book/widget/statistic/time_line_chart.dart' as timeChart;
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/api/account.dart';
 import 'package:money_book/utils/util.dart';
+import 'package:money_book/locale/locales.dart';
 
 enum Mode { year, month, seven, thirty, six_month }
 
@@ -169,6 +170,7 @@ class _StatisticScreen extends State<StatisticScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizer = AppLocalizations.of(context);
     Locale myLocale = Localizations.localeOf(context);
     double pieTotal = 0;
     if (pieChartData != null) {
@@ -183,7 +185,7 @@ class _StatisticScreen extends State<StatisticScreen> {
     }
     return Scaffold(
         appBar: AppBar(
-          title: Text('Statistic'),
+          title: Text(localizer.statistic),
           actions: <Widget>[
             PopupMenuButton(
                 icon: Icon(Icons.menu),
@@ -196,16 +198,17 @@ class _StatisticScreen extends State<StatisticScreen> {
                   });
                 },
                 itemBuilder: (BuildContext context) => [
-                      const PopupMenuItem<Mode>(
-                          value: Mode.seven, child: Text('recent 7 days')),
-                      const PopupMenuItem<Mode>(
-                          value: Mode.thirty, child: Text('recent 30 days')),
-                      const PopupMenuItem<Mode>(
-                          value: Mode.six_month, child: Text('last 6 months')),
-                      const PopupMenuItem<Mode>(
-                          value: Mode.month, child: Text('by month')),
-                      const PopupMenuItem<Mode>(
-                          value: Mode.year, child: Text('by year')),
+                      PopupMenuItem<Mode>(
+                          value: Mode.seven, child: Text(localizer.seven)),
+                      PopupMenuItem<Mode>(
+                          value: Mode.thirty, child: Text(localizer.thirty)),
+                      PopupMenuItem<Mode>(
+                          value: Mode.six_month,
+                          child: Text(localizer.lastSix)),
+                      PopupMenuItem<Mode>(
+                          value: Mode.month, child: Text(localizer.byMonth)),
+                      PopupMenuItem<Mode>(
+                          value: Mode.year, child: Text(localizer.byYear)),
                     ])
           ],
         ),
@@ -280,7 +283,7 @@ class _StatisticScreen extends State<StatisticScreen> {
                           child: pieChartData.isEmpty
                               ? Container()
                               : Text(
-                                  'Total   ${-pieTotal}',
+                                  '${localizer.total}   ${-pieTotal}',
                                   style: Theme.of(context).textTheme.title,
                                 )),
                       Container(

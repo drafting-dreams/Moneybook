@@ -1,5 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:money_book/locale/locales.dart';
 
 class LineChart extends StatelessWidget {
   List<Map<String, double>> data;
@@ -62,6 +63,8 @@ class LineChart extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
+    final localizer = AppLocalizations.of(context);
+
     return charts.LineChart(
       data2Series(data),
       animate: animate,
@@ -74,7 +77,7 @@ class LineChart extends StatelessWidget {
       defaultRenderer: new charts.LineRendererConfig(includePoints: true),
       behaviors: [
         charts.ChartTitle(
-          '$year Expense trend chart',
+          '$year ${localizer.trendChart}',
           behaviorPosition: charts.BehaviorPosition.top,
           titleOutsideJustification: charts.OutsideJustification.middle,
           innerPadding: 30,
