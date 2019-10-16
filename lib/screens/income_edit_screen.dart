@@ -45,7 +45,10 @@ class _IncomeEdit extends State<IncomeEditScreen> {
         context: context,
         initialDate: date != null ? date : DateTime.now(),
         firstDate: DateTime(2019),
-        lastDate: DateTime.now());
+        lastDate: DateTime.now(),
+        builder: (BuildContext context, Widget child) {
+          return FittedBox(child: child);
+        });
     if (picked != null)
       setState(() {
         date = picked;
@@ -113,8 +116,8 @@ class _IncomeEdit extends State<IncomeEditScreen> {
                             ),
                             Expanded(
                               child: TextFormField(
-                                decoration:
-                                    InputDecoration(labelText: localizer.amount),
+                                decoration: InputDecoration(
+                                    labelText: localizer.amount),
                                 controller: amountController,
                                 keyboardType: TextInputType.number,
                                 validator: (v) {
@@ -141,8 +144,8 @@ class _IncomeEdit extends State<IncomeEditScreen> {
                                 )),
                             Expanded(
                               child: TextFormField(
-                                  decoration:
-                                      InputDecoration(labelText: localizer.description),
+                                  decoration: InputDecoration(
+                                      labelText: localizer.description),
                                   controller: descriptionController,
                                   validator: (v) {
                                     String value = descriptionController.text;

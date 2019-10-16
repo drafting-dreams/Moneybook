@@ -368,7 +368,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                       Row(
                         children: <Widget>[
                           Container(
-                              width: 50,
+                              width: myLocale.languageCode.contains('zh') ? 30 : 50,
                               margin: EdgeInsets.only(left: 26),
                               child: Text(localizer.from)),
                           DropdownButton<int>(
@@ -412,7 +412,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                       Row(
                         children: <Widget>[
                           Container(
-                              width: 50,
+                              width: myLocale.languageCode.contains('zh') ? 30 : 50,
                               margin: EdgeInsets.only(left: 26),
                               child: Text(localizer.to)),
                           DropdownButton<int>(
