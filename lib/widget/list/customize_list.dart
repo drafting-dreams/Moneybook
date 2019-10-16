@@ -7,6 +7,7 @@ import 'package:money_book/shared_state/expense_type_info.dart';
 import 'package:provider/provider.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/model/expense_type.dart';
+import 'package:money_book/locale/locales.dart';
 
 enum DeleteType { NORMAL, CASCADE }
 
@@ -43,22 +44,22 @@ class _CustomizeListState extends State<CustomizeList> {
       -1;
 
   Future<DeleteType> _deletionDialog(BuildContext context) async {
+    final localizer = AppLocalizations.of(context);
     return showDialog(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) => AlertDialog(
-              title: Text('Delete Transaction'),
-              content: Text(
-                  "Do you want this operation affect your account's balance?"),
+              title: Text(localizer.deleteTransaction),
+              content: Text(localizer.confirmDeleteTransaction),
               actions: <Widget>[
                 FlatButton(
-                  child: Text('Yes'),
+                  child: Text(localizer.yes ),
                   onPressed: () {
                     Navigator.of(context).pop(DeleteType.CASCADE);
                   },
                 ),
                 FlatButton(
-                  child: Text('No'),
+                  child: Text(localizer.no),
                   onPressed: () {
                     Navigator.of(context).pop(DeleteType.NORMAL);
                   },
@@ -75,6 +76,7 @@ class _CustomizeListState extends State<CustomizeList> {
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: transactions.length,
         itemBuilder: (BuildContext context, int index) {
+          final localizer = AppLocalizations.of(context);
           final transaction = transactions.get(index);
           final icon = transaction.value < 0
             ? expenseTypeInfo.types
@@ -152,7 +154,7 @@ class _CustomizeListState extends State<CustomizeList> {
                       actionPane: SlidableDrawerActionPane(),
                       secondaryActions: <Widget>[
                         IconSlideAction(
-                          caption: 'Edit',
+                          caption: localizer.edit,
                           color: Colors.grey[350],
                           icon: Icons.edit,
                           onTap: () {
@@ -166,7 +168,7 @@ class _CustomizeListState extends State<CustomizeList> {
                           },
                         ),
                         IconSlideAction(
-                          caption: 'Delete',
+                          caption: localizer.delete,
                           color: Colors.red,
                           icon: Icons.delete,
                           onTap: () {

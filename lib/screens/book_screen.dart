@@ -168,6 +168,7 @@ class _BookScreen extends State<BookScreen> {
     var transactions = Provider.of<Transactions>(context);
     var accountState = Provider.of<AccountState>(context);
     var localizer = AppLocalizations.of(context);
+    Locale myLocale = Localizations.localeOf(context);
 
     final String currentAccountId = accountState.currentAccount == null
         ? ''
@@ -309,8 +310,11 @@ class _BookScreen extends State<BookScreen> {
                                     .map<DropdownMenuItem<int>>((int value) =>
                                         DropdownMenuItem<int>(
                                             value: value,
-                                            child:
-                                                Text(Util.getMonthName(value))))
+                                            child: Text(myLocale.languageCode
+                                                    .contains('zh')
+                                                ? Util.getMonthName(value)['zh']
+                                                : Util.getMonthName(
+                                                    value)['en'])))
                                     .toList()),
                           ],
                         ),
@@ -358,8 +362,11 @@ class _BookScreen extends State<BookScreen> {
                                     .map<DropdownMenuItem<int>>((int value) =>
                                         DropdownMenuItem<int>(
                                             value: value,
-                                            child:
-                                                Text(Util.getMonthName(value))))
+                                            child: Text(myLocale.languageCode
+                                                    .contains('zh')
+                                                ? Util.getMonthName(value)['zh']
+                                                : Util.getMonthName(
+                                                    value)['en'])))
                                     .toList()),
                           ],
                         )

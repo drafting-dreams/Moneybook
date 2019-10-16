@@ -138,45 +138,50 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
     });
   }
 
-  Future<String> _payDialog(BuildContext context) => showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) => AlertDialog(
-            title: Text('Pay bill'),
-            content: Text('Are you sure you wanna pay this bill TODAY?'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Yes', style: TextStyle(color: Colors.green)),
-                onPressed: () {
-                  Navigator.of(context).pop('yes');
-                },
-              ),
-              FlatButton(
-                child: Text('No'),
-                onPressed: () {
-                  Navigator.of(context).pop('no');
-                },
-              )
-            ],
-          ));
-
-  Future<DeleteType> _deletionDialog(BuildContext context) async {
+  Future<String> _payDialog(BuildContext context) {
+    final localizer = AppLocalizations.of(context);
     return showDialog(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) => AlertDialog(
-              title: Text('Delete Bill'),
-              content: Text("Delete this bill record."),
+              title: Text(localizer.payBill),
+              content: Text(localizer.payBillMessage),
               actions: <Widget>[
                 FlatButton(
-                  child:
-                      Text('Delete', style: TextStyle(color: Colors.red[600])),
+                  child: Text(localizer.yes,
+                      style: TextStyle(color: Colors.green)),
+                  onPressed: () {
+                    Navigator.of(context).pop('yes');
+                  },
+                ),
+                FlatButton(
+                  child: Text(localizer.no),
+                  onPressed: () {
+                    Navigator.of(context).pop('no');
+                  },
+                )
+              ],
+            ));
+  }
+
+  Future<DeleteType> _deletionDialog(BuildContext context) async {
+    final localizer = AppLocalizations.of(context);
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text(localizer.deleteBill),
+              content: Text(localizer.deleteBillMessage),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text(localizer.delete,
+                      style: TextStyle(color: Colors.red[600])),
                   onPressed: () {
                     Navigator.of(context).pop(DeleteType.YES);
                   },
                 ),
                 FlatButton(
-                  child: Text('Cancel'),
+                  child: Text(localizer.cancel),
                   onPressed: () {
                     Navigator.of(context).pop(DeleteType.NO);
                   },
@@ -190,6 +195,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
     var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
     var transactions = Provider.of<Transactions>(context);
     var localizer = AppLocalizations.of(context);
+    Locale myLocale = Localizations.localeOf(context);
 
     List<Bill> bills = mode == 'default' ? defaultList : customizedList;
     if (paymentFilter == Payment.PAID) {
@@ -202,7 +208,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
     List<Widget> actions(Bill bill) {
       List<Widget> list = [
         IconSlideAction(
-            caption: 'Edit',
+            caption: localizer.edit,
             color: Colors.grey,
             icon: Icons.edit,
             onTap: () {
@@ -212,14 +218,13 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                       builder: (BuildContext context) =>
                           BillEditScreen(id: bill.id))).then((paidToday) {
                 if (paidToday ?? false) {
-                  paySuccessfulDialog(
-                      context, "Today's bill has been successfully paid!");
+                  paySuccessfulDialog(context, localizer.todaysPaid);
                 }
                 reload();
               });
             }),
         IconSlideAction(
-            caption: 'Pay',
+            caption: localizer.pay,
             color: Colors.green,
             icon: Icons.account_balance_wallet,
             onTap: () {
@@ -229,8 +234,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                       bill.value, DateTime.now(), bill.accountId,
                       type: bill.type, name: bill.name);
                   BillAPI.pay(bill.id, t);
-                  paySuccessfulDialog(
-                      context, 'The bill has been successfully paid.');
+                  paySuccessfulDialog(context, localizer.billPaid);
                   setState(() {
                     bills.firstWhere((element) => element.id == bill.id).paid =
                         true;
@@ -240,7 +244,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
               });
             }),
         IconSlideAction(
-            caption: 'Delete',
+            caption: localizer.delete,
             color: Colors.red,
             icon: Icons.delete,
             onTap: () {
@@ -285,8 +289,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                         builder: (BuildContext context) => BillEditScreen()))
                 .then((paidToday) {
               if (paidToday ?? false) {
-                paySuccessfulDialog(
-                    context, "Today's bill has been successfully paid!");
+                paySuccessfulDialog(context, localizer.todaysPaid);
               }
               reload();
             });
@@ -398,8 +401,11 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                                   .map<DropdownMenuItem<int>>((int value) =>
                                       DropdownMenuItem<int>(
                                           value: value,
-                                          child:
-                                              Text(Util.getMonthName(value))))
+                                          child: Text(myLocale.languageCode
+                                                  .contains('zh')
+                                              ? Util.getMonthName(value)['zh']
+                                              : Util.getMonthName(
+                                                  value)['en'])))
                                   .toList()),
                         ],
                       ),
@@ -447,8 +453,11 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                                   .map<DropdownMenuItem<int>>((int value) =>
                                       DropdownMenuItem<int>(
                                           value: value,
-                                          child:
-                                              Text(Util.getMonthName(value))))
+                                          child: Text(myLocale.languageCode
+                                                  .contains('zh')
+                                              ? Util.getMonthName(value)['zh']
+                                              : Util.getMonthName(
+                                                  value)['en'])))
                                   .toList()),
                         ],
                       )
@@ -511,7 +520,8 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                       });
                     },
                     child: Container(
-                        decoration: BoxDecoration(color: Theme.of(context).dividerColor),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).dividerColor),
                         padding: EdgeInsets.fromLTRB(10, 15, 5, 15),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

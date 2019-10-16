@@ -169,6 +169,7 @@ class _StatisticScreen extends State<StatisticScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Locale myLocale = Localizations.localeOf(context);
     double pieTotal = 0;
     if (pieChartData != null) {
       pieChartData.forEach((_, v) {
@@ -256,8 +257,12 @@ class _StatisticScreen extends State<StatisticScreen> {
                                       .map<DropdownMenuItem<int>>((int value) =>
                                           DropdownMenuItem<int>(
                                               value: value,
-                                              child: Text(
-                                                  Util.getMonthName(value))))
+                                              child: Text(myLocale.languageCode
+                                                      .contains('zh')
+                                                  ? Util.getMonthName(
+                                                      value)['zh']
+                                                  : Util.getMonthName(
+                                                      value)['en'])))
                                       .toList(),
                                   onChanged: (int i) {
                                     if (i == this.month) {
@@ -295,17 +300,16 @@ class _StatisticScreen extends State<StatisticScreen> {
                       children: <Widget>[
                         Container(
                             margin: EdgeInsets.only(top: 40),
-                            child: currentMode == Mode.seven ? timeChart.TimeLineChart(
-                              lineChartData,
-                              this._onSelectionChanged,
-                              sevenDates,
-                              animate: false
-                            ) : lineChart.LineChart(
-                              lineChartData,
-                              year,
-                              this._onSelectionChanged,
-                              animate: false,
-                            )),
+                            child: currentMode == Mode.seven
+                                ? timeChart.TimeLineChart(lineChartData,
+                                    this._onSelectionChanged, sevenDates,
+                                    animate: false)
+                                : lineChart.LineChart(
+                                    lineChartData,
+                                    year,
+                                    this._onSelectionChanged,
+                                    animate: false,
+                                  )),
                         selectionBoard.length > 0
                             ? Positioned(
                                 top: 110,

@@ -7,6 +7,7 @@ import 'package:money_book/screens/expense_edit_screen.dart';
 import 'package:money_book/screens/income_edit_screen.dart';
 import 'package:money_book/api/transaction.dart';
 import 'package:money_book/model/expense_type.dart';
+import 'package:money_book/locale/locales.dart';
 
 enum DeleteType { NORMAL, CASCADE }
 
@@ -30,22 +31,22 @@ class _DefaultListState extends State<DefaultList> {
       -1;
 
   Future<DeleteType> _deletionDialog(BuildContext context) async {
+    final localizer = AppLocalizations.of(context);
     return showDialog(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) => AlertDialog(
-              title: Text('Delete Transaction'),
-              content: Text(
-                  "Do you want this operation affect your account's balance?"),
+              title: Text(localizer.deleteTransaction),
+              content: Text(localizer.confirmDeleteTransaction),
               actions: <Widget>[
                 FlatButton(
-                  child: Text('Yes'),
+                  child: Text(localizer.yes),
                   onPressed: () {
                     Navigator.of(context).pop(DeleteType.CASCADE);
                   },
                 ),
                 FlatButton(
-                  child: Text('No'),
+                  child: Text(localizer.no),
                   onPressed: () {
                     Navigator.of(context).pop(DeleteType.NORMAL);
                   },
@@ -55,6 +56,7 @@ class _DefaultListState extends State<DefaultList> {
   }
 
   build(BuildContext context) {
+    final localizer = AppLocalizations.of(context);
     var transactions = Provider.of<Transactions>(context);
     var expenseTypeInfo = Provider.of<ExpenseTypeInfo>(context);
 
@@ -143,7 +145,7 @@ class _DefaultListState extends State<DefaultList> {
                         actionPane: SlidableDrawerActionPane(),
                         secondaryActions: <Widget>[
                           IconSlideAction(
-                            caption: 'Edit',
+                            caption: localizer.edit,
                             color: Colors.grey[350],
                             icon: Icons.edit,
                             onTap: () {
@@ -157,7 +159,7 @@ class _DefaultListState extends State<DefaultList> {
                             },
                           ),
                           IconSlideAction(
-                            caption: 'Delete',
+                            caption: localizer.delete,
                             color: Colors.red,
                             icon: Icons.delete,
                             onTap: () {

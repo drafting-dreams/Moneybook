@@ -276,6 +276,14 @@ class AppLocalizations {
   String get autoPayNotification => Intl.message('Autopay Notification', name: 'autoPayNotification');
   String get autoPayNotificationMessage => Intl.message('Autopay bills has been paid.', name: 'autoPayNotificationMessage');
   String get gotIt => Intl.message('Got it', name: 'gotIt');
+  String get deleteTransaction => Intl.message('Delete Transaction', name: 'deleteTransaction');
+  String get confirmDeleteTransaction => Intl.message("Do you want this operation affect your account's balance?", name: 'confirmDeleteTransaction');
+  String get todaysPaid => Intl.message("Today's bill has been successfully paid!", name: 'todaysPaid');
+  String get billPaid => Intl.message('The bill has been successfully paid.', name: 'billPaid');
+  String get deleteBill => Intl.message('Delete Bill', name: 'deleteBill');
+  String get deleteBillMessage => Intl.message('Delete this bill record.', name: 'deleteBillMessage');
+  String get payBill => Intl.message('Pay Bill', name: 'payBill');
+  String get payBillMessage => Intl.message('Are you sure you wanna pay this bill TODAY?', name: 'payBillMessage');
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

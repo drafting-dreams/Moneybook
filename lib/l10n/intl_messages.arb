@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-10-15T19:08:10.906063",
+  "@@last_modified": "2019-10-16T13:06:33.282409",
   "moneyBook": "MoneyBook",
   "@moneyBook": {
     "type": "text",
@@ -570,13 +570,53 @@
     "type": "text",
     "placeholders": {}
   },
-  "autoPayNotificationMessage": "Expired autopay bills has been paid.",
+  "autoPayNotificationMessage": "Autopay bills has been paid.",
   "@autoPayNotificationMessage": {
     "type": "text",
     "placeholders": {}
   },
   "gotIt": "Got it",
   "@gotIt": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteTransaction": "Delete Transaction",
+  "@deleteTransaction": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmDeleteTransaction": "Do you want this operation affect your account's balance?",
+  "@confirmDeleteTransaction": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "todaysPaid": "Today's bill has been successfully paid!",
+  "@todaysPaid": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "billPaid": "The bill has been successfully paid.",
+  "@billPaid": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteBill": "Delete Bill",
+  "@deleteBill": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteBillMessage": "Delete this bill record.",
+  "@deleteBillMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "payBill": "Pay Bill",
+  "@payBill": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "payBillMessage": "Are you sure you wanna pay this bill TODAY?",
+  "@payBillMessage": {
     "type": "text",
     "placeholders": {}
   }

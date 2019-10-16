@@ -38,6 +38,7 @@ class _MonthListState extends State<MonthList> {
   }
 
   build(BuildContext context) {
+    Locale myLocale = Localizations.localeOf(context);
     var transactions = Provider.of<Transactions>(context);
     var accountState = Provider.of<AccountState>(context);
     return RefreshIndicator(
@@ -104,7 +105,9 @@ class _MonthListState extends State<MonthList> {
                         height: 0,
                       )
                     : ListTile(
-                        title: Text(Util.getMonthName(e['month'])),
+                        title: Text(myLocale.languageCode.contains('zh')
+                            ? Util.getMonthName(e['month'])['zh']
+                            : Util.getMonthName(e['month'])['en']),
                         trailing: Text(
                             (e['amount'] > 0 ? '+' : '') +
                                 e['amount'].toString(),

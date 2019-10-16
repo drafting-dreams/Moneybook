@@ -578,6 +578,45 @@
                  "@gotIt": {
                    "type": "text",
                    "placeholders": {}
-                 }
-
+                 },
+                 "deleteTransaction": "Delete Transaction",
+                   "@deleteTransaction": {
+                     "type": "text",
+                     "placeholders": {}
+                   },
+                   "confirmDeleteTransaction": "Do you want this operation affect your account's balance?",
+                   "@confirmDeleteTransaction": {
+                     "type": "text",
+                     "placeholders": {}
+                   },
+                   "todaysPaid": "Today's bill has been successfully paid!",
+                     "@todaysPaid": {
+                       "type": "text",
+                       "placeholders": {}
+                     },
+                     "billPaid": "The bill has been successfully paid.",
+                     "@billPaid": {
+                       "type": "text",
+                       "placeholders": {}
+                     },
+                     "deleteBill": "Delete Bill",
+                     "@deleteBill": {
+                       "type": "text",
+                       "placeholders": {}
+                     },
+                     "deleteBillMessage": "Delete this bill record.",
+                     "@deleteBillMessage": {
+                       "type": "text",
+                       "placeholders": {}
+                     },
+                     "payBill": "Pay Bill",
+                     "@payBill": {
+                       "type": "text",
+                       "placeholders": {}
+                     },
+                     "payBillMessage": "Are you sure you wanna pay this bill TODAY?",
+                     "@payBillMessage": {
+                       "type": "text",
+                       "placeholders": {}
+                     }
 }

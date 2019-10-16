@@ -29,32 +29,32 @@ class Util {
     return dt1.year == dt2.year && dt1.month == dt2.month && dt1.day == dt2.day;
   }
 
-  static String getMonthName(int month) {
+  static Map getMonthName(int month) {
     switch (month) {
       case 1:
-        return 'Jan';
+        return {'en': 'Jan', 'zh': '一月'};
       case 2:
-        return 'Feb';
+        return {'en': 'Feb', 'zh': '二月'};
       case 3:
-        return 'Mar';
+        return {'en': 'Mar', 'zh': '三月'};
       case 4:
-        return 'Apr';
+        return {'en': 'Apr', 'zh': '四月'};
       case 5:
-        return 'May';
+        return {'en': 'May', 'zh': '五月'};
       case 6:
-        return 'Jun';
+        return {'en': 'Jun', 'zh': '六月'};
       case 7:
-        return 'Jul';
+        return {'en': 'Jul', 'zh': '七月'};
       case 8:
-        return 'Aug';
+        return {'en': 'Aug', 'zh': '八月'};
       case 9:
-        return 'Sep';
+        return {'en': 'Sep', 'zh': '九月'};
       case 10:
-        return 'Oct';
+        return {'en': 'Oct', 'zh': '十月'};
       case 11:
-        return 'Nov';
+        return {'en': 'Nov', 'zh': '十一月'};
       case 12:
-        return 'Dec';
+        return {'en': 'Dec', 'zh': '十二月'};
     }
     throw Exception('Month out of range');
   }

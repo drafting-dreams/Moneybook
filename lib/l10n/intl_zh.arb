@@ -578,5 +578,45 @@
                    "@gotIt": {
                      "type": "text",
                      "placeholders": {}
-                   }
+                   },
+                   "deleteTransaction": "删除交易",
+                     "@deleteTransaction": {
+                       "type": "text",
+                       "placeholders": {}
+                     },
+                     "confirmDeleteTransaction": "你想要让该操作影响你的账户余额吗？",
+                     "@confirmDeleteTransaction": {
+                       "type": "text",
+                       "placeholders": {}
+                     },
+                     "todaysPaid": "今天的自动支付账单已被成功支付",
+                       "@todaysPaid": {
+                         "type": "text",
+                         "placeholders": {}
+                       },
+                       "billPaid": "已成功支付此账单",
+                       "@billPaid": {
+                         "type": "text",
+                         "placeholders": {}
+                       },
+                       "deleteBill": "删除账单",
+                       "@deleteBill": {
+                         "type": "text",
+                         "placeholders": {}
+                       },
+                       "deleteBillMessage": "删除这条账单记录？",
+                       "@deleteBillMessage": {
+                         "type": "text",
+                         "placeholders": {}
+                       },
+                       "payBill": "支付账单",
+                       "@payBill": {
+                         "type": "text",
+                         "placeholders": {}
+                       },
+                       "payBillMessage": "你确定今天支付这个账单吗？",
+                       "@payBillMessage": {
+                         "type": "text",
+                         "placeholders": {}
+                       }
 }
