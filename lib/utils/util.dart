@@ -32,7 +32,8 @@ class Util {
   static Map getMonthName(int month) {
     switch (month) {
       case 1:
-        return {'en': 'Jan', 'zh': '一月'};
+        // Extra space to give dropdownbutton enough when 11,12 month is out of range
+        return {'en': 'Jan', 'zh': '一月    '};
       case 2:
         return {'en': 'Feb', 'zh': '二月'};
       case 3:

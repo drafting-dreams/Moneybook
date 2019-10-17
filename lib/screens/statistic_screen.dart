@@ -30,7 +30,7 @@ class _StatisticScreen extends State<StatisticScreen> {
   List<dynamic> selectionBoard = [];
   List<String> typeList;
   List<String> selectedTypes;
-  List<DateTime> sevenDates;
+  List<DateTime> sevenDates = [];
 
   @override
   void initState() {

@@ -191,9 +191,9 @@ class _BookScreen extends State<BookScreen> {
           actions: <Widget>[
             Builder(
               builder: (innerContext) => IconButton(
-                    icon: Icon(Icons.tune),
-                    onPressed: () => Scaffold.of(innerContext).openEndDrawer(),
-                  ),
+                icon: Icon(Icons.tune),
+                onPressed: () => Scaffold.of(innerContext).openEndDrawer(),
+              ),
             )
           ],
         ),
@@ -275,7 +275,9 @@ class _BookScreen extends State<BookScreen> {
                         Row(
                           children: <Widget>[
                             Container(
-                                width: myLocale.languageCode.contains('zh') ? 30 : 50,
+                                width: myLocale.languageCode.contains('zh')
+                                    ? 30
+                                    : 50,
                                 margin: EdgeInsets.only(left: 26),
                                 child: Text(localizer.from)),
                             DropdownButton<int>(
@@ -286,10 +288,7 @@ class _BookScreen extends State<BookScreen> {
                                   });
                                 },
                                 items: <int>[
-                                  for (var i = 2019;
-                                      i <= DateTime.now().year;
-                                      i += 1)
-                                    i
+                                  for (var i = 2019; i <= endYear; i += 1) i
                                 ]
                                     .map<DropdownMenuItem<int>>((int value) =>
                                         DropdownMenuItem<int>(
@@ -306,7 +305,15 @@ class _BookScreen extends State<BookScreen> {
                                     startMonth = i;
                                   });
                                 },
-                                items: <int>[for (var i = 1; i <= 12; i += 1) i]
+                                items: <int>[
+                                  for (var i = 1;
+                                      i <=
+                                          (startYear == endYear
+                                              ? endMonth
+                                              : 12);
+                                      i += 1)
+                                    i
+                                ]
                                     .map<DropdownMenuItem<int>>((int value) =>
                                         DropdownMenuItem<int>(
                                             value: value,
@@ -321,7 +328,9 @@ class _BookScreen extends State<BookScreen> {
                         Row(
                           children: <Widget>[
                             Container(
-                                width: myLocale.languageCode.contains('zh') ? 30 : 50,
+                                width: myLocale.languageCode.contains('zh')
+                                    ? 30
+                                    : 50,
                                 margin: EdgeInsets.only(left: 26),
                                 child: Text(localizer.to)),
                             DropdownButton<int>(

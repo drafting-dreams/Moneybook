@@ -38,6 +38,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
   int endYear = DateTime.now().year;
   int startMonth = 1;
   int endMonth = 12;
+  int lastBillYear = 0;
   bool expand = false;
   Payment paymentFilter = Payment.ALL;
 
@@ -60,13 +61,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
       setState(() {
         currentAccount = account;
       });
-      final now = DateTime.now();
-      BillAPI.getListAfterDate(account.id, DateTime(now.year, now.month, 1))
-          .then((bills) {
-        setState(() {
-          defaultList.addAll(bills);
-        });
-      });
+      reload();
     });
     WidgetsBinding.instance.addObserver(this);
   }
@@ -92,6 +87,11 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
       setState(() {
         defaultList.clear();
         defaultList.addAll(bills);
+      });
+    });
+    BillAPI.getLastBillYear(currentAccount.id).then((year) {
+      setState(() {
+        lastBillYear = year;
       });
     });
   }
@@ -274,9 +274,9 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
         actions: <Widget>[
           Builder(
             builder: (innerContext) => IconButton(
-                  icon: Icon(Icons.tune),
-                  onPressed: () => Scaffold.of(innerContext).openEndDrawer(),
-                ),
+              icon: Icon(Icons.tune),
+              onPressed: () => Scaffold.of(innerContext).openEndDrawer(),
+            ),
           )
         ],
       ),
@@ -368,14 +368,19 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                       Row(
                         children: <Widget>[
                           Container(
-                              width: myLocale.languageCode.contains('zh') ? 30 : 50,
+                              width: myLocale.languageCode.contains('zh')
+                                  ? 30
+                                  : 50,
                               margin: EdgeInsets.only(left: 26),
                               child: Text(localizer.from)),
                           DropdownButton<int>(
                               value: startYear,
                               items: <int>[
                                 for (var i = 2019;
-                                    i <= DateTime.now().year;
+                                    i <=
+                                        (endYear < lastBillYear
+                                            ? endYear
+                                            : lastBillYear);
                                     i += 1)
                                   i
                               ]
@@ -385,7 +390,9 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                                           child: Text(value.toString())))
                                   .toList(),
                               onChanged: (int i) {
-                                startYear = i;
+                                setState(() {
+                                  startYear = i;
+                                });
                               }),
                           Container(
                               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -397,7 +404,12 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                                   startMonth = i;
                                 });
                               },
-                              items: <int>[for (var i = 1; i <= 12; i += 1) i]
+                              items: <int>[
+                                for (var i = 1;
+                                    i <= (startYear == endYear ? endMonth : 12);
+                                    i += 1)
+                                  i
+                              ]
                                   .map<DropdownMenuItem<int>>((int value) =>
                                       DropdownMenuItem<int>(
                                           value: value,
@@ -412,7 +424,9 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                       Row(
                         children: <Widget>[
                           Container(
-                              width: myLocale.languageCode.contains('zh') ? 30 : 50,
+                              width: myLocale.languageCode.contains('zh')
+                                  ? 30
+                                  : 50,
                               margin: EdgeInsets.only(left: 26),
                               child: Text(localizer.to)),
                           DropdownButton<int>(
@@ -424,7 +438,10 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                               },
                               items: <int>[
                                 for (var i = startYear;
-                                    i <= DateTime.now().year;
+                                    i <=
+                                        (DateTime.now().year >= lastBillYear
+                                            ? DateTime.now().year
+                                            : lastBillYear);
                                     i += 1)
                                   i
                               ]

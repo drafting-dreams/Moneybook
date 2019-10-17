@@ -166,6 +166,18 @@ class BillService {
     await db.rawDelete(sql, params);
     DatabaseCreator.databaseLog('Delete bill by type', sql, null, null, params);
   }
+
+  static Future<int> getLastBillYear(String accountId) async {
+    final sql = '''SELECT ${DatabaseCreator.billDueDate} FROM ${DatabaseCreator.billTable}
+    WHERE ${DatabaseCreator.accountId} = ?
+    ORDER BY ${DatabaseCreator.billDueDate} DESC LIMIT 1''';
+    List<dynamic> params = [accountId];
+    final result = await db.rawQuery(sql, params);
+    if (result.length < 1) {
+      return 0;
+    }
+    return int.parse(result[0][DatabaseCreator.billDueDate].substring(0, 4));
+  }
 }
 
 class NoNearestDateException implements Exception {

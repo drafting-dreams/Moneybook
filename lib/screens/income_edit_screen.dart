@@ -45,10 +45,7 @@ class _IncomeEdit extends State<IncomeEditScreen> {
         context: context,
         initialDate: date != null ? date : DateTime.now(),
         firstDate: DateTime(2019),
-        lastDate: DateTime.now(),
-        builder: (BuildContext context, Widget child) {
-          return FittedBox(child: child);
-        });
+        lastDate: DateTime.now(),);
     if (picked != null)
       setState(() {
         date = picked;

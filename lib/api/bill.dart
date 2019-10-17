@@ -62,6 +62,11 @@ class BillAPI {
     return re;
   }
 
+  static Future<int> getLastBillYear(String accountId) async {
+    final lastYear = await BillService.getLastBillYear(accountId);
+    return lastYear;
+  }
+
   static Future<void> deleteById(String id) async {
     await BillService.deleteBill(id);
   }
