@@ -378,9 +378,10 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                               items: <int>[
                                 for (var i = 2019;
                                     i <=
-                                        (endYear < lastBillYear
-                                            ? endYear
-                                            : lastBillYear);
+                                        ((endYear >= lastBillYear &&
+                                                lastBillYear != 0)
+                                            ? lastBillYear
+                                            : endYear);
                                     i += 1)
                                   i
                               ]
