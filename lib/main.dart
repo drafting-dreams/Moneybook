@@ -16,6 +16,7 @@ import 'package:money_book/api/transaction.dart';
 import 'package:money_book/api/account.dart';
 import 'package:money_book/api/expense_type.dart';
 import 'package:money_book/api/theme.dart';
+import 'package:money_book/api/keeper.dart';
 import 'package:money_book/model/account.dart';
 import 'const/themes.dart';
 
@@ -24,6 +25,7 @@ void main() async {
   await AccountAPI.initializingAccount();
   await ExpenseTypeAPI.initializingTypes();
   await ThemeAPI.initializingThemes();
+  await KeeperAPI.initializingKeeper();
   runApp(MyApp());
 }
 
@@ -82,6 +84,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         themeLoaded = true;
       });
     });
+
     Account currentAccount;
     ExpenseTypeAPI.list().then((types) {
       expenseTypes.addAll(types);
@@ -101,6 +104,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         });
       });
     });
+
     WidgetsBinding.instance.addObserver(this);
     checkAndPay();
   }

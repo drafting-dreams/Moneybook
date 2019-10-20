@@ -15,9 +15,12 @@ import 'package:money_book/widget/expanded_section.dart';
 import 'package:money_book/utils/util.dart';
 import 'package:money_book/widget/paid_dialog.dart';
 import 'package:money_book/locale/locales.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 enum DeleteType { YES, NO }
 enum Payment { ALL, PAID, UNPAID }
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
 
 class BillScreen extends StatefulWidget {
   @override
@@ -234,6 +237,9 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
                       bill.value, DateTime.now(), bill.accountId,
                       type: bill.type, name: bill.name);
                   BillAPI.pay(bill.id, t);
+                  if (!bill.autoPay && bill.notificationId != null) {
+                    flutterLocalNotificationsPlugin.cancel(bill.notificationId);
+                  }
                   paySuccessfulDialog(context, localizer.billPaid);
                   setState(() {
                     bills.firstWhere((element) => element.id == bill.id).paid =
@@ -251,6 +257,9 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
               _deletionDialog(context).then((DeleteType type) {
                 if (type == DeleteType.YES) {
                   BillAPI.deleteById(bill.id);
+                  if (!bill.paid && !bill.autoPay && bill.notificationId != null) {
+                    flutterLocalNotificationsPlugin.cancel(bill.notificationId);
+                  }
                   setState(() {
                     if (mode == 'default') {
                       defaultList.removeWhere((item) => item.id == bill.id);

@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-10-16T20:12:50.238178",
+  "@@last_modified": "2019-10-19T20:25:37.342329",
   "moneyBook": "MoneyBook",
   "@moneyBook": {
     "type": "text",
@@ -627,6 +627,21 @@
   },
   "trend7": "Recent 7 days' expense trend chart",
   "@trend7": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "inappropriateBillDate": "Inappropriate Bill Date",
+  "@inappropriateBillDate": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "dateOnOrAfter": "Bill date should be on or after today.",
+  "@dateOnOrAfter": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "repeatBillWarning": "Repeat Bill day should be on or before 28 of each month.",
+  "@repeatBillWarning": {
     "type": "text",
     "placeholders": {}
   }

@@ -12,16 +12,20 @@ class Bill {
   String type;
   bool autoPay;
   bool paid;
+  int notificationId;
 
   Bill(double v, DateTime dt, String accountId, String type, bool autoPay,
       bool paid,
-      {String name}) {
+      {String name, int notificationId}) {
     this.id = RandomGenerator.str(ID_PREFIX_LENGTH) +
         new DateTime.now().millisecondsSinceEpoch.toString();
     this.dueDate = dt;
     this.accountId = accountId;
     if (name != null) {
       this.name = name;
+    }
+    if (notificationId != null) {
+      this.notificationId = notificationId;
     }
     this.type = type;
     this.autoPay = autoPay;
@@ -39,5 +43,6 @@ class Bill {
     this.autoPay = json[DatabaseCreator.billAutoPay] == 1 ? true : false;
     this.paid = json[DatabaseCreator.billPaid] == 1 ? true : false;
     this.value = json[DatabaseCreator.billAmount];
+    this.notificationId = json[DatabaseCreator.notificationId];
   }
 }

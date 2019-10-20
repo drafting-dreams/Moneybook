@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_book/api/keeper.dart';
 import 'package:money_book/app.dart';
 import 'package:money_book/model/transaction.dart';
 import 'package:money_book/shared_state/transactions.dart';
@@ -11,6 +12,11 @@ import 'package:money_book/model/bill.dart';
 import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/api/bill.dart';
 import 'package:money_book/locale/locales.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:money_book/utils/util.dart';
+
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class BillEditScreen extends StatefulWidget {
   String id;
@@ -34,11 +40,16 @@ class _BillEditScreen extends State<BillEditScreen> {
   final _descriptionController = TextEditingController();
   final _frequencyController = TextEditingController();
   final _repeatTimeController = TextEditingController();
+  final _frequencyFocusNode = FocusNode();
+  final _repeatFocusNode = FocusNode();
+  Bill previousBill;
 
   initState() {
     super.initState();
     _frequencyController.text = '1';
     _repeatTimeController.text = '2';
+    _frequencyFocusNode.addListener(_onFrequencyFocus);
+    _repeatFocusNode.addListener(_onRepeatFocus);
     // if today is after 28, then _repeatDate will be next month's first day
     if (_repeatDate.day > 28) {
       if (_repeatDate.month < 12) {
@@ -51,6 +62,7 @@ class _BillEditScreen extends State<BillEditScreen> {
     if (widget.id != null) {
       BillAPI.getBillById(widget.id).then((Bill bill) {
         setState(() {
+          previousBill = bill;
           _amountController.text = (-bill.value).toString();
           _descriptionController.text = bill.name;
           date = bill.dueDate;
@@ -59,9 +71,59 @@ class _BillEditScreen extends State<BillEditScreen> {
         });
       });
     }
+
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  Future _selectDate() async {
+  Future<void> _setSchedualedNotification(
+      int id, DateTime schedualedTime) async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'money_book_id', 'money_book', 'money book bill notification channel',
+        ongoing: false, autoCancel: true);
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(
+        id,
+        'MoneyBook',
+        'You have unpaid bills today.',
+        schedualedTime,
+        platformChannelSpecifics);
+  }
+
+  _onFrequencyFocus() {
+    if (_frequencyFocusNode.hasFocus) {
+      _frequencyController.selection = TextSelection(
+          baseOffset: 0, extentOffset: _frequencyController.text.length);
+    }
+  }
+
+  _onRepeatFocus() {
+    if (_repeatFocusNode.hasFocus) {
+      _repeatTimeController.selection = TextSelection(
+          baseOffset: 0, extentOffset: _repeatTimeController.text.length);
+    }
+  }
+
+  void dispose() {
+    _amountController.dispose();
+    _descriptionController.dispose();
+    _frequencyController.dispose();
+    _repeatTimeController.dispose();
+    _frequencyFocusNode.removeListener(_onFrequencyFocus);
+    _repeatFocusNode.removeListener(_onRepeatFocus);
+    _frequencyFocusNode.dispose();
+    _repeatFocusNode.dispose();
+    super.dispose();
+  }
+
+  Future _selectDate(BuildContext context) async {
+    var localizer = AppLocalizations.of(context);
     DateTime picked = await showDatePicker(
         context: context,
         initialDate: date != null ? date : DateTime.now(),
@@ -78,15 +140,14 @@ class _BillEditScreen extends State<BillEditScreen> {
             context: context,
             barrierDismissible: false,
             builder: (context) => AlertDialog(
-                    title: Text('Inappropriate Bill Date'),
-                    content: Text('Bill date should be on or after today.'),
+                    title: Text(localizer.inappropriateBillDate),
+                    content: Text(localizer.dateOnOrAfter),
                     actions: [
                       FlatButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            _selectDate();
                           },
-                          child: Text('OK'))
+                          child: Text(localizer.ok))
                     ]));
       } else {
         setState(() {
@@ -96,7 +157,8 @@ class _BillEditScreen extends State<BillEditScreen> {
     }
   }
 
-  Future _selectRepeatDate() async {
+  Future _selectRepeatDate(BuildContext context) async {
+    final localizer = AppLocalizations.of(context);
     DateTime picked = await showDatePicker(
         context: context,
         initialDate: _repeatDate != null ? _repeatDate : DateTime.now(),
@@ -113,31 +175,28 @@ class _BillEditScreen extends State<BillEditScreen> {
             context: context,
             barrierDismissible: false,
             builder: (context) => AlertDialog(
-                    title: Text('Inappropriate Bill Date'),
-                    content: Text('Bill date should be on or after today.'),
+                    title: Text(localizer.inappropriateBillDate),
+                    content: Text(localizer.dateOnOrAfter),
                     actions: [
                       FlatButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            _selectDate();
                           },
-                          child: Text('OK'))
+                          child: Text(localizer.ok))
                     ]));
       } else if (picked.day > 28) {
         showDialog(
             context: context,
             barrierDismissible: false,
             builder: (context) => AlertDialog(
-                    title: Text('Inappropriate Bill Date'),
-                    content: Text(
-                        'Repeat Bill day should be on or before 28 of each month.'),
+                    title: Text(localizer.inappropriateBillDate),
+                    content: Text(localizer.repeatBillWarning),
                     actions: [
                       FlatButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            _selectRepeatDate();
                           },
-                          child: Text('OK'))
+                          child: Text(localizer.ok))
                     ]));
       } else {
         setState(() {
@@ -169,6 +228,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                     bool paidToday = false;
                     if (widget.id == null) {
                       if (_repeat) {
+                        int notificationId;
                         for (int i = 0;
                             i < int.parse(_repeatTimeController.text);
                             i++) {
@@ -182,15 +242,36 @@ class _BillEditScreen extends State<BillEditScreen> {
                           } else {
                             newMonth = addedMonth;
                           }
+                          DateTime billDate = DateTime(
+                              _repeatDate.year + yearToBeAdd,
+                              newMonth,
+                              _repeatDate.day);
+                          if (!_autoPay) {
+                            if (!Util.isTheSameDay(billDate, DateTime.now())) {
+                              notificationId =
+                                  await KeeperAPI.checkAndUpdateKeeper(1);
+                              await _setSchedualedNotification(notificationId,
+                                  billDate.add(Duration(hours: 8)));
+                            } else {
+                              if (billDate.hour < 20) {
+                                notificationId =
+                                    await KeeperAPI.checkAndUpdateKeeper(1);
+                                await _setSchedualedNotification(
+                                    notificationId,
+                                    DateTime(billDate.year, billDate.month,
+                                        billDate.day, 20));
+                              }
+                            }
+                          }
                           Bill bill = Bill(
                               -double.parse(_amountController.text),
-                              DateTime(_repeatDate.year + yearToBeAdd, newMonth,
-                                  _repeatDate.day),
+                              billDate,
                               accountState.currentAccount.id,
                               _selectedType,
                               _autoPay,
                               false,
-                              name: _descriptionController.text);
+                              name: _descriptionController.text,
+                              notificationId: notificationId);
                           await BillAPI.add(bill);
                           if (i == 0 &&
                               bill.autoPay &&
@@ -204,6 +285,24 @@ class _BillEditScreen extends State<BillEditScreen> {
                           }
                         }
                       } else {
+                        int notificationId;
+                        if (!_autoPay) {
+                          if (!Util.isTheSameDay(date, DateTime.now())) {
+                            notificationId =
+                            await KeeperAPI.checkAndUpdateKeeper(1);
+                            await _setSchedualedNotification(
+                                notificationId, date.add(Duration(hours: 8)));
+                          } else {
+                            if (date.hour < 20) {
+                              notificationId =
+                              await KeeperAPI.checkAndUpdateKeeper(1);
+                              await _setSchedualedNotification(
+                                  notificationId,
+                                  DateTime(
+                                      date.year, date.month, date.day, 20));
+                            }
+                          }
+                        }
                         Bill bill = Bill(
                             -double.parse(_amountController.text),
                             date,
@@ -211,7 +310,8 @@ class _BillEditScreen extends State<BillEditScreen> {
                             _selectedType,
                             _autoPay,
                             false,
-                            name: _descriptionController.text);
+                            name: _descriptionController.text,
+                            notificationId: notificationId);
                         await BillAPI.add(bill);
                         if (bill.autoPay &&
                             Util.isTheSameDay(DateTime.now(), bill.dueDate)) {
@@ -224,6 +324,27 @@ class _BillEditScreen extends State<BillEditScreen> {
                         }
                       }
                     } else {
+                      if (!Util.isTheSameDay(previousBill.dueDate, date) && previousBill.notificationId != null) {
+                        flutterLocalNotificationsPlugin.cancel(previousBill.notificationId);
+                      }
+                      int notificationId;
+                      if (!_autoPay) {
+                        if (!Util.isTheSameDay(date, DateTime.now())) {
+                          notificationId =
+                          await KeeperAPI.checkAndUpdateKeeper(1);
+                          await _setSchedualedNotification(
+                            notificationId, date.add(Duration(hours: 8)));
+                        } else {
+                          if (date.hour < 20) {
+                            notificationId =
+                            await KeeperAPI.checkAndUpdateKeeper(1);
+                            await _setSchedualedNotification(
+                              notificationId,
+                              DateTime(
+                                date.year, date.month, date.day, 20));
+                          }
+                        }
+                      }
                       Bill bill = Bill(
                           -double.parse(_amountController.text),
                           date,
@@ -231,7 +352,8 @@ class _BillEditScreen extends State<BillEditScreen> {
                           _selectedType,
                           _autoPay,
                           false,
-                          name: _descriptionController.text);
+                          name: _descriptionController.text,
+                          notificationId: notificationId);
                       await BillAPI.modify(widget.id, bill);
                       if (bill.autoPay &&
                           Util.isTheSameDay(DateTime.now(), bill.dueDate)) {
@@ -291,7 +413,8 @@ class _BillEditScreen extends State<BillEditScreen> {
                       ),
                       Expanded(
                         child: TextFormField(
-                          decoration: InputDecoration(labelText: localizer.amount),
+                          decoration:
+                              InputDecoration(labelText: localizer.amount),
                           controller: _amountController,
                           keyboardType: TextInputType.number,
                           validator: (v) {
@@ -318,8 +441,8 @@ class _BillEditScreen extends State<BillEditScreen> {
                           )),
                       Expanded(
                         child: TextFormField(
-                            decoration:
-                                InputDecoration(labelText: localizer.description),
+                            decoration: InputDecoration(
+                                labelText: localizer.description),
                             controller: _descriptionController,
                             validator: (v) {
                               String value = _descriptionController.text;
@@ -375,7 +498,7 @@ class _BillEditScreen extends State<BillEditScreen> {
                   ExpandedSection(
                     expand: !_repeat,
                     child: InkWell(
-                        onTap: _selectDate,
+                        onTap: () => _selectDate(context),
                         child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
                             child: Row(
@@ -422,88 +545,101 @@ class _BillEditScreen extends State<BillEditScreen> {
                           )),
                   ExpandedSection(
                     expand: _repeat,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 35.0),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 15.0),
-                                child: Icon(
-                                  Icons.av_timer,
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              ),
-                              Expanded(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                      labelText: localizer.repeatFrequency),
-                                  controller: _frequencyController,
-                                  keyboardType: TextInputType.number,
-                                  validator: (v) {
-                                    String value = _frequencyController.text;
-                                    if (value.isEmpty ||
-                                        !Util.isInt(value) ||
-                                        int.parse(value) < 1 ||
-                                        int.parse(value) > 60) {
-                                      return localizer.frequencyRange;
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 15.0),
-                                child: Icon(
-                                  Icons.update,
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              ),
-                              Expanded(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                      labelText: localizer.repeatTimes),
-                                  controller: _repeatTimeController,
-                                  keyboardType: TextInputType.number,
-                                  validator: (v) {
-                                    String value = _repeatTimeController.text;
-                                    if (value.isEmpty ||
-                                        !Util.isInt(value) ||
-                                        int.parse(value) < 2 ||
-                                        int.parse(value) > 60) {
-                                      return localizer.repeatTimesRange;
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          InkWell(
-                              onTap: _selectRepeatDate,
-                              child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: EdgeInsets.only(right: 15),
-                                        child: Icon(
-                                          Icons.date_range,
-                                          color: Theme.of(context).accentColor,
-                                        ),
+                    child: _repeat
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 35.0),
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 15.0),
+                                      child: Icon(
+                                        Icons.av_timer,
+                                        color: Theme.of(context).accentColor,
                                       ),
-                                      Expanded(
-                                          child: Text(
-                                              '${_repeatDate.year}-${_repeatDate.month}-${_repeatDate.day}',
-                                              style: TextStyle(fontSize: 16)))
-                                    ],
-                                  )))
-                        ],
-                      ),
-                    ),
+                                    ),
+                                    Expanded(
+                                      child: TextFormField(
+                                        decoration: InputDecoration(
+                                            labelText:
+                                                localizer.repeatFrequency),
+                                        controller: _frequencyController,
+                                        focusNode: _frequencyFocusNode,
+                                        keyboardType: TextInputType.number,
+                                        validator: (v) {
+                                          String value =
+                                              _frequencyController.text;
+                                          if (value.isEmpty ||
+                                              !Util.isInt(value) ||
+                                              int.parse(value) < 1 ||
+                                              int.parse(value) > 60) {
+                                            return localizer.frequencyRange;
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 15.0),
+                                      child: Icon(
+                                        Icons.update,
+                                        color: Theme.of(context).accentColor,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: TextFormField(
+                                        decoration: InputDecoration(
+                                            labelText: localizer.repeatTimes),
+                                        controller: _repeatTimeController,
+                                        focusNode: _repeatFocusNode,
+                                        keyboardType: TextInputType.number,
+                                        validator: (v) {
+                                          String value =
+                                              _repeatTimeController.text;
+                                          if (value.isEmpty ||
+                                              !Util.isInt(value) ||
+                                              int.parse(value) < 2 ||
+                                              int.parse(value) > 60) {
+                                            return localizer.repeatTimesRange;
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                InkWell(
+                                    onTap: () => _selectRepeatDate(context),
+                                    child: Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 15),
+                                              child: Icon(
+                                                Icons.date_range,
+                                                color: Theme.of(context)
+                                                    .accentColor,
+                                              ),
+                                            ),
+                                            Expanded(
+                                                child: Text(
+                                                    '${_repeatDate.year}-${_repeatDate.month}-${_repeatDate.day}',
+                                                    style: TextStyle(
+                                                        fontSize: 16)))
+                                          ],
+                                        )))
+                              ],
+                            ),
+                          )
+                        : Container(),
                   )
                 ],
               ),

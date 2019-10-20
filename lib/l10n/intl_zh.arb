@@ -628,5 +628,20 @@
                      "@trend7": {
                        "type": "text",
                        "placeholders": {}
-                     }
+                     },
+                     "inappropriateBillDate": "日期范围错误",
+                       "@inappropriateBillDate": {
+                         "type": "text",
+                         "placeholders": {}
+                       },
+                       "dateOnOrAfter": "账单日期应该在今天或今天以后",
+                       "@dateOnOrAfter": {
+                         "type": "text",
+                         "placeholders": {}
+                       },
+                       "repeatBillWarning": "重复账单日期应该在每个月的28号之前（包括28）",
+                       "@repeatBillWarning": {
+                         "type": "text",
+                         "placeholders": {}
+                       }
 }

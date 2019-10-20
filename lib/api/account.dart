@@ -8,7 +8,6 @@ class AccountAPI {
     if (accounts.length == 0) {
       final account = await AccountService.createAccount(Account('Normal'));
       await AccountService.setCurrent(account.id);
-      print('First account initialized');
     }
   }
 

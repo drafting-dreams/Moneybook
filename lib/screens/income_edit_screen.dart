@@ -40,6 +40,12 @@ class _IncomeEdit extends State<IncomeEditScreen> {
     }
   }
 
+  void dispose() {
+    amountController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
   Future _selectDate() async {
     DateTime picked = await showDatePicker(
         context: context,

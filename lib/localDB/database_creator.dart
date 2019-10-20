@@ -29,9 +29,12 @@ class DatabaseCreator {
   static const billDescription = 'billDescription';
   static const billDueDate = 'billDueDate';
   static const billId = 'billId';
+  static const notificationId = 'notificationId';
   static const themeTable = 'themeTable';
   static const theme = 'theme';
   static const themeUsing = 'themeUsing';
+  static const idKeeper = 'idKeeper';
+  static const keeperId = '_id';
 
   static void databaseLog(String functionName, String sql,
       [List<Map<String, dynamic>> selectQueryResult,
@@ -47,6 +50,15 @@ class DatabaseCreator {
     } else if (insertAndUpdateQueryResult != null) {
       print(insertAndUpdateQueryResult);
     }
+  }
+
+  Future<void> createIdKeeper(Database db) async {
+    final todoSql = '''CREATE TABLE $idKeeper
+    (
+     $keeperId INTEGER PRIMATRY KEY,
+     $notificationId INTEGER
+    )''';
+    await db.execute(todoSql);
   }
 
   Future<void> createExpenseTypeTable(Database db) async {
@@ -96,7 +108,8 @@ class DatabaseCreator {
       $billDescription TEXT,
       $billType TEXT,
       $billDueDate TEXT,
-      $accountId TEXT
+      $accountId TEXT,
+      $notificationId INTEGER
     )''';
     await db.execute(todoSql);
   }
@@ -115,7 +128,7 @@ class DatabaseCreator {
     final path = join(databasePath, dbName);
 
     if (await Directory(dirname(path)).exists()) {
-//      await deleteDatabase(path);
+      await deleteDatabase(path);
     } else {
       Directory(path).create(recursive: true);
     }
@@ -134,5 +147,6 @@ class DatabaseCreator {
     await createExpenseTypeTable(db);
     await createBillTable(db);
     await createThemeTable(db);
+    await createIdKeeper(db);
   }
 }

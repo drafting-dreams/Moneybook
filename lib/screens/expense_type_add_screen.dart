@@ -32,6 +32,11 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
     }
   }
 
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
   void createOrModifyType(BuildContext context, ExpenseTypeInfo info,
       [String oldName = '']) {
     if (_textController.text.length < 1) {

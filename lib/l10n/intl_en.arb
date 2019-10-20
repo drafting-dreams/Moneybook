@@ -628,5 +628,20 @@
                    "@trend7": {
                      "type": "text",
                      "placeholders": {}
-                   }
+                   },
+                   "inappropriateBillDate": "Inappropriate Bill Date",
+                     "@inappropriateBillDate": {
+                       "type": "text",
+                       "placeholders": {}
+                     },
+                     "dateOnOrAfter": "Bill date should be on or after today.",
+                     "@dateOnOrAfter": {
+                       "type": "text",
+                       "placeholders": {}
+                     },
+                     "repeatBillWarning": "Repeat Bill day should be on or before 28 of each month.",
+                     "@repeatBillWarning": {
+                       "type": "text",
+                       "placeholders": {}
+                     }
 }

@@ -34,6 +34,12 @@ class _AccountEditScreen extends State<AccountEditScreen> {
     }
   }
 
+  void dispose() {
+    nameController.dispose();
+    balanceController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizer = AppLocalizations.of(context);

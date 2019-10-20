@@ -38,9 +38,10 @@ class BillService {
       ${DatabaseCreator.billAutoPay},
       ${DatabaseCreator.billType},
       ${DatabaseCreator.billAmount},
-      ${DatabaseCreator.billDescription}
+      ${DatabaseCreator.billDescription},
+      ${DatabaseCreator.notificationId}
     )
-    VALUES(?,?,?,?,?,?,?,?)''';
+    VALUES(?,?,?,?,?,?,?,?,?)''';
     List<dynamic> params = [
       bill.id,
       bill.accountId,
@@ -49,7 +50,8 @@ class BillService {
       bill.autoPay ? 1 : 0,
       bill.type,
       bill.value,
-      bill.name
+      bill.name,
+      bill.notificationId
     ];
     final result = await db.rawInsert(sql, params);
     DatabaseCreator.databaseLog('Add bill', sql, null, result, params);
@@ -61,7 +63,8 @@ class BillService {
     ${DatabaseCreator.billAmount} = ?,
     ${DatabaseCreator.billDescription} = ?,
     ${DatabaseCreator.billType} = ?,
-    ${DatabaseCreator.billDueDate} = ?
+    ${DatabaseCreator.billDueDate} = ?,
+    ${DatabaseCreator.notificationId} = ?
     WHERE ${DatabaseCreator.billId} = ?''';
 
     List<dynamic> params = [
@@ -70,6 +73,7 @@ class BillService {
       bill.name,
       bill.type,
       Util.date2DBString(bill.dueDate),
+      bill.notificationId,
       id
     ];
     final result = await db.rawUpdate(sql, params);

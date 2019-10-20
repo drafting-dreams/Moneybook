@@ -286,6 +286,9 @@ class AppLocalizations {
   String get payBillMessage => Intl.message('Are you sure you wanna pay this bill TODAY?', name: 'payBillMessage');
   String get total => Intl.message('Total', name: 'total');
   String get trend7 => Intl.message("Recent 7 days' expense trend chart", name: 'trend7');
+  String get inappropriateBillDate => Intl.message('Inappropriate Bill Date', name: 'inappropriateBillDate');
+  String get dateOnOrAfter => Intl.message('Bill date should be on or after today.', name: 'dateOnOrAfter');
+  String get repeatBillWarning => Intl.message('Repeat Bill day should be on or before 28 of each month.', name: 'repeatBillWarning');
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
