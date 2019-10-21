@@ -87,6 +87,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "general" : MessageLookupByLibrary.simpleMessage("General"),
     "gotIt" : MessageLookupByLibrary.simpleMessage("Got it"),
     "green" : MessageLookupByLibrary.simpleMessage("Tree"),
+    "haveUnpaidBill" : MessageLookupByLibrary.simpleMessage("You have unpaid bills today"),
     "history" : MessageLookupByLibrary.simpleMessage("History"),
     "housing" : MessageLookupByLibrary.simpleMessage("Housing"),
     "import" : MessageLookupByLibrary.simpleMessage("Import Backup"),

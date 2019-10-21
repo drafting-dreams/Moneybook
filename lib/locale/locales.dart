@@ -289,6 +289,7 @@ class AppLocalizations {
   String get inappropriateBillDate => Intl.message('Inappropriate Bill Date', name: 'inappropriateBillDate');
   String get dateOnOrAfter => Intl.message('Bill date should be on or after today.', name: 'dateOnOrAfter');
   String get repeatBillWarning => Intl.message('Repeat Bill day should be on or before 28 of each month.', name: 'repeatBillWarning');
+  String get haveUnpaidBill => Intl.message('You have unpaid bills today', name: 'haveUnpaidBill');
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -643,5 +643,10 @@
                      "@repeatBillWarning": {
                        "type": "text",
                        "placeholders": {}
+                     },
+                     "haveUnpaidBill": "You have unpaid bills today",
+                     "@haveUnpaidBill": {
+                       "type": "text",
+                       "placeholders": {}
                      }
 }

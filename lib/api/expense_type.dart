@@ -8,15 +8,15 @@ class ExpenseTypeAPI {
     return types;
   }
 
-  static Future<void> initializingTypes() async {
+  static Future<void> initializingTypes(String languageCode) async {
     final List<ExpenseType> list = await ExpenseTypeService.list();
     if (list.length == 0) {
-      const List<String> types = [
-        'food',
-        'housing',
-        'commuting',
-        'shopping',
-        'entertainment',
+      List<String> types = [
+        languageCode == 'zh' ? '饮食' : 'food',
+        languageCode == 'zh' ? '住房' : 'housing',
+        languageCode == 'zh' ? '通勤' : 'commuting',
+        languageCode == 'zh' ? '购物' : 'shopping',
+        languageCode == 'zh' ? '娱乐' : 'entertainment',
       ];
       const List<String> icons = [
         'IconData(U+0E57A)',

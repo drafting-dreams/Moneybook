@@ -3,10 +3,11 @@ import 'package:money_book/localDB/service/account.dart';
 import 'package:money_book/localDB/service/transaction.dart';
 
 class AccountAPI {
-  static Future<void> initializingAccount() async {
+  static Future<void> initializingAccount(String languageCode) async {
     final accounts = await getAll();
     if (accounts.length == 0) {
-      final account = await AccountService.createAccount(Account('Normal'));
+      final account = await AccountService.createAccount(
+          Account(languageCode == 'zh' ? '日常账户' : 'Daily Account'));
       await AccountService.setCurrent(account.id);
     }
   }
@@ -21,7 +22,8 @@ class AccountAPI {
     return account;
   }
 
-  static Future<void> modifyAccount(String id, String name, double balance) async {
+  static Future<void> modifyAccount(
+      String id, String name, double balance) async {
     await AccountService.updateAccount(id, name, balance);
   }
 

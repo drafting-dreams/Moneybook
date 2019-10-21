@@ -19,11 +19,19 @@ import 'package:money_book/api/theme.dart';
 import 'package:money_book/api/keeper.dart';
 import 'package:money_book/model/account.dart';
 import 'const/themes.dart';
+import 'package:devicelocale/devicelocale.dart';
 
 void main() async {
+  String currentLocale = 'en_US';
+  try {
+    currentLocale = await Devicelocale.currentLocale;
+  } on Exception {
+    print("Error obtaining current locale");
+  }
+  String languageCode = currentLocale.substring(0, 2);
   await DatabaseCreator().initDatabase();
-  await AccountAPI.initializingAccount();
-  await ExpenseTypeAPI.initializingTypes();
+  await AccountAPI.initializingAccount(languageCode);
+  await ExpenseTypeAPI.initializingTypes(languageCode);
   await ThemeAPI.initializingThemes();
   await KeeperAPI.initializingKeeper();
   runApp(MyApp());

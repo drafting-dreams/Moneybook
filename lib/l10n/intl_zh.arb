@@ -643,5 +643,10 @@
                        "@repeatBillWarning": {
                          "type": "text",
                          "placeholders": {}
+                       },
+                       "haveUnpaidBill": "你今天有待支付的账单",
+                       "@haveUnpaidBill": {
+                         "type": "text",
+                         "placeholders": {}
                        }
 }

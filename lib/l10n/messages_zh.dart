@@ -87,6 +87,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "general" : MessageLookupByLibrary.simpleMessage("通用"),
     "gotIt" : MessageLookupByLibrary.simpleMessage("了解"),
     "green" : MessageLookupByLibrary.simpleMessage("清新绿"),
+    "haveUnpaidBill" : MessageLookupByLibrary.simpleMessage("你今天有待支付的账单"),
     "history" : MessageLookupByLibrary.simpleMessage("记录"),
     "housing" : MessageLookupByLibrary.simpleMessage("住房"),
     "import" : MessageLookupByLibrary.simpleMessage("导入备份"),

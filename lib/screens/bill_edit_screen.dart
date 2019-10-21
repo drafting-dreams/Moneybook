@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:money_book/api/keeper.dart';
-import 'package:money_book/app.dart';
 import 'package:money_book/model/transaction.dart';
 import 'package:money_book/shared_state/transactions.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +12,7 @@ import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/api/bill.dart';
 import 'package:money_book/locale/locales.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:money_book/utils/util.dart';
+import 'package:money_book/locale/locales.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -81,19 +80,16 @@ class _BillEditScreen extends State<BillEditScreen> {
   }
 
   Future<void> _setSchedualedNotification(
-      int id, DateTime schedualedTime) async {
+      BuildContext context, int id, DateTime schedualedTime) async {
+    final localizer = AppLocalizations.of(context);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'money_book_id', 'money_book', 'money book bill notification channel',
         ongoing: false, autoCancel: true);
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.schedule(
-        id,
-        'MoneyBook',
-        'You have unpaid bills today.',
-        schedualedTime,
-        platformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(id, localizer.moneyBook,
+        localizer.haveUnpaidBill, schedualedTime, platformChannelSpecifics);
   }
 
   _onFrequencyFocus() {
@@ -250,13 +246,16 @@ class _BillEditScreen extends State<BillEditScreen> {
                             if (!Util.isTheSameDay(billDate, DateTime.now())) {
                               notificationId =
                                   await KeeperAPI.checkAndUpdateKeeper(1);
-                              await _setSchedualedNotification(notificationId,
+                              await _setSchedualedNotification(
+                                  context,
+                                  notificationId,
                                   billDate.add(Duration(hours: 8)));
                             } else {
                               if (billDate.hour < 20) {
                                 notificationId =
                                     await KeeperAPI.checkAndUpdateKeeper(1);
                                 await _setSchedualedNotification(
+                                    context,
                                     notificationId,
                                     DateTime(billDate.year, billDate.month,
                                         billDate.day, 20));
@@ -289,14 +288,15 @@ class _BillEditScreen extends State<BillEditScreen> {
                         if (!_autoPay) {
                           if (!Util.isTheSameDay(date, DateTime.now())) {
                             notificationId =
-                            await KeeperAPI.checkAndUpdateKeeper(1);
-                            await _setSchedualedNotification(
+                                await KeeperAPI.checkAndUpdateKeeper(1);
+                            await _setSchedualedNotification(context,
                                 notificationId, date.add(Duration(hours: 8)));
                           } else {
                             if (date.hour < 20) {
                               notificationId =
-                              await KeeperAPI.checkAndUpdateKeeper(1);
+                                  await KeeperAPI.checkAndUpdateKeeper(1);
                               await _setSchedualedNotification(
+                                  context,
                                   notificationId,
                                   DateTime(
                                       date.year, date.month, date.day, 20));
@@ -324,24 +324,26 @@ class _BillEditScreen extends State<BillEditScreen> {
                         }
                       }
                     } else {
-                      if (!Util.isTheSameDay(previousBill.dueDate, date) && previousBill.notificationId != null) {
-                        flutterLocalNotificationsPlugin.cancel(previousBill.notificationId);
+                      if (!Util.isTheSameDay(previousBill.dueDate, date) &&
+                          previousBill.notificationId != null) {
+                        flutterLocalNotificationsPlugin
+                            .cancel(previousBill.notificationId);
                       }
                       int notificationId;
                       if (!_autoPay) {
                         if (!Util.isTheSameDay(date, DateTime.now())) {
                           notificationId =
-                          await KeeperAPI.checkAndUpdateKeeper(1);
-                          await _setSchedualedNotification(
-                            notificationId, date.add(Duration(hours: 8)));
+                              await KeeperAPI.checkAndUpdateKeeper(1);
+                          await _setSchedualedNotification(context,
+                              notificationId, date.add(Duration(hours: 8)));
                         } else {
                           if (date.hour < 20) {
                             notificationId =
-                            await KeeperAPI.checkAndUpdateKeeper(1);
+                                await KeeperAPI.checkAndUpdateKeeper(1);
                             await _setSchedualedNotification(
-                              notificationId,
-                              DateTime(
-                                date.year, date.month, date.day, 20));
+                                context,
+                                notificationId,
+                                DateTime(date.year, date.month, date.day, 20));
                           }
                         }
                       }

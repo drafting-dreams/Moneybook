@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-10-19T20:25:37.342329",
+  "@@last_modified": "2019-10-21T11:40:55.991577",
   "moneyBook": "MoneyBook",
   "@moneyBook": {
     "type": "text",
@@ -642,6 +642,11 @@
   },
   "repeatBillWarning": "Repeat Bill day should be on or before 28 of each month.",
   "@repeatBillWarning": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "haveUnpaidBill": "You have unpaid bills today",
+  "@haveUnpaidBill": {
     "type": "text",
     "placeholders": {}
   }
