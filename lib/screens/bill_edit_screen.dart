@@ -12,7 +12,6 @@ import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/api/bill.dart';
 import 'package:money_book/locale/locales.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:money_book/locale/locales.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();

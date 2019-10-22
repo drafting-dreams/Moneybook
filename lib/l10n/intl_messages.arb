@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-10-21T11:40:55.991577",
+  "@@last_modified": "2019-10-22T18:25:53.271196",
   "moneyBook": "MoneyBook",
   "@moneyBook": {
     "type": "text",
@@ -647,6 +647,26 @@
   },
   "haveUnpaidBill": "You have unpaid bills today",
   "@haveUnpaidBill": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "permissionDenied": "Permission Denied",
+  "@permissionDenied": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "failedToGetWritePermission": "Failed to get writing file permission",
+  "@failedToGetWritePermission": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "failedToGetReadPermission": "Failed to get reading file permission",
+  "@failedToGetReadPermission": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupFileBroken": "The backup file has broken",
+  "@backupFileBroken": {
     "type": "text",
     "placeholders": {}
   }

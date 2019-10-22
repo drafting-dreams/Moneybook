@@ -290,6 +290,10 @@ class AppLocalizations {
   String get dateOnOrAfter => Intl.message('Bill date should be on or after today.', name: 'dateOnOrAfter');
   String get repeatBillWarning => Intl.message('Repeat Bill day should be on or before 28 of each month.', name: 'repeatBillWarning');
   String get haveUnpaidBill => Intl.message('You have unpaid bills today', name: 'haveUnpaidBill');
+  String get permissionDenied => Intl.message('Permission Denied', name: 'permissionDenied');
+  String get failedToGetWritePermission => Intl.message('Failed to get writing file permission', name: 'failedToGetWritePermission');
+  String get failedToGetReadPermission => Intl.message('Failed to get reading file permission', name: 'failedToGetReadPermission');
+  String get backupFileBroken => Intl.message('The backup file has broken', name: 'backupFileBroken');
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -648,5 +648,25 @@
                      "@haveUnpaidBill": {
                        "type": "text",
                        "placeholders": {}
-                     }
+                     },
+                     "permissionDenied": "Permission Denied",
+                       "@permissionDenied": {
+                         "type": "text",
+                         "placeholders": {}
+                       },
+                       "failedToGetWritePermission": "Failed to get writing file permission",
+                       "@failedToGetWritePermission": {
+                         "type": "text",
+                         "placeholders": {}
+                       },
+                       "failedToGetReadPermission": "Failed to get reading file permission",
+                       "@failedToGetReadPermission": {
+                         "type": "text",
+                         "placeholders": {}
+                       },
+                       "backupFileBroken": "The backup file has broken",
+                       "@backupFileBroken": {
+                         "type": "text",
+                         "placeholders": {}
+                       }
 }

@@ -648,5 +648,25 @@
                        "@haveUnpaidBill": {
                          "type": "text",
                          "placeholders": {}
-                       }
+                       },
+                       "permissionDenied": "无法获取权限",
+                         "@permissionDenied": {
+                           "type": "text",
+                           "placeholders": {}
+                         },
+                         "failedToGetWritePermission": "写文件权限获取失败",
+                         "@failedToGetWritePermission": {
+                           "type": "text",
+                           "placeholders": {}
+                         },
+                         "failedToGetReadPermission": "读文件权限获取失败",
+                         "@failedToGetReadPermission": {
+                           "type": "text",
+                           "placeholders": {}
+                         },
+                         "backupFileBroken": "The backup file has broken",
+                         "@backupFileBroken": {
+                           "type": "text",
+                           "placeholders": {}
+                         }
 }

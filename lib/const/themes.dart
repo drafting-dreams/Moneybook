@@ -36,7 +36,13 @@ ThemeData getTheme(String color) {
         textSelectionHandleColor: darkTheme.accentColor);
   }
 
+  final lightTheme = ThemeData.light();
+  final colorScheme = lightTheme.colorScheme
+    .copyWith(primary: themes[color]['primary'], secondary: themes[color]['accent']);
+
   return ThemeData.light().copyWith(
+      colorScheme: colorScheme,
+      buttonTheme: lightTheme.buttonTheme.copyWith(colorScheme: colorScheme),
       primaryColor: themes[color]['primary'],
       accentColor: themes[color]['accent'],
       dividerColor: themes[color]['divider'],

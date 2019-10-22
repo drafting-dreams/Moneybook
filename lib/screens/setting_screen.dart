@@ -25,6 +25,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:money_book/model/transaction.dart' as myTransaction;
 import 'package:money_book/const/themes.dart';
 import 'package:money_book/locale/locales.dart';
+import 'package:simple_permissions/simple_permissions.dart';
+import 'dart:io';
 
 Map<String, Widget> items(BuildContext context) {
   return {
@@ -56,10 +58,31 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   FileUtil utilizer;
+  String _platformVersion = 'Unknown';
 
   initState() {
     super.initState();
     this.utilizer = FileUtil();
+    initPlatformState();
+  }
+
+  initPlatformState() async {
+    String platformVersion;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      platformVersion = await MySimplePermission1s.platformVersion;
+    } on Exception {
+      platformVersion = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _platformVersion = platformVersion;
+    });
   }
 
   Widget renderTile(BuildContext context, String text, IconData icon,
@@ -96,6 +119,39 @@ class _SettingScreenState extends State<SettingScreen> {
           ],
         ),
       );
+
+  importLocally(
+      BuildContext context,
+      Transactions transactions,
+      ExpenseTypeInfo expenseTypeInfo,
+      AccountState accountState,
+      ThemeChanger themeChanger) async {
+    final localizer = AppLocalizations.of(context);
+    bool hasPermission = await MySimplePermission1s.checkPermission(
+        SimplePermission1.ReadExternalStorage);
+    if (!hasPermission) {
+      final result = await MySimplePermission1s.requestPermission(
+          SimplePermission1.ReadExternalStorage);
+      if (result != MyPermissionStatus.authorized) {
+        simpleDialog.showSimpleDialog(context, localizer.permissionDenied,
+            localizer.failedToGetReadPermission);
+        return;
+      }
+    }
+    final path = await utilizer.externalPath;
+    if (FileSystemEntity.typeSync('$path/.moneybookbackup') == FileSystemEntityType.notFound) {
+      simpleDialog.showSimpleDialog(context, localizer.importFailed,
+        '${localizer.importFailedMessage1}$path${localizer.importFailedMessage2}');
+      return;
+    }
+    utilizer.readFrom(PathType.external, '.moneybookbackup').then((contents) {
+      importBackup(context, contents, transactions, expenseTypeInfo,
+          accountState, themeChanger);
+    }).catchError((error) async {
+      simpleDialog.showSimpleDialog(context, localizer.importFailed,
+          '${localizer.backupFileBroken}');
+    });
+  }
 
   Future importBackup(
       BuildContext context,
@@ -162,6 +218,28 @@ class _SettingScreenState extends State<SettingScreen> {
     });
   }
 
+  writeToLocal(BuildContext context, String content) async {
+    final localizer = AppLocalizations.of(context);
+    bool hasPermission = await MySimplePermission1s.checkPermission(
+        SimplePermission1.WriteExternalStorage);
+    if (!hasPermission) {
+      final result = await MySimplePermission1s.requestPermission(
+          SimplePermission1.WriteExternalStorage);
+      if (result != MyPermissionStatus.authorized) {
+        simpleDialog.showSimpleDialog(context, localizer.permissionDenied,
+            localizer.failedToGetWritePermission);
+        return;
+      }
+    }
+    this
+        .utilizer
+        .writeTo(PathType.external, '.moneybookbackup', content)
+        .then((f) {
+      simpleDialog.showSimpleDialog(context, localizer.backupSuccess,
+          '${localizer.backupMessage}${f.path}');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var transactions = Provider.of<Transactions>(context);
@@ -218,12 +296,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     String str = listString
                         .where((s) => !s.startsWith('CREATE'))
                         .join('^^^');
-                    utilizer.writeTo('.moneybookbackup', str).then((f) {
-                      simpleDialog.showSimpleDialog(
-                          context,
-                          localizer.backupSuccess,
-                          '${localizer.backupMessage}${f.path}');
-                    });
+                    this.writeToLocal(context, str);
                   });
                   break;
                 case 'dropbox':
@@ -262,16 +335,8 @@ class _SettingScreenState extends State<SettingScreen> {
                             ],
                           )).then((answer) {
                     if (answer == 1) {
-                      utilizer.readFrom('.moneybookbackup').then((contents) {
-                        importBackup(context, contents, transactions,
-                            expenseTypeInfo, accountState, themeChanger);
-                      }).catchError((error) async {
-                        final localPath = await utilizer.localPath;
-                        simpleDialog.showSimpleDialog(
-                            context,
-                            localizer.importFailed,
-                            '${localizer.importFailedMessage1}$localPath${localizer.importFailedMessage2}');
-                      });
+                      this.importLocally(context, transactions, expenseTypeInfo,
+                          accountState, themeChanger);
                     }
                   });
                   break;
