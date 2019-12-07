@@ -294,6 +294,8 @@ class AppLocalizations {
   String get failedToGetWritePermission => Intl.message('Failed to get writing file permission', name: 'failedToGetWritePermission');
   String get failedToGetReadPermission => Intl.message('Failed to get reading file permission', name: 'failedToGetReadPermission');
   String get backupFileBroken => Intl.message('The backup file has broken', name: 'backupFileBroken');
+  String get exportToOtherApps => Intl.message('export backup to other apps', name: 'exportToOtherApps');
+  String get importFromOtherApps => Intl.message('import backup from other apps', name: 'importFromOtherApps');
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -27,13 +27,20 @@ import 'package:money_book/const/themes.dart';
 import 'package:money_book/locale/locales.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'dart:io';
+import 'package:flutter_share/flutter_share.dart';
 
-Map<String, Widget> items(BuildContext context) {
+Map<String, Widget> exportItems(BuildContext context) {
   return {
     'local': Text(AppLocalizations.of(context).locally),
-    'dropbox': Text('Dropbox'),
-    'onedrive': Text('OneDrive'),
-    'googledrive': Text('GoogleDrive')
+    'exportToOtherApps': Text(AppLocalizations.of(context).exportToOtherApps)
+  };
+}
+
+Map<String, Widget> importItems(BuildContext context) {
+  return {
+    'local': Text(AppLocalizations.of(context).locally),
+    'importFromOtherApps':
+        Text(AppLocalizations.of(context).importFromOtherApps)
   };
 }
 
@@ -139,17 +146,18 @@ class _SettingScreenState extends State<SettingScreen> {
       }
     }
     final path = await utilizer.externalPath;
-    if (FileSystemEntity.typeSync('$path/.moneybookbackup') == FileSystemEntityType.notFound) {
+    if (FileSystemEntity.typeSync('$path/.moneybookbackup') ==
+        FileSystemEntityType.notFound) {
       simpleDialog.showSimpleDialog(context, localizer.importFailed,
-        '${localizer.importFailedMessage1}$path${localizer.importFailedMessage2}');
+          '${localizer.importFailedMessage1}$path${localizer.importFailedMessage2}');
       return;
     }
     utilizer.readFrom(PathType.external, '.moneybookbackup').then((contents) {
       importBackup(context, contents, transactions, expenseTypeInfo,
           accountState, themeChanger);
     }).catchError((error) async {
-      simpleDialog.showSimpleDialog(context, localizer.importFailed,
-          '${localizer.backupFileBroken}');
+      simpleDialog.showSimpleDialog(
+          context, localizer.importFailed, '${localizer.backupFileBroken}');
     });
   }
 
@@ -240,6 +248,24 @@ class _SettingScreenState extends State<SettingScreen> {
     });
   }
 
+  shareFile(BuildContext context, String content) async {
+    final localizer = AppLocalizations.of(context);
+    bool hasPermission = await MySimplePermission1s.checkPermission(
+      SimplePermission1.WriteExternalStorage);
+    if (!hasPermission) {
+      final result = await MySimplePermission1s.requestPermission(
+        SimplePermission1.WriteExternalStorage);
+      if (result != MyPermissionStatus.authorized) {
+        simpleDialog.showSimpleDialog(context, localizer.permissionDenied,
+          localizer.failedToGetWritePermission);
+        return;
+      }
+    }
+    this.utilizer.writeTo(PathType.external, '.moneybookbackup', content).then((f) {
+      FlutterShare.shareFile(title: 'title', text: 'text', filePath: f.path);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var transactions = Provider.of<Transactions>(context);
@@ -288,22 +314,22 @@ class _SettingScreenState extends State<SettingScreen> {
           renderTile(context, AppLocalizations.of(context).backup, Icons.backup,
               () {
             showRadioDialog(context, AppLocalizations.of(context).backup,
-                    items(context), '')
+                    exportItems(context), '')
                 .then((method) async {
+              String filterCreateTableSql(List<String> listString) =>
+                  listString.where((s) => !s.startsWith('CREATE')).join('^^^');
               switch (method) {
                 case 'local':
                   dbExportSql(db).then((listString) {
-                    String str = listString
-                        .where((s) => !s.startsWith('CREATE'))
-                        .join('^^^');
+                    String str = filterCreateTableSql(listString);
                     this.writeToLocal(context, str);
                   });
                   break;
-                case 'dropbox':
-                  break;
-                case 'onedrive':
-                  break;
-                case 'googledrive':
+                case 'exportToOtherApps':
+                  dbExportSql(db).then((listString) {
+                    String str = filterCreateTableSql(listString);
+                    this.shareFile(context, str);
+                  });
                   break;
               }
             });
@@ -311,7 +337,7 @@ class _SettingScreenState extends State<SettingScreen> {
           renderTile(context, AppLocalizations.of(context).import,
               Icons.cloud_download, () {
             showRadioDialog(context, AppLocalizations.of(context).import,
-                    items(context), '')
+                    importItems(context), '')
                 .then((method) {
               switch (method) {
                 case 'local':
@@ -340,11 +366,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     }
                   });
                   break;
-                case 'dropbox':
-                  break;
-                case 'onedrive':
-                  break;
-                case 'googledrive':
+                case 'importFromOtherApps':
                   break;
               }
             });

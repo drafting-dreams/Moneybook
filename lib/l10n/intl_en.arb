@@ -55,618 +55,628 @@
     "placeholders": {}
   },
   "transactionClass": "Class",
-    "@transactionClass": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "all": "All",
-    "@all": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "income": "Income",
-    "@income": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "expense": "Expense",
-    "@expense": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "time": "Time",
-    "@time": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "myDefault": "Default",
-    "@myDefault": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "byMonth": "By Month",
-    "@byMonth": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "byYear": "By Year",
-    "@byYear": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "customize": "Customize",
-    "@customize": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "amount": "Amount",
-    "@amount": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "description": "Description",
-    "@description": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "autopay": "AutoPay",
-    "@autopay": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "repeat": "Repeat",
-    "@repeat": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "repeatTimes": "Repeat Times",
-    "@repeatTimes": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "repeatFrequency": "Repeat Frequency By Month",
-    "@repeatFrequency": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "from": "From",
-    "@from": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "to": "to",
-    "@to": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "jan": "Jan",
-    "@jan": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "feb": "Feb",
-    "@feb": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "mar": "Mar",
-    "@mar": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "apr": "Apr",
-    "@apr": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "may": "May",
-    "@may": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "jun": "Jun",
-    "@jun": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "jul": "Jul",
-    "@jul": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "aug": "Aug",
-    "@aug": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "sep": "Sep",
-    "@sep": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "oct": "Oct",
-    "@oct": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "nov": "Nov",
-    "@nov": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "dec": "Dec",
-    "@dec": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "filterRange": "Filter\nRange",
-    "@filterRange": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "paymentStatus": "Payment Status",
-    "@paymentStatus": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "paid": "Paid",
-    "@paid": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "unpaid": "Unpaid",
-    "@unpaid": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "chartWarn": "No data for this period of time",
-    "@chartWarn": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "seven": "recent 7 days",
-    "@seven": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "thirty": "recent 30 days",
-    "@thirty": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "lastSix": "last 6 months",
-    "@lastSix": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "edit": "Edit",
-    "@edit": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "delete": "Delete",
-    "@delete": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "pay": "Pay",
-    "@pay": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "ratioChart": "Expense type ratio chart",
-    "@ratioChart": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "trendChart": "Expense trend chart",
-    "@trendChart": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "account": "Account",
-    "@account": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "typeName": "Type Name",
-    "@typeName": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "housing": "Housing",
-    "@housing": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "commuting": "Commuting",
-    "@commuting": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "food": "Food",
-    "@food": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "shopping": "Shopping",
-    "@shopping": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "digital": "Digital",
-    "@digital": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "individual": "Individual",
-    "@individual": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "education": "Education",
-    "@education": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "entertainment": "Entertainment",
-    "@entertainment": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "exercising": "Exercising",
-    "@exercising": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "family": "Family",
-    "@family": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "medical": "Medical",
-    "@medical": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "others": "Others",
-    "@others": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "locally": "Locally",
-    "@locally": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "blue": "Alien Blue",
-    "@blue": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "green": "Tree",
-    "@green": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "pony": "Pony",
-    "@pony": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "purple": "Noble Purple",
-    "@purple": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "dark": "Dark",
-    "@dark": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "chocolate": "Chocolate",
-    "@chocolate": {
-      "type": "text",
-      "placeholders": {}
-    },
-    "enterExpenseAmount": "Please enter your expense amount",
-      "@enterExpenseAmount": {
-        "type": "text",
-        "placeholders": {}
-      },
-      "enterIncomeAmount": "Please enter your income amount",
-      "@enterIncomeAmount": {
-        "type": "text",
-        "placeholders": {}
-      },
-      "enterBillAmount": "Please enter your bill amount for each period",
-      "@enterBillAmount": {
-        "type": "text",
-        "placeholders": {}
-      },
-      "enterPositive": "Please enter a positive Number",
-      "@enterPositive": {
-        "type": "text",
-        "placeholders": {}
-      },
-      "incomeDescription": "Please input some description about the income",
-      "@incomeDescription": {
-        "type": "text",
-        "placeholders": {}
-      },
-      "expenseDescription": "Please input some description about the expense",
-      "@expenseDescription": {
-        "type": "text",
-        "placeholders": {}
-      },
-      "billDescription": "Please input some description about the bill",
-        "@billDescription": {
-          "type": "text",
-          "placeholders": {}
-        },
-        "frequencyRange": "Please enter an integer ranged from 1 to 60",
-        "@frequencyRange": {
-          "type": "text",
-          "placeholders": {}
-        },
-        "repeatTimesRange": "Please enter an integer ranged from 2 to 60",
-        "@repeatTimesRange": {
-          "type": "text",
-          "placeholders": {}
-        },
-        "createAccount": "Create Account",
-          "@createAccount": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "accountName": "Account Name",
-          "@accountName": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "accountBalance": "Account Balance",
-          "@accountBalance": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "inputAccountName": "Please input account's name",
-          "@inputAccountName": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "enterAccountBalance": "Please enter account's balance",
-          "@enterAccountBalance": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "invalidNumber": "Invalid number",
-          "@invalidNumber": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "deleteAccount": "Delete Account",
-          "@deleteAccount": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "bigDelete": "DELETE",
-          "@bigDelete": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "confirmDeleteAccount": "All related information including transactions and bills will be deleted, are you sure?",
-          "@confirmDeleteAccount": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "ok": "OK",
-          "@ok": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "oneType": "There must be at least one expense type.",
-          "@oneType": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "maximumType": "The maximum number of expense type is 11.",
-          "@maximumType": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "typeNumberLimit": "Types number limit",
-          "@typeNumberLimit": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "addExpenseType": "Add Expense Type",
-          "@addExpenseType": {
-            "type": "text",
-            "placeholders": {}
-          },
-          "cancel": "CANCEL",
-            "@cancel": {
-              "type": "text",
-              "placeholders": {}
-           },
-           "deleteType": "Delete Type",
-             "@deleteType": {
-               "type": "text",
-               "placeholders": {}
-             },
-             "confirmDeleteType1": "This will delete the ",
-             "@confirmDeleteType1": {
-               "type": "text",
-               "placeholders": {}
-             },
-             "confirmDeleteType2": " type, all related transactions and bills on all accounts!\n\nAre you sure?",
-             "@confirmDeleteType2": {
-               "type": "text",
-               "placeholders": {}
-             },
-             "wrongName": "Wrong name",
-               "@wrongName": {
-                 "type": "text",
-                 "placeholders": {}
-             },
-             "enterTypeName": "Please enter a name",
-             "@enterTypeName": {
-               "type": "text",
-               "placeholders": {}
-             },
-             "backupSuccess": "Backup Success",
-               "@backupSuccess": {
-                 "type": "text",
-                 "placeholders": {}
-               },
-               "backupMessage": "Backup file was saved at ",
-               "@backupMessage": {
-                 "type": "text",
-                 "placeholders": {}
-               },
-               "confirmImport": "This will wipe all your current data on you device. Are you sure?",
-               "@confirmImport": {
-                 "type": "text",
-                 "placeholders": {}
-               },
-               "yes": "Yes",
-               "@yes": {
-                 "type": "text",
-                 "placeholders": {}
-               },
-               "no": "No",
-               "@no": {
-                 "type": "text",
-                 "placeholders": {}
-               },
-               "importFailed": "Read File Failed",
-               "@importFailed": {
-                 "type": "text",
-                 "placeholders": {}
-               },
-               "importFailedMessage1": "Make sure this file (",
-               "@importFailedMessage1": {
-                 "type": "text",
-                 "placeholders": {}
-               },
-               "importFailedMessage2": "/.moneybookbackup) exist on you device.",
-               "@importFailedMessage2": {
-                 "type": "text",
-                 "placeholders": {}
-               },
-               "importSuccess": "Import Success",
-                 "@importSuccess": {
-                   "type": "text",
-                   "placeholders": {}
-                 },
-                 "importSuccessMessage": "Backup data is imported successfully",
-                 "@importSuccessMessage": {
-                   "type": "text",
-                   "placeholders": {}
-                 },
-               "autoPayNotification": "Autopay Notification",
-                 "@autoPayNotification": {
-                   "type": "text",
-                   "placeholders": {}
-                 },
-                 "autoPayNotificationMessage": "Autopay bills has been paid.",
-                 "@autoPayNotificationMessage": {
-                   "type": "text",
-                   "placeholders": {}
-                 },
-                 "gotIt": "Got it",
-                 "@gotIt": {
-                   "type": "text",
-                   "placeholders": {}
-                 },
-                 "deleteTransaction": "Delete Transaction",
-                   "@deleteTransaction": {
-                     "type": "text",
-                     "placeholders": {}
-                   },
-                   "confirmDeleteTransaction": "Do you want this operation affect your account's balance?",
-                   "@confirmDeleteTransaction": {
-                     "type": "text",
-                     "placeholders": {}
-                   },
-                   "todaysPaid": "Today's bill has been successfully paid!",
-                     "@todaysPaid": {
-                       "type": "text",
-                       "placeholders": {}
-                     },
-                     "billPaid": "The bill has been successfully paid.",
-                     "@billPaid": {
-                       "type": "text",
-                       "placeholders": {}
-                     },
-                     "deleteBill": "Delete Bill",
-                     "@deleteBill": {
-                       "type": "text",
-                       "placeholders": {}
-                     },
-                     "deleteBillMessage": "Delete this bill record.",
-                     "@deleteBillMessage": {
-                       "type": "text",
-                       "placeholders": {}
-                     },
-                     "payBill": "Pay Bill",
-                     "@payBill": {
-                       "type": "text",
-                       "placeholders": {}
-                     },
-                     "payBillMessage": "Are you sure you wanna pay this bill TODAY?",
-                     "@payBillMessage": {
-                       "type": "text",
-                       "placeholders": {}
-                     },
-                     "total": "Total",
-                   "@total": {
-                     "type": "text",
-                     "placeholders": {}
-                   },
-                   "trend7": "Recent 7 days' expense trend chart",
-                   "@trend7": {
-                     "type": "text",
-                     "placeholders": {}
-                   },
-                   "inappropriateBillDate": "Inappropriate Bill Date",
-                     "@inappropriateBillDate": {
-                       "type": "text",
-                       "placeholders": {}
-                     },
-                     "dateOnOrAfter": "Bill date should be on or after today.",
-                     "@dateOnOrAfter": {
-                       "type": "text",
-                       "placeholders": {}
-                     },
-                     "repeatBillWarning": "Repeat Bill day should be on or before 28 of each month.",
-                     "@repeatBillWarning": {
-                       "type": "text",
-                       "placeholders": {}
-                     },
-                     "haveUnpaidBill": "You have unpaid bills today",
-                     "@haveUnpaidBill": {
-                       "type": "text",
-                       "placeholders": {}
-                     },
-                     "permissionDenied": "Permission Denied",
-                       "@permissionDenied": {
-                         "type": "text",
-                         "placeholders": {}
-                       },
-                       "failedToGetWritePermission": "Failed to get writing file permission",
-                       "@failedToGetWritePermission": {
-                         "type": "text",
-                         "placeholders": {}
-                       },
-                       "failedToGetReadPermission": "Failed to get reading file permission",
-                       "@failedToGetReadPermission": {
-                         "type": "text",
-                         "placeholders": {}
-                       },
-                       "backupFileBroken": "The backup file has broken",
-                       "@backupFileBroken": {
-                         "type": "text",
-                         "placeholders": {}
-                       }
+  "@transactionClass": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "all": "All",
+  "@all": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "income": "Income",
+  "@income": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "expense": "Expense",
+  "@expense": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "time": "Time",
+  "@time": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "myDefault": "Default",
+  "@myDefault": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "byMonth": "By Month",
+  "@byMonth": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "byYear": "By Year",
+  "@byYear": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "customize": "Customize",
+  "@customize": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "amount": "Amount",
+  "@amount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "description": "Description",
+  "@description": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "autopay": "AutoPay",
+  "@autopay": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "repeat": "Repeat",
+  "@repeat": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "repeatTimes": "Repeat Times",
+  "@repeatTimes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "repeatFrequency": "Repeat Frequency By Month",
+  "@repeatFrequency": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "from": "From",
+  "@from": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "to": "to",
+  "@to": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "jan": "Jan",
+  "@jan": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "feb": "Feb",
+  "@feb": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "mar": "Mar",
+  "@mar": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "apr": "Apr",
+  "@apr": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "may": "May",
+  "@may": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "jun": "Jun",
+  "@jun": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "jul": "Jul",
+  "@jul": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "aug": "Aug",
+  "@aug": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sep": "Sep",
+  "@sep": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "oct": "Oct",
+  "@oct": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "nov": "Nov",
+  "@nov": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "dec": "Dec",
+  "@dec": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "filterRange": "Filter\nRange",
+  "@filterRange": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "paymentStatus": "Payment Status",
+  "@paymentStatus": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "paid": "Paid",
+  "@paid": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "unpaid": "Unpaid",
+  "@unpaid": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "chartWarn": "No data for this period of time",
+  "@chartWarn": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "seven": "recent 7 days",
+  "@seven": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "thirty": "recent 30 days",
+  "@thirty": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "lastSix": "last 6 months",
+  "@lastSix": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "edit": "Edit",
+  "@edit": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete": "Delete",
+  "@delete": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "pay": "Pay",
+  "@pay": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "ratioChart": "Expense type ratio chart",
+  "@ratioChart": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "trendChart": "Expense trend chart",
+  "@trendChart": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "account": "Account",
+  "@account": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "typeName": "Type Name",
+  "@typeName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "housing": "Housing",
+  "@housing": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "commuting": "Commuting",
+  "@commuting": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "food": "Food",
+  "@food": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "shopping": "Shopping",
+  "@shopping": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "digital": "Digital",
+  "@digital": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "individual": "Individual",
+  "@individual": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "education": "Education",
+  "@education": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "entertainment": "Entertainment",
+  "@entertainment": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "exercising": "Exercising",
+  "@exercising": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "family": "Family",
+  "@family": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "medical": "Medical",
+  "@medical": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "others": "Others",
+  "@others": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "locally": "Locally",
+  "@locally": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "blue": "Alien Blue",
+  "@blue": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "green": "Tree",
+  "@green": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "pony": "Pony",
+  "@pony": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "purple": "Noble Purple",
+  "@purple": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "dark": "Dark",
+  "@dark": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "chocolate": "Chocolate",
+  "@chocolate": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterExpenseAmount": "Please enter your expense amount",
+  "@enterExpenseAmount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterIncomeAmount": "Please enter your income amount",
+  "@enterIncomeAmount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterBillAmount": "Please enter your bill amount for each period",
+  "@enterBillAmount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterPositive": "Please enter a positive Number",
+  "@enterPositive": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "incomeDescription": "Please input some description about the income",
+  "@incomeDescription": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "expenseDescription": "Please input some description about the expense",
+  "@expenseDescription": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "billDescription": "Please input some description about the bill",
+  "@billDescription": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "frequencyRange": "Please enter an integer ranged from 1 to 60",
+  "@frequencyRange": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "repeatTimesRange": "Please enter an integer ranged from 2 to 60",
+  "@repeatTimesRange": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "createAccount": "Create Account",
+  "@createAccount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "accountName": "Account Name",
+  "@accountName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "accountBalance": "Account Balance",
+  "@accountBalance": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "inputAccountName": "Please input account's name",
+  "@inputAccountName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterAccountBalance": "Please enter account's balance",
+  "@enterAccountBalance": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "invalidNumber": "Invalid number",
+  "@invalidNumber": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteAccount": "Delete Account",
+  "@deleteAccount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "bigDelete": "DELETE",
+  "@bigDelete": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmDeleteAccount": "All related information including transactions and bills will be deleted, are you sure?",
+  "@confirmDeleteAccount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "ok": "OK",
+  "@ok": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "oneType": "There must be at least one expense type.",
+  "@oneType": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "maximumType": "The maximum number of expense type is 11.",
+  "@maximumType": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "typeNumberLimit": "Types number limit",
+  "@typeNumberLimit": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "addExpenseType": "Add Expense Type",
+  "@addExpenseType": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel": "CANCEL",
+  "@cancel": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteType": "Delete Type",
+  "@deleteType": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmDeleteType1": "This will delete the ",
+  "@confirmDeleteType1": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmDeleteType2": " type, all related transactions and bills on all accounts!\n\nAre you sure?",
+  "@confirmDeleteType2": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "wrongName": "Wrong name",
+  "@wrongName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterTypeName": "Please enter a name",
+  "@enterTypeName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupSuccess": "Backup Success",
+  "@backupSuccess": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupMessage": "Backup file was saved at ",
+  "@backupMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmImport": "This will wipe all your current data on you device. Are you sure?",
+  "@confirmImport": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "yes": "Yes",
+  "@yes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "no": "No",
+  "@no": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importFailed": "Read File Failed",
+  "@importFailed": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importFailedMessage1": "Make sure this file (",
+  "@importFailedMessage1": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importFailedMessage2": "/.moneybookbackup) exist on you device.",
+  "@importFailedMessage2": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importSuccess": "Import Success",
+  "@importSuccess": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importSuccessMessage": "Backup data is imported successfully",
+  "@importSuccessMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "autoPayNotification": "Autopay Notification",
+  "@autoPayNotification": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "autoPayNotificationMessage": "Autopay bills has been paid.",
+  "@autoPayNotificationMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "gotIt": "Got it",
+  "@gotIt": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteTransaction": "Delete Transaction",
+  "@deleteTransaction": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmDeleteTransaction": "Do you want this operation affect your account's balance?",
+  "@confirmDeleteTransaction": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "todaysPaid": "Today's bill has been successfully paid!",
+  "@todaysPaid": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "billPaid": "The bill has been successfully paid.",
+  "@billPaid": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteBill": "Delete Bill",
+  "@deleteBill": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteBillMessage": "Delete this bill record.",
+  "@deleteBillMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "payBill": "Pay Bill",
+  "@payBill": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "payBillMessage": "Are you sure you wanna pay this bill TODAY?",
+  "@payBillMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "total": "Total",
+  "@total": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "trend7": "Recent 7 days' expense trend chart",
+  "@trend7": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "inappropriateBillDate": "Inappropriate Bill Date",
+  "@inappropriateBillDate": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "dateOnOrAfter": "Bill date should be on or after today.",
+  "@dateOnOrAfter": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "repeatBillWarning": "Repeat Bill day should be on or before 28 of each month.",
+  "@repeatBillWarning": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "haveUnpaidBill": "You have unpaid bills today",
+  "@haveUnpaidBill": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "permissionDenied": "Permission Denied",
+  "@permissionDenied": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "failedToGetWritePermission": "Failed to get writing file permission",
+  "@failedToGetWritePermission": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "failedToGetReadPermission": "Failed to get reading file permission",
+  "@failedToGetReadPermission": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupFileBroken": "The backup file has broken",
+  "@backupFileBroken": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "exportToOtherApps": "export backup to other apps",
+  "@exportToOtherApps": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importFromOtherApps": "import backup from other apps",
+  "@importFromOtherApps": {
+    "type": "text",
+    "placeholders": {}
+  }
 }

@@ -17,6 +17,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  flutter_share: ^1.0.2+1
   simple_permissions: ^0.1.9
   devicelocale: ^0.2.0
   flutter_local_notifications: ^0.8.4

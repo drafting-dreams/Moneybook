@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-10-22T18:25:53.271196",
+  "@@last_modified": "2019-12-07T12:02:25.457730",
   "moneyBook": "MoneyBook",
   "@moneyBook": {
     "type": "text",
@@ -667,6 +667,16 @@
   },
   "backupFileBroken": "The backup file has broken",
   "@backupFileBroken": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "exportToOtherApps": "export backup to other apps",
+  "@exportToOtherApps": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "importFromOtherApps": "import backup from other apps",
+  "@importFromOtherApps": {
     "type": "text",
     "placeholders": {}
   }
