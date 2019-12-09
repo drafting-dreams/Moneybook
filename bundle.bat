@@ -1,0 +1,1 @@
+java -jar bundletool.jar build-apks --bundle=C:\\Users\\drafting_dreams\\AndroidStudioProjects\\money_book\\build\\app\\outputs\\bundle\\release\\app.aab --output=C:\\Users\\drafting_dreams\\AndroidStudioProjects\\money_book\\build\\app\\outputs\\bundle\\release\\app.apks --ks=C:\\Users\\drafting_dreams\\key.jks --ks-pass=pass:qwerfdsa --ks-key-alias=key --key-pass=pass:qwerfdsa

@@ -39,8 +39,8 @@ Map<String, Widget> exportItems(BuildContext context) {
 Map<String, Widget> importItems(BuildContext context) {
   return {
     'local': Text(AppLocalizations.of(context).locally),
-    'importFromOtherApps':
-        Text(AppLocalizations.of(context).importFromOtherApps)
+//    'importFromOtherApps':
+//        Text(AppLocalizations.of(context).importFromOtherApps)
   };
 }
 
