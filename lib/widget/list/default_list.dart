@@ -81,7 +81,7 @@ class _DefaultListState extends State<DefaultList> {
                 transaction.date.month != previous.date.month) {
               final totalAmount =
                   transactions.getTotalOfMonth(transaction.date);
-              total = (totalAmount > 0 ? '+' : '') + totalAmount.toString();
+              total = (totalAmount > 0 ? '+' : '') + totalAmount.toStringAsFixed(2);
               leading = GestureDetector(
                   onTap: () {
                     setState(() {

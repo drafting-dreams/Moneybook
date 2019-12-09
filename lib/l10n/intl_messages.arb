@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-12-07T12:02:25.457730",
+  "@@last_modified": "2019-12-09T16:15:00.933552",
   "moneyBook": "MoneyBook",
   "@moneyBook": {
     "type": "text",
@@ -677,6 +677,11 @@
   },
   "importFromOtherApps": "import backup from other apps",
   "@importFromOtherApps": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyAccount": "Modify Account",
+  "@modifyAccount": {
     "type": "text",
     "placeholders": {}
   }

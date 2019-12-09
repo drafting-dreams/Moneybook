@@ -58,7 +58,7 @@ class _MonthListState extends State<MonthList> {
               final totalAmount = widget.monthTransactionTotalList
                   .where((item) => item['year'] == e['year'])
                   .fold(0.0, (current, next) => current + next['amount']);
-              total = (totalAmount > 0 ? '+' : '') + totalAmount.toString();
+              total = (totalAmount > 0 ? '+' : '') + totalAmount.toStringAsFixed(2);
               leading = GestureDetector(
                   onTap: () {
                     setState(() {

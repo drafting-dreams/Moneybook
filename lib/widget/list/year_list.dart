@@ -13,7 +13,7 @@ class YearList extends StatelessWidget {
           Divider(height: 2.0),
           ListTile(
             title: Text(e['year'].toString()),
-            trailing: Text((e['amount'] > 0 ? '+' : '') + e['amount'].toString(),
+            trailing: Text((e['amount'] > 0 ? '+' : '') + e['amount'].toStringAsFixed(2),
                 style: TextStyle(
                     color:
                         e['amount'] > 0 ? Colors.green[600] : Colors.red[600])),

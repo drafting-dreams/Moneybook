@@ -116,6 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "maximumType" : MessageLookupByLibrary.simpleMessage("The maximum number of expense type is 11."),
     "may" : MessageLookupByLibrary.simpleMessage("May"),
     "medical" : MessageLookupByLibrary.simpleMessage("Medical"),
+    "modifyAccount" : MessageLookupByLibrary.simpleMessage("Modify Account"),
     "moneyBook" : MessageLookupByLibrary.simpleMessage("MoneyBook"),
     "myDefault" : MessageLookupByLibrary.simpleMessage("Default"),
     "no" : MessageLookupByLibrary.simpleMessage("No"),

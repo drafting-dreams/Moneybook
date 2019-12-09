@@ -264,7 +264,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "account": "支付",
+  "account": "账户",
   "@account": {
     "type": "text",
     "placeholders": {}
@@ -676,6 +676,11 @@
   },
   "importFromOtherApps": "从其他应用打开备份文件",
   "@importFromOtherApps": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "modifyAccount": "修改账户",
+  "@modifyAccount": {
     "type": "text",
     "placeholders": {}
   }

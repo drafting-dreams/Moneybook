@@ -21,7 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "account" : MessageLookupByLibrary.simpleMessage("支付"),
+    "account" : MessageLookupByLibrary.simpleMessage("账户"),
     "accountBalance" : MessageLookupByLibrary.simpleMessage("余额"),
     "accountName" : MessageLookupByLibrary.simpleMessage("账户名"),
     "accounts" : MessageLookupByLibrary.simpleMessage("账户"),
@@ -116,6 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "maximumType" : MessageLookupByLibrary.simpleMessage("消费类型最多11种"),
     "may" : MessageLookupByLibrary.simpleMessage("五月"),
     "medical" : MessageLookupByLibrary.simpleMessage("医疗"),
+    "modifyAccount" : MessageLookupByLibrary.simpleMessage("修改账户"),
     "moneyBook" : MessageLookupByLibrary.simpleMessage("钱书"),
     "myDefault" : MessageLookupByLibrary.simpleMessage("默认"),
     "no" : MessageLookupByLibrary.simpleMessage("否"),

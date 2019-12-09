@@ -678,5 +678,10 @@
   "@importFromOtherApps": {
     "type": "text",
     "placeholders": {}
+  },
+  "modifyAccount": "Modify Account",
+  "@modifyAccount": {
+    "type": "text",
+    "placeholders": {}
   }
 }

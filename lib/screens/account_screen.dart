@@ -173,7 +173,7 @@ class _AccountScreen extends State<AccountScreen> {
                                   Text(accounts[index].name)
                                 ],
                               ),
-                        trailing: Text(accounts[index].balance.toString(),
+                        trailing: Text(accounts[index].balance.toStringAsFixed(2),
                             style: accounts[index].balance >= 0
                                 ? TextStyle(color: Colors.green[600])
                                 : TextStyle(color: Colors.red[600])),
