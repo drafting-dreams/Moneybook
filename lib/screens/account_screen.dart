@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:money_book/api/account.dart';
 import 'package:money_book/model/account.dart';
 import 'package:money_book/screens/account_edit_screen.dart';
+import 'package:money_book/screens/account_transfer_screen.dart';
 import 'package:money_book/shared_state/account.dart';
 import 'package:money_book/shared_state/transactions.dart';
 import 'package:provider/provider.dart';
@@ -110,18 +111,38 @@ class _AccountScreen extends State<AccountScreen> {
 
     return Scaffold(
         appBar: AppBar(title: Text(localizer.account), actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add_circle_outline),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          AccountEditScreen())).then((value) {
-                updateAccountsList();
-              });
-            },
-          )
+          PopupMenuButton(
+              icon: Icon(Icons.menu),
+              initialValue: '',
+              onSelected: (String value) {
+                switch (value) {
+                  case 'createAccount':
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                AccountEditScreen())).then((res) {
+                      updateAccountsList();
+                    });
+                    break;
+                  case 'transfer':
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                AccountTransferScreen())).then((res) {
+                      updateAccountsList();
+                    });
+                    break;
+                }
+              },
+              itemBuilder: (BuildContext context) => [
+                    PopupMenuItem<String>(
+                        value: 'createAccount',
+                        child: Text(localizer.createAccount)),
+                    PopupMenuItem<String>(
+                        value: 'transfer', child: Text(localizer.transfer)),
+                  ])
         ]),
         body: ListView.builder(
           itemCount: accounts.length,
@@ -153,27 +174,29 @@ class _AccountScreen extends State<AccountScreen> {
                       actionPane: SlidableDrawerActionPane(),
                       secondaryActions: actions(index),
                       child: ListTile(
-                        title: accountState.currentAccount.id == accounts[index].id
-                            ? Row(children: <Widget>[
-                                Container(
-                                  width: 28,
-                                  margin: EdgeInsets.only(right: 10),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Theme.of(context).accentColor,
-                                  ),
-                                ),
-                                Text(accounts[index].name)
-                              ])
-                            : Row(
-                                children: <Widget>[
-                                  Container(
+                        title:
+                            accountState.currentAccount.id == accounts[index].id
+                                ? Row(children: <Widget>[
+                                    Container(
                                       width: 28,
-                                      margin: EdgeInsets.only(right: 10)),
-                                  Text(accounts[index].name)
-                                ],
-                              ),
-                        trailing: Text(accounts[index].balance.toStringAsFixed(2),
+                                      margin: EdgeInsets.only(right: 10),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Theme.of(context).accentColor,
+                                      ),
+                                    ),
+                                    Text(accounts[index].name)
+                                  ])
+                                : Row(
+                                    children: <Widget>[
+                                      Container(
+                                          width: 28,
+                                          margin: EdgeInsets.only(right: 10)),
+                                      Text(accounts[index].name)
+                                    ],
+                                  ),
+                        trailing: Text(
+                            accounts[index].balance.toStringAsFixed(2),
                             style: accounts[index].balance >= 0
                                 ? TextStyle(color: Colors.green[600])
                                 : TextStyle(color: Colors.red[600])),

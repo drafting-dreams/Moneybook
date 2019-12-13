@@ -66,13 +66,14 @@ class _ExpenseTypeAddScreen extends State<ExpenseTypeAddScreen> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
+          final localizer = AppLocalizations.of(context);
           return AlertDialog(
-            title: Text('Duplicated name'),
+            title: Text(localizer.duplicatedName),
             content:
-                Text('There is already a type named ${_textController.text}.'),
+                Text('${localizer.duplicatedNameContent} ${_textController.text}.'),
             actions: <Widget>[
               FlatButton(
-                child: Text('OK'),
+                child: Text(localizer.ok),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

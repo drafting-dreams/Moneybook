@@ -262,41 +262,147 @@ class AppLocalizations {
       name: 'confirmDeleteType2');
 
   String get wrongName => Intl.message('Wrong name', name: 'wrongName');
-  String get enterTypeName => Intl.message('Please enter a name', name: 'enterTypeName');
-  String get backupSuccess => Intl.message('Backup Success', name: 'backupSuccess');
-  String get backupMessage => Intl.message('Backup file was saved at ', name: 'backupMessage');
-  String get confirmImport => Intl.message('This will wipe all your current data on you device. Are you sure?', name: 'confirmImport');
+
+  String get enterTypeName =>
+      Intl.message('Please enter a name', name: 'enterTypeName');
+
+  String get backupSuccess =>
+      Intl.message('Backup Success', name: 'backupSuccess');
+
+  String get backupMessage =>
+      Intl.message('Backup file was saved at ', name: 'backupMessage');
+
+  String get confirmImport => Intl.message(
+      'This will wipe all your current data on you device. Are you sure?',
+      name: 'confirmImport');
+
   String get yes => Intl.message('Yes', name: 'yes');
+
   String get no => Intl.message('No', name: 'no');
-  String get importFailed => Intl.message('Read File Failed', name: 'importFailed');
-  String get importFailedMessage1 => Intl.message('Make sure this file (', name: 'importFailedMessage1');
-  String get importFailedMessage2 => Intl.message('/.moneybookbackup) exist on you device.', name: 'importFailedMessage2');
-  String get importSuccess => Intl.message('Import Success', name: 'importSuccess');
-  String get importSuccessMessage => Intl.message('Backup data is imported successfully', name: 'importSuccessMessage');
-  String get autoPayNotification => Intl.message('Autopay Notification', name: 'autoPayNotification');
-  String get autoPayNotificationMessage => Intl.message('Autopay bills has been paid.', name: 'autoPayNotificationMessage');
+
+  String get importFailed =>
+      Intl.message('Read File Failed', name: 'importFailed');
+
+  String get importFailedMessage1 =>
+      Intl.message('Make sure this file (', name: 'importFailedMessage1');
+
+  String get importFailedMessage2 =>
+      Intl.message('/.moneybookbackup) exist on you device.',
+          name: 'importFailedMessage2');
+
+  String get importSuccess =>
+      Intl.message('Import Success', name: 'importSuccess');
+
+  String get importSuccessMessage =>
+      Intl.message('Backup data is imported successfully',
+          name: 'importSuccessMessage');
+
+  String get autoPayNotification =>
+      Intl.message('Autopay Notification', name: 'autoPayNotification');
+
+  String get autoPayNotificationMessage =>
+      Intl.message('Autopay bills has been paid.',
+          name: 'autoPayNotificationMessage');
+
   String get gotIt => Intl.message('Got it', name: 'gotIt');
-  String get deleteTransaction => Intl.message('Delete Transaction', name: 'deleteTransaction');
-  String get confirmDeleteTransaction => Intl.message("Do you want this operation affect your account's balance?", name: 'confirmDeleteTransaction');
-  String get todaysPaid => Intl.message("Today's bill has been successfully paid!", name: 'todaysPaid');
-  String get billPaid => Intl.message('The bill has been successfully paid.', name: 'billPaid');
+
+  String get deleteTransaction =>
+      Intl.message('Delete Transaction', name: 'deleteTransaction');
+
+  String get confirmDeleteTransaction =>
+      Intl.message("Do you want this operation affect your account's balance?",
+          name: 'confirmDeleteTransaction');
+
+  String get todaysPaid =>
+      Intl.message("Today's bill has been successfully paid!",
+          name: 'todaysPaid');
+
+  String get billPaid =>
+      Intl.message('The bill has been successfully paid.', name: 'billPaid');
+
   String get deleteBill => Intl.message('Delete Bill', name: 'deleteBill');
-  String get deleteBillMessage => Intl.message('Delete this bill record.', name: 'deleteBillMessage');
+
+  String get deleteBillMessage =>
+      Intl.message('Delete this bill record.', name: 'deleteBillMessage');
+
   String get payBill => Intl.message('Pay Bill', name: 'payBill');
-  String get payBillMessage => Intl.message('Are you sure you wanna pay this bill TODAY?', name: 'payBillMessage');
+
+  String get payBillMessage =>
+      Intl.message('Are you sure you wanna pay this bill TODAY?',
+          name: 'payBillMessage');
+
   String get total => Intl.message('Total', name: 'total');
-  String get trend7 => Intl.message("Recent 7 days' expense trend chart", name: 'trend7');
-  String get inappropriateBillDate => Intl.message('Inappropriate Bill Date', name: 'inappropriateBillDate');
-  String get dateOnOrAfter => Intl.message('Bill date should be on or after today.', name: 'dateOnOrAfter');
-  String get repeatBillWarning => Intl.message('Repeat Bill day should be on or before 28 of each month.', name: 'repeatBillWarning');
-  String get haveUnpaidBill => Intl.message('You have unpaid bills today', name: 'haveUnpaidBill');
-  String get permissionDenied => Intl.message('Permission Denied', name: 'permissionDenied');
-  String get failedToGetWritePermission => Intl.message('Failed to get writing file permission', name: 'failedToGetWritePermission');
-  String get failedToGetReadPermission => Intl.message('Failed to get reading file permission', name: 'failedToGetReadPermission');
-  String get backupFileBroken => Intl.message('The backup file has broken', name: 'backupFileBroken');
-  String get exportToOtherApps => Intl.message('export backup to other apps', name: 'exportToOtherApps');
-  String get importFromOtherApps => Intl.message('import backup from other apps', name: 'importFromOtherApps');
-  String get modifyAccount => Intl.message('Modify Account', name: 'modifyAccount');
+
+  String get trend7 =>
+      Intl.message("Recent 7 days' expense trend chart", name: 'trend7');
+
+  String get inappropriateBillDate =>
+      Intl.message('Inappropriate Bill Date', name: 'inappropriateBillDate');
+
+  String get dateOnOrAfter =>
+      Intl.message('Bill date should be on or after today.',
+          name: 'dateOnOrAfter');
+
+  String get repeatBillWarning =>
+      Intl.message('Repeat Bill day should be on or before 28 of each month.',
+          name: 'repeatBillWarning');
+
+  String get haveUnpaidBill =>
+      Intl.message('You have unpaid bills today', name: 'haveUnpaidBill');
+
+  String get permissionDenied =>
+      Intl.message('Permission Denied', name: 'permissionDenied');
+
+  String get failedToGetWritePermission =>
+      Intl.message('Failed to get writing file permission',
+          name: 'failedToGetWritePermission');
+
+  String get failedToGetReadPermission =>
+      Intl.message('Failed to get reading file permission',
+          name: 'failedToGetReadPermission');
+
+  String get backupFileBroken =>
+      Intl.message('The backup file has broken', name: 'backupFileBroken');
+
+  String get exportToOtherApps =>
+      Intl.message('export backup to other apps', name: 'exportToOtherApps');
+
+  String get importFromOtherApps =>
+      Intl.message('import backup from other apps',
+          name: 'importFromOtherApps');
+
+  String get modifyAccount =>
+      Intl.message('Modify Account', name: 'modifyAccount');
+
+  String get transfer => Intl.message('Transfer', name: 'transfer');
+
+  String get fromAccount => Intl.message('From Account', name: 'fromAccount');
+
+  String get toAccount => Intl.message('To Account', name: 'toAccount');
+
+  String get enterTransferAmount =>
+      Intl.message('Please enter the amount of the transfer',
+          name: 'enterTransferAmount');
+
+  String get confirm => Intl.message('Confirm', name: 'confirm');
+
+  String get duplicatedName =>
+      Intl.message('Duplicated Name', name: 'duplicatedName');
+
+  String get duplicatedNameContent =>
+      Intl.message('There is already a type named',
+          name: 'duplicatedNameContent');
+
+  String get transferTo => Intl.message('Transfer to', name: 'transferTo');
+
+  String get transferFrom =>
+      Intl.message('Transfer from', name: 'transferFrom');
+
+  String get sameAccount => Intl.message('Same Account', name: 'sameAccount');
+
+  String get sameAccountContent =>
+      Intl.message("Transfer accounts couldn't be same.",
+          name: 'sameAccountContent');
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

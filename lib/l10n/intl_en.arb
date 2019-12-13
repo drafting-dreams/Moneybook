@@ -683,5 +683,60 @@
   "@modifyAccount": {
     "type": "text",
     "placeholders": {}
+  },
+  "transfer": "Transfer",
+  "@transfer": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "fromAccount": "From Account",
+  "@fromAccount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "toAccount": "To Account",
+  "@toAccount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterTransferAmount": "Please enter the amount of the transfer",
+  "@enterTransferAmount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "duplicatedName": "Duplicated Name",
+  "@duplicatedName": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "duplicatedNameContent": "There is already a type named",
+  "@duplicatedNameContent": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "transferTo": "Transfer to",
+  "@transferTo": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "transferFrom": "Transfer from",
+  "@transferFrom": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sameAccount": "Same Account",
+  "@sameAccount": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "sameAccountContent": "Transfer accounts couldn't be same.",
+  "@sameAccountContent": {
+    "type": "text",
+    "placeholders": {}
   }
 }
