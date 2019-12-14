@@ -100,7 +100,7 @@ class _ExpenseEdit extends State<ExpenseEditScreen> {
                   }
                   this.widget.update();
                 } else {
-                  await TransactionAPI.modify(widget.id, t);
+                  await TransactionAPI.modify(widget.id, accountState.currentAccount.id, t);
                   transactions.update(widget.id, t);
                 }
                 Navigator.of(context).pop();
