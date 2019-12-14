@@ -94,7 +94,7 @@ class _ExpenseTypeSettingScreen extends State<ExpenseTypeSettingScreen> {
             IconButton(
               icon: Icon(Icons.add_circle_outline),
               onPressed: () {
-                if (expenseTypeInfo.types.length == 11) {
+                if (expenseTypeInfo.types.length >= 11) {
                   _fallbackDialog(context, 11);
                   return;
                 }
