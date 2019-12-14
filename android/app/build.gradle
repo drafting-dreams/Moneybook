@@ -84,3 +84,5 @@ configurations.all {
         force 'com.android.support:support-v4:27.1.0'
     }
 }
+
+apply plugin: 'com.google.gms.google-services'  // Google Play services Gradle plugin
