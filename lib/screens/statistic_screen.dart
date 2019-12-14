@@ -283,7 +283,7 @@ class _StatisticScreen extends State<StatisticScreen> {
                           child: pieChartData.isEmpty
                               ? Container()
                               : Text(
-                                  '${localizer.total}   ${-pieTotal}',
+                                  '${localizer.total}   ${(-pieTotal).toStringAsFixed(1)}',
                                   style: Theme.of(context).textTheme.title,
                                 )),
                       Container(
@@ -329,7 +329,7 @@ class _StatisticScreen extends State<StatisticScreen> {
                                         CrossAxisAlignment.stretch,
                                     children: selectionBoard
                                         .map((datum) => Text(
-                                              '${datum.type}: ${datum.value < 0 ? -datum.value : datum.value}',
+                                              '${datum.type}: ${datum.value < 0 ? (-datum.value).toStringAsFixed(2) : (datum.value).toStringAsFixed(2)}',
                                               style: TextStyle(
                                                   color: Colors.white),
                                             ))
