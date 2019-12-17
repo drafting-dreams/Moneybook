@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 class YearList extends StatelessWidget {
   final List<Map<String, dynamic>> yearTransactionTotalList;
+  final ScrollController scrollController;
 
-  YearList(this.yearTransactionTotalList);
+  YearList(this.yearTransactionTotalList, {this.scrollController});
 
   build(BuildContext context) {
-    return ListView.builder(itemCount: yearTransactionTotalList.length, itemBuilder: (BuildContext context, int index) {
+    return ListView.builder(controller: scrollController, itemCount: yearTransactionTotalList.length, itemBuilder: (BuildContext context, int index) {
       final e = yearTransactionTotalList[index];
       return Column(
         children: <Widget>[

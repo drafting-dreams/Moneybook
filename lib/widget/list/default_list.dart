@@ -13,8 +13,9 @@ enum DeleteType { NORMAL, CASCADE }
 
 class DefaultList extends StatefulWidget {
   final Function onRefresh;
+  final ScrollController scrollController;
 
-  DefaultList(this.onRefresh);
+  DefaultList(this.onRefresh, {this.scrollController});
 
   @override
   _DefaultListState createState() => _DefaultListState();
@@ -24,6 +25,10 @@ class _DefaultListState extends State<DefaultList> {
   final SlidableController slidableController = SlidableController();
 
   final List<Map<String, int>> hiddenMonth = [];
+
+  initState() {
+    super.initState();
+  }
 
   bool hiddenContained(int year, int month) =>
       hiddenMonth.indexWhere((Map element) =>
@@ -65,6 +70,7 @@ class _DefaultListState extends State<DefaultList> {
       child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: transactions.length,
+          controller: this.widget.scrollController,
           itemBuilder: (BuildContext context, int index) {
             final transaction = transactions.get(index);
             final icon = transaction.value < 0
@@ -81,7 +87,8 @@ class _DefaultListState extends State<DefaultList> {
                 transaction.date.month != previous.date.month) {
               final totalAmount =
                   transactions.getTotalOfMonth(transaction.date);
-              total = (totalAmount > 0 ? '+' : '') + totalAmount.toStringAsFixed(2);
+              total =
+                  (totalAmount > 0 ? '+' : '') + totalAmount.toStringAsFixed(2);
               leading = GestureDetector(
                   onTap: () {
                     setState(() {
@@ -99,8 +106,8 @@ class _DefaultListState extends State<DefaultList> {
                     });
                   },
                   child: Container(
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).dividerColor),
+                    decoration:
+                        BoxDecoration(color: Theme.of(context).dividerColor),
                     padding: EdgeInsets.fromLTRB(10, 15, 5, 15),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

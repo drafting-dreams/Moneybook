@@ -23,7 +23,7 @@ class BookScreen extends StatefulWidget {
   }
 }
 
-class _BookScreen extends State<BookScreen> {
+class _BookScreen extends State<BookScreen> with TickerProviderStateMixin {
   ActionTypes _currentActionType = ActionTypes.byDay;
   List<Map<String, dynamic>> transactionByYear = [];
   List<Map<String, dynamic>> transactionByMonth = [];
@@ -32,6 +32,41 @@ class _BookScreen extends State<BookScreen> {
   int startMonth = 1;
   int endMonth = 12;
   bool expand = false;
+  AnimationController _controller;
+  Animation<double> _animation;
+  ScrollController scrollController;
+  double prevScrollOffset = 0;
+
+  initState() {
+    super.initState();
+    scrollController = ScrollController();
+    scrollController.addListener(_scrollListener);
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 300), vsync: this, value: 0);
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+
+    _controller.forward();
+  }
+
+  dispose() {
+    scrollController.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  _scrollListener() {
+    if ((scrollController.offset - prevScrollOffset).abs() < 50) {
+      return;
+    }
+    if (scrollController.offset > prevScrollOffset) {
+      _controller.reverse();
+    } else {
+      _controller.forward();
+    }
+    setState(() {
+      prevScrollOffset = scrollController.offset;
+    });
+  }
 
   Function setActionTypeWrapper(String accountId, Transactions ts) {
     void setActionType(ActionTypes type) {
@@ -175,14 +210,25 @@ class _BookScreen extends State<BookScreen> {
         : accountState.currentAccount.id;
 
     Map<ActionTypes, Function> bodyWidgets = {
-      ActionTypes.byDay: () => DefaultList(_onRefreshWrapper(currentAccountId,
-          transactions.previousLoadingReference, transactions)),
-      ActionTypes.byYear: () => YearList(transactionByYear),
-      ActionTypes.byMonth: () =>
-          MonthList(refreshTransactionByMonth, transactionByMonth),
+      ActionTypes.byDay: () => DefaultList(
+            _onRefreshWrapper(currentAccountId,
+                transactions.previousLoadingReference, transactions),
+            scrollController: scrollController,
+          ),
+      ActionTypes.byYear: () => YearList(
+            transactionByYear,
+            scrollController: scrollController,
+          ),
+      ActionTypes.byMonth: () => MonthList(
+            refreshTransactionByMonth,
+            transactionByMonth,
+            scrollController: scrollController,
+          ),
       ActionTypes.customize: () => CustomizeList(
-          start: DateTime(startYear, startMonth),
-          end: DateTime(endYear, endMonth))
+            start: DateTime(startYear, startMonth),
+            end: DateTime(endYear, endMonth),
+            scrollController: scrollController,
+          )
     };
 
     return Scaffold(
@@ -407,10 +453,14 @@ class _BookScreen extends State<BookScreen> {
                 )),
           ],
         )),
-        floatingActionButton: FloatingAddButton(
-          update: () {
-            this.updateBoth(accountState.currentAccount.id, transactions.tc);
-          },
+        floatingActionButton: ScaleTransition(
+          scale: _animation,
+          alignment: Alignment.bottomCenter,
+          child: FloatingAddButton(
+            update: () {
+              this.updateBoth(accountState.currentAccount.id, transactions.tc);
+            },
+          ),
         ),
         body: bodyWidgets[_currentActionType](),
         bottomNavigationBar: BottomNavigator(initialIndex: 0));

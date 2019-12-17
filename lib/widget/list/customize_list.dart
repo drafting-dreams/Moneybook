@@ -14,7 +14,9 @@ enum DeleteType { NORMAL, CASCADE }
 class CustomizeList extends StatefulWidget {
   DateTime start;
   DateTime end;
-  CustomizeList({this.start, this.end});
+  final ScrollController scrollController;
+
+  CustomizeList({this.start, this.end, this.scrollController});
 
   @override
   State<StatefulWidget> createState() {
@@ -30,10 +32,7 @@ class _CustomizeListState extends State<CustomizeList> {
     super.initState();
     for (int year = widget.start.year; year <= widget.end.year; year++) {
       for (int month = widget.start.month; month <= widget.end.month; month++) {
-        hiddenMonth.add({
-          'year': year,
-          'month': month
-        });
+        hiddenMonth.add({'year': year, 'month': month});
       }
     }
   }
@@ -53,7 +52,7 @@ class _CustomizeListState extends State<CustomizeList> {
               content: Text(localizer.confirmDeleteTransaction),
               actions: <Widget>[
                 FlatButton(
-                  child: Text(localizer.yes ),
+                  child: Text(localizer.yes),
                   onPressed: () {
                     Navigator.of(context).pop(DeleteType.CASCADE);
                   },
@@ -75,14 +74,15 @@ class _CustomizeListState extends State<CustomizeList> {
     return ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: transactions.length,
+        controller: this.widget.scrollController,
         itemBuilder: (BuildContext context, int index) {
           final localizer = AppLocalizations.of(context);
           final transaction = transactions.get(index);
           final icon = transaction.value < 0
-            ? expenseTypeInfo.types
-            .firstWhere((info) => info.name == transaction.type)
-            : ExpenseType('income', Icons.monetization_on.toString(),
-            Colors.yellow.toString());
+              ? expenseTypeInfo.types
+                  .firstWhere((info) => info.name == transaction.type)
+              : ExpenseType('income', Icons.monetization_on.toString(),
+                  Colors.yellow.toString());
           final previous = index > 0 ? transactions.get(index - 1) : null;
           Widget leading = Container(height: 0);
           String total = '';
@@ -91,7 +91,8 @@ class _CustomizeListState extends State<CustomizeList> {
               transaction.date.year != previous.date.year ||
               transaction.date.month != previous.date.month) {
             final totalAmount = transactions.getTotalOfMonth(transaction.date);
-            total = (totalAmount > 0 ? '+' : '') + totalAmount.toStringAsFixed(2);
+            total =
+                (totalAmount > 0 ? '+' : '') + totalAmount.toStringAsFixed(2);
             leading = GestureDetector(
                 onTap: () {
                   setState(() {
@@ -109,7 +110,8 @@ class _CustomizeListState extends State<CustomizeList> {
                   });
                 },
                 child: Container(
-                  decoration: BoxDecoration(color: Theme.of(context).dividerColor),
+                  decoration:
+                      BoxDecoration(color: Theme.of(context).dividerColor),
                   padding: EdgeInsets.fromLTRB(10, 15, 5, 15),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -188,10 +190,10 @@ class _CustomizeListState extends State<CustomizeList> {
                       child: ListTile(
                         leading: RawMaterialButton(
                           constraints: BoxConstraints(
-                            minWidth: 45,
-                            minHeight: 45,
-                            maxHeight: 45,
-                            maxWidth: 45),
+                              minWidth: 45,
+                              minHeight: 45,
+                              maxHeight: 45,
+                              maxWidth: 45),
                           onPressed: () {},
                           shape: CircleBorder(),
                           child: Icon(icon.icon, color: Colors.white),

@@ -8,8 +8,9 @@ import 'package:provider/provider.dart';
 class MonthList extends StatefulWidget {
   final Function refresh;
   final List<Map<String, dynamic>> monthTransactionTotalList;
+  ScrollController scrollController;
 
-  MonthList(this.refresh, this.monthTransactionTotalList);
+  MonthList(this.refresh, this.monthTransactionTotalList, {this.scrollController});
 
   @override
   _MonthListState createState() => _MonthListState();
@@ -46,6 +47,7 @@ class _MonthListState extends State<MonthList> {
             onRefreshWrapper(accountState.currentAccount.id, transactions.tc),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
+          controller: this.widget.scrollController,
           itemCount: widget.monthTransactionTotalList.length,
           itemBuilder: (BuildContext context, int index) {
             final e = widget.monthTransactionTotalList[index];

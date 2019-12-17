@@ -19,8 +19,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 enum DeleteType { YES, NO }
 enum Payment { ALL, PAID, UNPAID }
+
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 class BillScreen extends StatefulWidget {
   @override
@@ -29,7 +30,8 @@ class BillScreen extends StatefulWidget {
   }
 }
 
-class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
+class _BillScreenState extends State<BillScreen>
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   final SlidableController slidableController = SlidableController();
   List<Bill> defaultList = [];
   List<Bill> customizedList = [];
@@ -44,6 +46,10 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
   int lastBillYear = 0;
   bool expand = false;
   Payment paymentFilter = Payment.ALL;
+  AnimationController _controller;
+  Animation<double> _animation;
+  ScrollController scrollController;
+  double prevScrollOffset = 0;
 
   setPayment(Payment p) {
     setState(() {
@@ -60,6 +66,13 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    scrollController = ScrollController();
+    scrollController.addListener(_scrollListener);
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 300), vsync: this, value: 0);
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+
+    _controller.forward();
     AccountAPI.getCurrentAccount().then((account) {
       setState(() {
         currentAccount = account;
@@ -67,6 +80,20 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
       reload();
     });
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  _scrollListener() {
+    if ((scrollController.offset - prevScrollOffset).abs() < 50) {
+      return;
+    }
+    if (scrollController.offset > prevScrollOffset) {
+      _controller.reverse();
+    } else {
+      _controller.forward();
+    }
+    setState(() {
+      prevScrollOffset = scrollController.offset;
+    });
   }
 
   @override
@@ -257,7 +284,9 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
               _deletionDialog(context).then((DeleteType type) {
                 if (type == DeleteType.YES) {
                   BillAPI.deleteById(bill.id);
-                  if (!bill.paid && !bill.autoPay && bill.notificationId != null) {
+                  if (!bill.paid &&
+                      !bill.autoPay &&
+                      bill.notificationId != null) {
                     flutterLocalNotificationsPlugin.cancel(bill.notificationId);
                   }
                   setState(() {
@@ -289,20 +318,24 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => BillEditScreen()))
-                .then((paidToday) {
-              if (paidToday ?? false) {
-                paySuccessfulDialog(context, localizer.todaysPaid);
-              }
-              reload();
-            });
-          }),
+      floatingActionButton: ScaleTransition(
+        scale: _animation,
+        alignment: Alignment.bottomCenter,
+        child: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => BillEditScreen()))
+                  .then((paidToday) {
+                if (paidToday ?? false) {
+                  paySuccessfulDialog(context, localizer.todaysPaid);
+                }
+                reload();
+              });
+            }),
+      ),
       endDrawer: Drawer(
           child: Column(
         children: <Widget>[
@@ -519,6 +552,7 @@ class _BillScreenState extends State<BillScreen> with WidgetsBindingObserver {
         onRefresh: _onRefresh,
         child: ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
+            controller: scrollController,
             itemCount: bills.length,
             itemBuilder: (BuildContext context, int index) {
               Bill bill = bills[index];
