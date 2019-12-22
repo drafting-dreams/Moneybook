@@ -23,7 +23,7 @@ class PieOutsideLabelChart extends StatelessWidget {
               .shadeDefault;
         },
         domainFn: (TransactionStatistic t, _) => t.type,
-        measureFn: (TransactionStatistic t, _) => t.value,
+        measureFn: (TransactionStatistic t, _) => num.parse(t.value.toStringAsFixed(2)),
         data: statistic,
         labelAccessorFn: (TransactionStatistic t, _) => t.type,
       )
