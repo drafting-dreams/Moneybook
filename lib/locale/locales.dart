@@ -18,7 +18,7 @@ class AppLocalizations {
   static AppLocalizations of(BuildContext context) =>
       Localizations.of<AppLocalizations>(context, AppLocalizations);
 
-  String get moneyBook => Intl.message('MoneyBook', name: 'moneyBook');
+  String get moneyBook => Intl.message('CyberMoneyBook', name: 'moneyBook');
 
   String get statistic => Intl.message('Statistic', name: 'statistic');
 

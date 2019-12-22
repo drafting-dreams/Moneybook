@@ -1,6 +1,6 @@
 {
-  "@@last_modified": "2019-12-13T16:27:37.806192",
-  "moneyBook": "MoneyBook",
+  "@@last_modified": "2019-12-22T19:33:41.257845",
+  "moneyBook": "CyberMoneyBook",
   "@moneyBook": {
     "type": "text",
     "placeholders": {}

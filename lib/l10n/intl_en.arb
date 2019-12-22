@@ -1,5 +1,5 @@
 {
-  "moneyBook": "MoneyBook",
+  "moneyBook": "CyberMoneyBook",
   "@moneyBook": {
     "type": "text",
     "placeholders": {}

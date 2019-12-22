@@ -1,5 +1,5 @@
 {
-  "moneyBook": "钱书",
+  "moneyBook": "赛博账本",
   "@moneyBook": {
     "type": "text",
     "placeholders": {}

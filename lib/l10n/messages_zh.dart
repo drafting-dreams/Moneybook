@@ -122,7 +122,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "may" : MessageLookupByLibrary.simpleMessage("五月"),
     "medical" : MessageLookupByLibrary.simpleMessage("医疗"),
     "modifyAccount" : MessageLookupByLibrary.simpleMessage("修改账户"),
-    "moneyBook" : MessageLookupByLibrary.simpleMessage("钱书"),
+    "moneyBook" : MessageLookupByLibrary.simpleMessage("赛博账本"),
     "myDefault" : MessageLookupByLibrary.simpleMessage("默认"),
     "no" : MessageLookupByLibrary.simpleMessage("否"),
     "nov" : MessageLookupByLibrary.simpleMessage("十一月"),

@@ -122,7 +122,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "may" : MessageLookupByLibrary.simpleMessage("May"),
     "medical" : MessageLookupByLibrary.simpleMessage("Medical"),
     "modifyAccount" : MessageLookupByLibrary.simpleMessage("Modify Account"),
-    "moneyBook" : MessageLookupByLibrary.simpleMessage("MoneyBook"),
+    "moneyBook" : MessageLookupByLibrary.simpleMessage("CyberMoneyBook"),
     "myDefault" : MessageLookupByLibrary.simpleMessage("Default"),
     "no" : MessageLookupByLibrary.simpleMessage("No"),
     "nov" : MessageLookupByLibrary.simpleMessage("Nov"),

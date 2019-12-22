@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="money_book"
+        android:label="@string/icon_label"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
