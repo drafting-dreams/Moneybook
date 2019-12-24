@@ -251,17 +251,20 @@ class _SettingScreenState extends State<SettingScreen> {
   shareFile(BuildContext context, String content) async {
     final localizer = AppLocalizations.of(context);
     bool hasPermission = await MySimplePermission1s.checkPermission(
-      SimplePermission1.WriteExternalStorage);
+        SimplePermission1.WriteExternalStorage);
     if (!hasPermission) {
       final result = await MySimplePermission1s.requestPermission(
-        SimplePermission1.WriteExternalStorage);
+          SimplePermission1.WriteExternalStorage);
       if (result != MyPermissionStatus.authorized) {
         simpleDialog.showSimpleDialog(context, localizer.permissionDenied,
-          localizer.failedToGetWritePermission);
+            localizer.failedToGetWritePermission);
         return;
       }
     }
-    this.utilizer.writeTo(PathType.external, '.moneybookbackup', content).then((f) {
+    this
+        .utilizer
+        .writeTo(PathType.external, '.moneybookbackup', content)
+        .then((f) {
       FlutterShare.shareFile(title: 'title', text: 'text', filePath: f.path);
     });
   }
@@ -317,7 +320,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     exportItems(context), '')
                 .then((method) async {
               String filterCreateTableSql(List<String> listString) =>
-                  listString.where((s) => !s.startsWith('CREATE')).join('^^^');
+                  listString.where((s) => s.startsWith('INSERT')).join('^^^');
               switch (method) {
                 case 'local':
                   dbExportSql(db).then((listString) {
