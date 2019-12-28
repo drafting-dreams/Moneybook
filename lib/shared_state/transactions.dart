@@ -30,7 +30,7 @@ class Transactions extends ChangeNotifier {
 
   void removeById(String id) {
     transactions
-      .removeAt(transactions.indexWhere((Transaction t) => t.id == id));
+        .removeAt(transactions.indexWhere((Transaction t) => t.id == id));
     notifyListeners();
   }
 
@@ -50,18 +50,41 @@ class Transactions extends ChangeNotifier {
     }
     Transaction firstTransaction = transactions[0];
     if (t.date.compareTo(firstTransaction.date) < 0 &&
-      (t.date.month != firstTransaction.date.month ||
-        t.date.year != firstTransaction.date.year)) {} else {
-      // Find the first transaction's date which is after the added one, and insert it here
-      final idx = this
-        .transactions
-        .indexWhere((element) => t.date.compareTo(element.date) < 0);
-      if (idx >= 0) {
-        this.transactions.insert(idx, t);
-        notifyListeners();
-      } else if (idx < 0) {
-        this.transactions.add(t);
-        notifyListeners();
+        (t.date.month != firstTransaction.date.month ||
+            t.date.year != firstTransaction.date.year)) {
+    } else {
+      if (this.transactions.any((item) =>
+          t.date.year == item.date.year && t.date.month == item.date.month)) {
+        final lastSameMonthIdx = this.transactions.lastIndexWhere((item) =>
+            item.date.year == t.date.year && item.date.month == t.date.month);
+        if (t.date.compareTo(this.transactions[lastSameMonthIdx].date) < 0) {
+          if (lastSameMonthIdx + 1 < this.transactions.length) {
+            this.transactions.insert(lastSameMonthIdx + 1, t);
+            notifyListeners();
+          } else {
+            this.transactions.add(t);
+            notifyListeners();
+          }
+        } else {
+          final idx = this.transactions.indexWhere((item) =>
+              t.date.compareTo(item.date) >= 0 &&
+              t.date.year == item.date.year &&
+              t.date.month == item.date.month);
+          this.transactions.insert(idx, t);
+          notifyListeners();
+        }
+      } else {
+        // Find the first transaction's date which is after the added one, and insert it here
+        final idx = this
+            .transactions
+            .indexWhere((element) => t.date.compareTo(element.date) < 0);
+        if (idx >= 0) {
+          this.transactions.insert(idx, t);
+          notifyListeners();
+        } else if (idx < 0) {
+          this.transactions.add(t);
+          notifyListeners();
+        }
       }
     }
   }
@@ -69,8 +92,8 @@ class Transactions extends ChangeNotifier {
   void update(String id, Transaction info) {
     final idx = transactions.indexWhere((element) => id == element.id);
     if (info.date.compareTo(transactions[0].date) < 0 &&
-      (info.date.month != transactions[0].date.month ||
-        info.date.year != transactions[0].date.year)) {
+        (info.date.month != transactions[0].date.month ||
+            info.date.year != transactions[0].date.year)) {
       transactions.removeAt(idx);
     } else {
       Transaction old = transactions[idx];
@@ -94,8 +117,7 @@ class Transactions extends ChangeNotifier {
   }
 
   Transaction get(int i) {
-    if (this.filtered.length < 1)
-      return null;
+    if (this.filtered.length < 1) return null;
     return this.filtered[i];
   }
 
@@ -112,12 +134,12 @@ class Transactions extends ChangeNotifier {
 
   double getTotalOfMonth(DateTime dt) {
     return this
-      .filtered
-      .where((transaction) =>
-    dt.year == transaction.date.year &&
-      dt.month == transaction.date.month)
-      .toList()
-      .fold(0.0, (current, next) => current + next.value);
+        .filtered
+        .where((transaction) =>
+            dt.year == transaction.date.year &&
+            dt.month == transaction.date.month)
+        .toList()
+        .fold(0.0, (current, next) => current + next.value);
   }
 }
 

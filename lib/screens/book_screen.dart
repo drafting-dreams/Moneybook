@@ -79,7 +79,7 @@ class _BookScreen extends State<BookScreen> with TickerProviderStateMixin {
             });
             final now = DateTime.now();
             final nextMonth = now.month == 12
-                ? DateTime(now.year + 1, now.month, 1)
+                ? DateTime(now.year + 1, 1, 1)
                 : DateTime(now.year, now.month + 1, 1);
             TransactionAPI.loadPrevious(accountId, nextMonth)
                 .then((List<Transaction> data) {

@@ -96,7 +96,7 @@ class TransactionService {
 
   static Future<List<Transaction>> getListByDate(
       String accountId, DateTime start,
-      [DateTime end]) async {
+      [DateTime end, bool reverse = false]) async {
     final s = Util.date2DBString(start);
     final e = Util.date2DBString(end);
     final sql = '''SELECT * FROM ${DatabaseCreator.transactionTable}
@@ -105,8 +105,14 @@ class TransactionService {
     AND ${DatabaseCreator.transactionDate} <= ?
     ORDER BY ${DatabaseCreator.transactionDate} ASC
     ''';
+    final reverseSql = '''
+    SELECT * FROM ${DatabaseCreator.transactionTable}
+    WHERE ${DatabaseCreator.accountId} = ?
+    AND ${DatabaseCreator.transactionDate} >= ?
+    AND ${DatabaseCreator.transactionDate} <= ?
+    ORDER BY ${DatabaseCreator.transactionDate} DESC''';
     List<dynamic> params = [accountId, s, e];
-    final re = await _executeSqlList(sql, params);
+    final re = await _executeSqlList(reverse ? reverseSql : sql, params);
     return re;
   }
 

@@ -102,7 +102,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       accountState.setCurrentAccount(currentAccount);
       final now = DateTime.now();
       final nextMonth = now.month == 12
-          ? DateTime(now.year + 1, now.month, 1)
+          ? DateTime(now.year + 1, 1, 1)
           : DateTime(now.year, now.month + 1, 1);
       TransactionAPI.loadPrevious(accountState.currentAccount.id, nextMonth)
           .then((List<Transaction> ts) {

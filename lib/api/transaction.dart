@@ -62,7 +62,7 @@ class TransactionAPI {
         ? DateTime(referenceDate.year + 1, 1, 0)
         : DateTime(referenceDate.year, referenceDate.month + 1, 0);
     List<Transaction> transactions =
-        await TransactionService.getListByDate(accountId, start, end);
+        await TransactionService.getListByDate(accountId, start, end, true);
     return transactions;
   }
 
