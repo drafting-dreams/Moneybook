@@ -109,6 +109,67 @@ class _AccountScreen extends State<AccountScreen> {
       return secondaryActions;
     }
 
+    List<Widget> renderAccounts() {
+      return accounts.asMap().entries.map((entry) {
+        final account = entry.value;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Divider(height: 2.0),
+            InkWell(
+              onTap: () {
+                accountState.setCurrentAccount(account);
+                AccountAPI.setCurrentAccount(account.id);
+                final now = DateTime.now();
+                final nextMonth = now.month == 12
+                    ? DateTime(now.year + 1, 1, 1)
+                    : DateTime(now.year, now.month + 1, 1);
+                TransactionAPI.loadPrevious(
+                        accountState.currentAccount.id, nextMonth)
+                    .then((List<Transaction> ts) {
+                  setState(() {
+                    transactions.clear();
+                    transactions.addAll(ts);
+                  });
+                });
+              },
+              child: Slidable(
+                  key: ValueKey(entry.key),
+                  controller: slidableController,
+                  actionPane: SlidableDrawerActionPane(),
+                  secondaryActions: actions(entry.key),
+                  child: ListTile(
+                    title: accountState.currentAccount.id == account.id
+                        ? Row(children: <Widget>[
+                            Container(
+                              width: 28,
+                              margin: EdgeInsets.only(right: 10),
+                              child: Icon(
+                                Icons.check,
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                            Text(account.name)
+                          ])
+                        : Row(
+                            children: <Widget>[
+                              Container(
+                                  width: 28,
+                                  margin: EdgeInsets.only(right: 10)),
+                              Text(account.name)
+                            ],
+                          ),
+                    trailing: Text(account.balance.toStringAsFixed(2),
+                        style: account.balance >= 0
+                            ? TextStyle(color: Colors.green[600])
+                            : TextStyle(color: Colors.red[600])),
+                  )),
+            ),
+          ],
+        );
+      }).toList();
+    }
+
     return Scaffold(
         appBar: AppBar(title: Text(localizer.account), actions: <Widget>[
           PopupMenuButton(
@@ -144,67 +205,20 @@ class _AccountScreen extends State<AccountScreen> {
                         value: 'transfer', child: Text(localizer.transfer)),
                   ])
         ]),
-        body: ListView.builder(
-          itemCount: accounts.length,
-          itemBuilder: (context, index) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Divider(height: 2.0),
-                InkWell(
-                  onTap: () {
-                    accountState.setCurrentAccount(accounts[index]);
-                    AccountAPI.setCurrentAccount(accounts[index].id);
-                    final now = DateTime.now();
-                    final nextMonth = now.month == 12
-                        ? DateTime(now.year + 1, 1, 1)
-                        : DateTime(now.year, now.month + 1, 1);
-                    TransactionAPI.loadPrevious(
-                            accountState.currentAccount.id, nextMonth)
-                        .then((List<Transaction> ts) {
-                      setState(() {
-                        transactions.clear();
-                        transactions.addAll(ts);
-                      });
-                    });
-                  },
-                  child: Slidable(
-                      key: ValueKey(index),
-                      controller: slidableController,
-                      actionPane: SlidableDrawerActionPane(),
-                      secondaryActions: actions(index),
-                      child: ListTile(
-                        title:
-                            accountState.currentAccount.id == accounts[index].id
-                                ? Row(children: <Widget>[
-                                    Container(
-                                      width: 28,
-                                      margin: EdgeInsets.only(right: 10),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: Theme.of(context).accentColor,
-                                      ),
-                                    ),
-                                    Text(accounts[index].name)
-                                  ])
-                                : Row(
-                                    children: <Widget>[
-                                      Container(
-                                          width: 28,
-                                          margin: EdgeInsets.only(right: 10)),
-                                      Text(accounts[index].name)
-                                    ],
-                                  ),
-                        trailing: Text(
-                            accounts[index].balance.toStringAsFixed(2),
-                            style: accounts[index].balance >= 0
-                                ? TextStyle(color: Colors.green[600])
-                                : TextStyle(color: Colors.red[600])),
-                      )),
-                ),
-              ],
-            );
-          },
+        body: ListView(
+          children: [
+            ...renderAccounts(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 15, 15, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text(
+                      'Total: ${accounts.map((account) => account.balance).reduce((value, element) => value + element).toStringAsFixed(2)}')
+                ],
+              ),
+            )
+          ],
         ));
   }
 }
