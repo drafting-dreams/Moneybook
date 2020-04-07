@@ -214,7 +214,7 @@ class _AccountScreen extends State<AccountScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                      'Total: ${accounts.map((account) => account.balance).reduce((value, element) => value + element).toStringAsFixed(2)}')
+                      'Total: ${accounts.length > 0 ? accounts.map((account) => account.balance).reduce((value, element) => value + element).toStringAsFixed(2) : ''}')
                 ],
               ),
             )

@@ -17,7 +17,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  firebase_core: ^0.2.5       # This dependency was added during initial configuration.
+  firebase_core: ^0.4.4       # This dependency was added during initial configuration.
   firebase_analytics: ^1.0.4  # add dependency for Google Analytics for Firebase
   flutter_share: ^1.0.2+1
   simple_permissions: ^0.1.9
@@ -30,7 +30,7 @@ dependencies:
       ref: dart2
       path: sqflite_porter
     version: '>=0.2.0'
-  charts_flutter: ^0.6.0
+  charts_flutter: ^0.9.0
   flutter_slidable: ^0.5.3
   unicorndial: ^1.1.5
   provider: ^2.0.1+1

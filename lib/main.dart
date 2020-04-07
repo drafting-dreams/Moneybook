@@ -22,6 +22,7 @@ import 'const/themes.dart';
 import 'package:devicelocale/devicelocale.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   String currentLocale = 'en_US';
   try {
     currentLocale = await Devicelocale.currentLocale;
